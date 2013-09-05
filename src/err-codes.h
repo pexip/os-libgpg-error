@@ -9,12 +9,12 @@
    modify it under the terms of the GNU Lesser General Public License
    as published by the Free Software Foundation; either version 2.1 of
    the License, or (at your option) any later version.
- 
+
    libgpg-error is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Lesser General Public License for more details.
- 
+
    You should have received a copy of the GNU Lesser General Public
    License along with libgpg-error; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -103,7 +103,7 @@ static const char msgstr[] =
   gettext_noop ("Incomplete line") "\0"
   gettext_noop ("Invalid response") "\0"
   gettext_noop ("No agent running") "\0"
-  gettext_noop ("agent error") "\0"
+  gettext_noop ("Agent error") "\0"
   gettext_noop ("Invalid data") "\0"
   gettext_noop ("Unspecific Assuan server fault") "\0"
   gettext_noop ("General Assuan error") "\0"
@@ -211,6 +211,17 @@ static const char msgstr[] =
   gettext_noop ("Limit reached") "\0"
   gettext_noop ("Not initialized") "\0"
   gettext_noop ("Missing issuer certificate") "\0"
+  gettext_noop ("No keyserver available") "\0"
+  gettext_noop ("Invalid elliptic curve") "\0"
+  gettext_noop ("Unknown elliptic curve") "\0"
+  gettext_noop ("Duplicated key") "\0"
+  gettext_noop ("Ambiguous result") "\0"
+  gettext_noop ("No crypto context") "\0"
+  gettext_noop ("Wrong crypto context") "\0"
+  gettext_noop ("Bad crypto context") "\0"
+  gettext_noop ("Conflict in the crypto context") "\0"
+  gettext_noop ("Broken public key") "\0"
+  gettext_noop ("Broken secret key") "\0"
   gettext_noop ("Operation fully cancelled") "\0"
   gettext_noop ("Operation not yet finished") "\0"
   gettext_noop ("Buffer too short") "\0"
@@ -461,76 +472,87 @@ static const int msgidx[] =
     3158,
     3174,
     3201,
-    3227,
-    3254,
-    3271,
-    3312,
-    3344,
-    3382,
+    3224,
+    3247,
+    3270,
+    3285,
+    3302,
+    3320,
+    3341,
+    3360,
+    3391,
     3409,
-    3439,
-    3469,
+    3427,
+    3453,
+    3480,
     3497,
-    3534,
-    3558,
-    3606,
-    3648,
-    3688,
-    3724,
-    3742,
-    3765,
-    3789,
-    3810,
-    3838,
-    3868,
-    3896,
-    3916,
-    3940,
-    3967,
-    3985,
-    4003,
-    4031,
-    4046,
-    4062,
-    4090,
-    4113,
-    4133,
-    4150,
-    4178,
-    4202,
-    4227,
-    4247,
-    4267,
-    4293,
-    4319,
-    4345,
-    4371,
-    4397,
-    4423,
-    4449,
-    4475,
-    4501,
-    4528,
-    4555,
-    4582,
-    4609,
-    4636,
-    4663,
-    4690,
-    4713,
-    4734,
-    4746
+    3538,
+    3570,
+    3608,
+    3635,
+    3665,
+    3695,
+    3723,
+    3760,
+    3784,
+    3832,
+    3874,
+    3914,
+    3950,
+    3968,
+    3991,
+    4015,
+    4036,
+    4064,
+    4094,
+    4122,
+    4142,
+    4166,
+    4193,
+    4211,
+    4229,
+    4257,
+    4272,
+    4288,
+    4316,
+    4339,
+    4359,
+    4376,
+    4404,
+    4428,
+    4453,
+    4473,
+    4493,
+    4519,
+    4545,
+    4571,
+    4597,
+    4623,
+    4649,
+    4675,
+    4701,
+    4727,
+    4754,
+    4781,
+    4808,
+    4835,
+    4862,
+    4889,
+    4916,
+    4939,
+    4960,
+    4972
   };
 
-static inline int
+static GPG_ERR_INLINE int
 msgidxof (int code)
 {
   return (0 ? 0
-  : ((code >= 0) && (code <= 185)) ? (code - 0)
-  : ((code >= 198) && (code <= 213)) ? (code - 12)
-  : ((code >= 257) && (code <= 271)) ? (code - 55)
-  : ((code >= 273) && (code <= 281)) ? (code - 56)
-  : ((code >= 1024) && (code <= 1039)) ? (code - 798)
-  : ((code >= 16381) && (code <= 16383)) ? (code - 16139)
-  : 16384 - 16139);
+  : ((code >= 0) && (code <= 196)) ? (code - 0)
+  : ((code >= 198) && (code <= 213)) ? (code - 1)
+  : ((code >= 257) && (code <= 271)) ? (code - 44)
+  : ((code >= 273) && (code <= 281)) ? (code - 45)
+  : ((code >= 1024) && (code <= 1039)) ? (code - 787)
+  : ((code >= 16381) && (code <= 16383)) ? (code - 16128)
+  : 16384 - 16128);
 }

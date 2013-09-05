@@ -1,10 +1,57 @@
-libgpg-error (1.10-2ubuntu1) precise; urgency=low
+libgpg-error (1.12-0.2) unstable; urgency=low
 
-  * Sync with Debian testing.
-  * Drop the .la file from the -dev package; it's unused, and we don't want
-    anyone to pick up more dependencies on it.
+  * NMU
+  * debian/libgpg-error0.install: Renamed to debian/libgpg-error0.install.in.
+    Put libraries under /lib (closes: #720593).
+  * debian/libgpg-error-dev.install: Don't install .so link. We need to
+    handle this via dh_link.
+  * debian/rules: Create .so link and install files between /usr/lib and /lib.
 
- -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 24 Jan 2012 06:40:10 -0800
+ -- Daniel Leidert <dleidert@debian.org>  Thu, 05 Sep 2013 22:27:50 +0200
+
+libgpg-error (1.12-0.1) unstable; urgency=low
+
+  * NMU
+  * New upstream release (closes: #711995).
+  * debian/clean, debian/*.dirs: Removed unused file.
+  * debian/control: Added generic Vcs-Browser and Vcs-Svn.
+    (Standards-Version): Bumped to 3.9.4.
+    (Build-Depends): Added versioned autotools-dev (closes: #689621).
+  * debian/copyright: Updated.
+  * debian/docs, debian/libgpg-error0.docs: Removed. Installed files via
+    debian/rules.
+  * debian/libgpg-error0.install.in: Renamed to debian/libgpg-error0.install
+    and dropped sed stuff.
+  * debian/libgpg-error0.symbols: Added.
+  * debian/libgpg-error-dev.links.in: Put into debian/rules.
+  * debian/rules: Rewritten for dh 7+. Enabled hardening. Dropped linking.
+  * debian/watch: Minor update.
+  * debian/patches/: Removed patches and dpatch leftovers (closes: #689604).
+  * debian/patches/l10n_update.patch: Dropped (shipped with new release).
+  * debian/patches/series: Emptied.
+
+ -- Daniel Leidert <dleidert@debian.org>  Mon, 12 Aug 2013 22:49:55 +0200
+
+libgpg-error (1.10-3.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+
+  [ Program translation ]
+  * Japanese, new (Takeshi Hamasaki)
+  * Danish, new (Joe Hansen)
+  * German updated (Werner Koch)
+  * French updated (David Prévot, closes: #625485)
+  * Czech updated (Petr Pisar)
+  * Dutch updated (Freek de Kruijf)
+  * Polish updated (Michał Kułach, closes: #685023)
+
+ -- David Prévot <taffit@debian.org>  Fri, 17 Aug 2012 22:56:29 -0400
+
+libgpg-error (1.10-3) unstable; urgency=low
+
+  * Do not install .la file (Closes: #657156) 
+
+ -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Thu, 02 Feb 2012 21:56:39 +0000
 
 libgpg-error (1.10-2) unstable; urgency=low
 
@@ -13,25 +60,11 @@ libgpg-error (1.10-2) unstable; urgency=low
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Fri, 06 Jan 2012 00:46:00 +0100
 
-libgpg-error (1.10-1ubuntu1) precise; urgency=low
-
-  * Merge from Debian unstable.  Remaining changes:
-    - build for multiarch.
-
- -- Steve Langasek <steve.langasek@ubuntu.com>  Sat, 10 Sep 2011 17:28:07 +0000
-
 libgpg-error (1.10-1) unstable; urgency=low
 
   * Ack all previous NMU. All thanks go to Jonas Meurer.
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Sat, 10 Sep 2011 10:39:11 +0200
-
-libgpg-error (1.10-0.3ubuntu1) oneiric; urgency=low
-
-  * Merge from Debian unstable, remaining changes:
-    - build for multiarch.
-
- -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 20 May 2011 16:31:18 -0700
 
 libgpg-error (1.10-0.3) unstable; urgency=low
 
@@ -42,13 +75,6 @@ libgpg-error (1.10-0.3) unstable; urgency=low
     - Add udeb package for debian-installer
 
  -- Jonas Meurer <mejo@debian.org>  Mon, 07 Feb 2011 11:14:44 +0100
-
-libgpg-error (1.10-0.2ubuntu1) natty; urgency=low
-
-  * FFe LP: #733501.
-  * Build for multiarch.
-
- -- Steve Langasek <steve.langasek@ubuntu.com>  Sun, 20 Mar 2011 22:54:11 -0700
 
 libgpg-error (1.10-0.2) experimental; urgency=low
 
@@ -241,4 +267,3 @@ libgpg-error (0.1-1) unstable; urgency=low
   * Initial release. (Closes: #196386)
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Mon, 23 Jun 2003 15:39:47 +0200
-
