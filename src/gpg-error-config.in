@@ -54,7 +54,7 @@ while test $# -gt 0; do
 	    output="$output $exec_prefix"
 	    ;;
         --version)
-            echo "@VERSION@"
+            echo "@PACKAGE_VERSION@"
 	    exit 0
 	    ;;
         --cflags)
@@ -69,11 +69,18 @@ while test $# -gt 0; do
 	    output="$output @GPG_ERROR_CONFIG_CFLAGS@"
 	    ;;
 	--libs)
-	    if test "x$libdir" != "x/usr/lib" -a "x$libdir" != "x/lib"; then
-		output="$output -L$libdir"
-	    fi
+	    case "$libdir" in
+		/usr/lib|/usr/lib64|/lib|/lib64) ;;
+		*)
+		    output="$output -L$libdir"
+		    ;;
+	    esac
 	    output="$output @GPG_ERROR_CONFIG_LIBS@"
 	    ;;
+        --host)
+            echo "@GPG_ERROR_CONFIG_HOST@"
+            exit 0
+            ;;
 	*)
             usage 1 1>&2
 	    ;;

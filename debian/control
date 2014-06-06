@@ -1,33 +1,34 @@
 Source: libgpg-error
 Section: libs
 Maintainer: Pexip AS <packaging@pexip.com>
-XSBC-Pexip-Original-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: Jose Carlos Garcia Sogo <jsogo@debian.org>
+XSBC-Pexip-Original-Maintainer: Jose Carlos Garcia Sogo <jsogo@debian.org>
 XSBC-Pexip-Original-Uploaders: Matthias Urlichs <smurf@debian.org>
 Priority: standard
-Build-Depends: debhelper (>= 8.1.3)
-Standards-Version: 3.9.1
+Build-Depends: autotools-dev (>> 20120210.1~), debhelper (>> 8.1.3~)
+Standards-Version: 3.9.4
 Homepage: http://www.gnupg.org/related_software/libgpg-error/
-XS-Pexip-Upstream: http://archive.ubuntu.com/ubuntu/ precise
+Vcs-Browser: http://anonscm.debian.org/viewvc/pkg-gnupg/libgpg-error/trunk/
+Vcs-Svn: svn://anonscm.debian.org/pkg-gnupg/libgpg-error/trunk/
+XS-Pexip-Upstream: http://ftp.debian.org/debian/ jessie
 
 Package: libgpg-error-dev
 Priority: optional
 Section: libdevel
 Architecture: any
-Depends: libgpg-error0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: libgpg-error0 (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
 Description: library for common error values and messages in GnuPG components (development)
  Library that defines common error values for all GnuPG
  components.  Among these are GPG, GPGSM, GPGME, GPG-Agent, libgcrypt,
  pinentry, SmartCard Daemon and possibly more in the future.
  .
- This package contains the headers and other files needed to compile 
+ This package contains the headers and other files needed to compile
  against this library.
 
 Package: libgpg-error0
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Pre-Depends: ${misc:Pre-Depends}
 Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
 Description: library for common error values and messages in GnuPG components
  Library that defines common error values for all GnuPG
  components.  Among these are GPG, GPGSM, GPGME, GPG-Agent, libgcrypt,
@@ -38,9 +39,8 @@ Priority: optional
 Section: debian-installer
 Package-Type: udeb
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: library for common error values and messages in GnuPG components
  Library that defines common error values for all GnuPG
  components.  Among these are GPG, GPGSM, GPGME, GPG-Agent, libgcrypt,
  pinentry, SmartCard Daemon and possibly more in the future.
-
