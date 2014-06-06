@@ -1,5 +1,11 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* GIT commit id revision used to build this package */
+#undef BUILD_REVISION
+
+/* The time this package was configured for a build */
+#undef BUILD_TIMESTAMP
+
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
 #undef ENABLE_NLS
@@ -67,6 +73,9 @@
 
 /* Defined if we run on a W32 API based system */
 #undef HAVE_W32_SYSTEM
+
+/* Defined if we run on 64 bit W32 API system */
+#undef HAVE_W64_SYSTEM
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
@@ -141,7 +150,7 @@
 #undef const
 
 
-/* Force using of NLS for W32 even if no libintl has been found.  This is 
+/* Force using of NLS for W32 even if no libintl has been found.  This is
    okay because we have our own gettext implementation for W32.  */
 #if defined(HAVE_W32_SYSTEM) && !defined(ENABLE_NLS)
 #define ENABLE_NLS 1

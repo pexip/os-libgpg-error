@@ -30,8 +30,9 @@
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
+#ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
-#include <sys/stat.h>
+#endif
 #include <stdint.h>
 #ifndef HAVE_W32CE_SYSTEM
 # include <locale.h>
@@ -50,7 +51,39 @@
 #endif /*!jnlib_malloc*/
 
 #include "init.h"
+#include "gpg-error.h"
 
+#ifdef HAVE_W32CE_SYSTEM
+/* Forward declaration.  */
+static wchar_t *utf8_to_wchar (const char *string, size_t length, size_t *retlen);
+
+static HANDLE
+MyCreateFileA (LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwSharedMode,
+	     LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+	     DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes,
+	     HANDLE hTemplateFile)
+{
+  wchar_t *filename;
+  HANDLE result;
+  int err;
+  size_t size;
+
+  filename = utf8_to_wchar (lpFileName, -1, &size);
+  if (!filename)
+    return INVALID_HANDLE_VALUE;
+
+  result = CreateFileW (filename, dwDesiredAccess, dwSharedMode,
+			lpSecurityAttributes, dwCreationDisposition,
+			dwFlagsAndAttributes, hTemplateFile);
+
+  err = GetLastError ();
+  free (filename);
+  SetLastError (err);
+  return result;
+}
+#undef CreateFileA
+#define CreateFileA MyCreateFileA
+#endif
 
 
 /* localname.c from gettext BEGIN.  */
@@ -611,7 +644,9 @@
 static const char *
 my_nl_locale_name (const char *categoryname)
 {
+#ifndef HAVE_W32CE_SYSTEM
   const char *retval;
+#endif
   LCID lcid;
   LANGID langid;
   int primary, sub;
@@ -1026,7 +1061,7 @@ my_nl_locale_name (const char *categoryname)
 
 /* Support functions.  */
 
-static __inline__ uint32_t
+static GPG_ERR_INLINE uint32_t
 do_swap_u32 (uint32_t i)
 {
   return (i << 24) | ((i & 0xff00) << 8) | ((i >> 8) & 0xff00) | (i >> 24);
@@ -1041,8 +1076,8 @@ do_swap_u32 (uint32_t i)
 /* The so called `hashpjw' function by P.J. Weinberger
    [see Aho/Sethi/Ullman, COMPILERS: Principles, Techniques and Tools,
    1986, 1987 Bell Telephone Laboratories, Inc.]  */
-static __inline__ unsigned long
-hash_string( const char *str_param )
+static GPG_ERR_INLINE unsigned long
+hash_string (const char *str_param)
 {
   unsigned long int hval, g;
   const char *str = str_param;
@@ -1147,11 +1182,11 @@ static char *current_domainname;
 
 
 /* Constructor for this module.  This can only be used if we are a
-   DLL.  IF used as a static lib we can't control the process set; for
+   DLL.  If used as a static lib we can't control the process set; for
    example it might be used with a main module which is not build with
    mingw and thus does not know how to call the constructors.  */
 #ifdef DLL_EXPORT
-static void module_init (void) __attribute__ ((__constructor__));
+static void module_init (void) _GPG_ERR_CONSTRUCTOR;
 #endif
 static void
 module_init (void)
@@ -1165,7 +1200,7 @@ module_init (void)
     }
 }
 
-#ifndef DLL_EXPORT
+#if !defined(DLL_EXPORT) || !defined(_GPG_ERR_HAVE_CONSTRUCTOR)
 void
 _gpg_w32__init_gettext_module (void)
 {
@@ -1194,31 +1229,29 @@ free_domain (struct loaded_domain *domain)
 static struct loaded_domain *
 load_domain (const char *filename)
 {
-  FILE *fp;
-  size_t size;
-  struct stat st;
+  HANDLE fh;
+  DWORD size;
   struct mo_file_header *data = NULL;
   struct loaded_domain *domain = NULL;
   size_t to_read;
   char *read_ptr;
-  
-  fp = fopen (filename, "rb");
-  if (!fp)
+
+  fh = CreateFileA (filename, GENERIC_READ, FILE_SHARE_WRITE, NULL,
+                    OPEN_EXISTING, 0, NULL);
+  if (fh == INVALID_HANDLE_VALUE)
+    return NULL;
+
+  size = GetFileSize (fh, NULL);
+  if (size == INVALID_FILE_SIZE)
     {
-      return NULL;
-    }
-  if (fstat (fileno (fp), &st)
-      || (size = (size_t) st.st_size) != st.st_size
-      || size < sizeof (struct mo_file_header))
-    {
-      fclose (fp);
+      CloseHandle (fh);
       return NULL;
     }
 
   data = (2*size <= size)? NULL : jnlib_malloc (2*size);
   if (!data)
     {
-      fclose (fp);
+      CloseHandle (fh);
       return NULL;
     }
 
@@ -1226,10 +1259,13 @@ load_domain (const char *filename)
   read_ptr = (char *) data;
   do
     {
-      long int nb = fread (read_ptr, 1, to_read, fp);
-      if (nb < to_read)
+      BOOL res;
+      DWORD nb;
+
+      res = ReadFile (fh, read_ptr, to_read, &nb, NULL);
+      if (! res || nb < to_read)
 	{
-	  fclose (fp);
+	  CloseHandle (fh);
 	  jnlib_free (data);
 	  return NULL;
 	}
@@ -1237,7 +1273,7 @@ load_domain (const char *filename)
       to_read -= nb;
     }
   while (to_read > 0);
-  fclose (fp);
+  CloseHandle (fh);
 
   /* Using the magic number we can test whether it really is a message
      catalog file.  */
