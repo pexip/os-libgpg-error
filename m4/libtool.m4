@@ -1326,7 +1326,10 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
 	  x86_64-*linux*)
 	    LD="${LD-ld} -m elf_i386"
 	    ;;
-	  ppc64-*linux*|powerpc64-*linux*)
+         powerpc64le-*)
+           LD="${LD-ld} -m elf32lppclinux"
+           ;;
+         powerpc64-*)
 	    LD="${LD-ld} -m elf32ppclinux"
 	    ;;
 	  s390x-*linux*)
@@ -1345,7 +1348,10 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
 	  x86_64-*linux*)
 	    LD="${LD-ld} -m elf_x86_64"
 	    ;;
-	  ppc*-*linux*|powerpc*-*linux*)
+         powerpcle-*)
+           LD="${LD-ld} -m elf64lppc"
+           ;;
+         powerpc-*)
 	    LD="${LD-ld} -m elf64ppc"
 	    ;;
 	  s390*-*linux*|s390*-*tpf*)
@@ -2636,6 +2642,26 @@ irix5* | irix6* | nonstopux*)
 # No shared lib support for Linux oldld, aout, or coff.
 linux*oldld* | linux*aout* | linux*coff*)
   dynamic_linker=no
+  ;;
+
+linux*android*)
+  version_type=none # Android doesn't support versioned libraries.
+  need_lib_prefix=no
+  need_version=no
+  library_names_spec='$libname$release$shared_ext'
+  soname_spec='$libname$release$shared_ext'
+  finish_cmds=
+  shlibpath_var=LD_LIBRARY_PATH
+  shlibpath_overrides_runpath=yes
+
+  # This implies no fast_install, which is unacceptable.
+  # Some rework will be needed to allow for fast_install
+  # before this can be enabled.
+  hardcode_into_libs=yes
+
+  dynamic_linker='Android linker'
+  # Don't embed -rpath directories since the linker doesn't support them.
+  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-L$libdir'
   ;;
 
 # This must be glibc/ELF.

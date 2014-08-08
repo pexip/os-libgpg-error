@@ -1,3 +1,162 @@
+2014-04-15  Werner Koch  <wk@gnupg.org>
+
+	Release 1.13.
+	* configure.ac: Set LT version to C11/A11/R0.
+
+	Update pl.po.
+
+	Add code GPG_ERR_KEY_ON_CARD.
+
+2014-01-29  Werner Koch  <wk@gnupg.org>
+
+	Fix a syscfg/ file name.
+	* src/syscfg/lock-obj.arm-unknown-linux-androideabi.h: Rename to ...
+	* src/syscfg/lock-obj-pub.arm-unknown-linux-androideabi.h: this.
+	* src/Makefile.am (lock_obj_pub): Fix file name.
+
+2014-01-28  Werner Koch  <wk@gnupg.org>
+
+	Fix the name of the file in the comment of the output.
+	* src/gen-posix-lock-obj.c (main): Chnage comment in created file.
+
+2014-01-25  Werner Koch  <wk@gnupg.org>
+
+	Add lock info for arm-unknown-linux-androideabi.
+	* src/syscfg/lock-obj.arm-unknown-linux-androideabi.h: New.  Provided
+	by Hans-Christoph Steiner.
+	* src/Makefile.am (lock_obj_pub): Add file.
+
+2014-01-24  Werner Koch  <wk@gnupg.org>
+
+	tests: Call srand for each thread under Windows.
+	* tests/t-lock.c (accountant_thread) [W32]: Call srand.
+
+	Do not use the threadlib macros for Windows.
+	* configure.ac: Move platform detection before gl_THREADLIB_EARLY.  Do
+	not use gl_THREADLIB for Windows.
+
+	Make multi-threading flags available via gpg-error-config.
+	* m4/threadlib.m4: Set THREADLIB_CPPFLAGS.
+	* src/gpg-error-config.in: Add option --mt.
+	* configure.ac: Add support for the --mt option.
+	* src/gpg-error.m4: Add ac_subst GPG_ERROR_MT_CFLAGS and
+	GPG_ERROR_MT_LIBS.
+
+	Allow using gpgrt_lock_init on an unitialized variable.
+	* src/posix-lock.c (gpgrt_lock_init): Detect unitialized lock var.
+	* src/w32-lock.c (gpgrt_lock_init): Ditto.
+
+2014-01-17  Werner Koch  <wk@gnupg.org>
+
+	Move version number first in the Posix lock-obj.
+	* src/posix-lock-obj.h (_gpgrt_lock_t): Swap VERS and MTX and put MTX
+	into a union.
+	* src/posix-lock.c (gpgrt_lock_lock): Adjust for this change.
+	* src/gen-posix-lock-obj.c (main): Change output accordingly.
+
+	Extend the platform dependent build rules.
+	* src/mkheader.c (mk_include_name): New.
+	(include_file): Implement '&' substitution.
+	(try_include_file): New.
+	(write_special): Use try_include_file and syscfg/.
+	(main): Add a new arg.
+	* configure.ac (CROSS_COMPILING): New am_conditional.
+	(HOST_TRIPLET_STRING): New ac_define.
+	* src/gen-posix-lock-obj.c (main): Print the host triplet.
+	* src/w32-lock-obj-pub.in: Move to ...
+	* src/syscfg/lock-obj-pub.mingw32.h: here.
+	* src/Makefile.am (lock_obj_pub): New.
+	(pre_mkheader_cmds): New.
+	(gpg-error.h): Run pre_mkheader_cmds.
+	(parts_of_gpg_error_h, lock-obj-pub.native.h): Do not use when
+	cross-compiling.
+
+2014-01-16  Werner Koch  <wk@gnupg.org>
+
+	Fix linking for last change on non-ELF platforms.
+	* src/Makefile.am (libgpg_error_la_LIBADD): Add LIBTHREAD.
+
+	Add gpgrt_lock_ functions.
+	* src/gpg-error.h.in (GPGRT_LOCK_DEFINE): New.
+	(gpgrt_lock_init): New.
+	(gpgrt_lock_lock): New.
+	(gpgrt_lock_unlock): New.
+	(gpgrt_lock_destroy): New.
+	(gpgrt_yield): New.
+	* src/gpg-error.def.in: Add new functions.
+	* m4/lock.m4, m4/threadlib.m4: New. Taken from current gnulib.
+	* configure.ac: Call gl_LOCK.  Check size of pthread_mutex_t. Add
+	LIBTHREAD to GPG_ERROR_CONFIG_LIBS.
+	* src/err-codes.h.in (GPG_ERR_INV_LOCK_OBJ): New.
+	* src/gen-posix-lock-obj.c: New.
+	* src/gen-w32-lock-obj.c: New.
+	* src/lock.h, src/thread.h: New.
+	* src/posix-lock-obj.h, src/w32-lock-obj.h: New.
+	* src/posix-lock.c, src/w32-lock.c: New.
+	* src/posix-thread.c, src/w32-thread.c:
+	* src/w32-lock-obj-pub.in: New.
+	* src/mkheader.c (include_file): Support build time include files.
+	(write_special): Add keyword "include:lock-obj".
+	* src/Makefile.am:
+	(posix-lock-obj-pub.in): New rule.
+	(noinst_PROGRAMS): Add gen-*-lock-obj helpers.
+
+	* tests/t-common.h: New.
+	* tests/t-lock.c: New.
+	* tests/Makefile.am (t_lock_LDADD): Add new test.
+
+2014-01-14  Werner Koch  <wk@gnupg.org>
+
+	Improve maintainability by rewriting the mkheader helper.
+	* src/mkheader.c: New.  Based on the mkheader from Libassuan.
+	* src/mkheader.awk: Remove.
+	* src/errnos.in: Add trailing linefeed.
+	* src/gpg-error.h.in: Change meta include directives for use with
+	mkheader.c.
+	* src/Makefile.am (EXTRA_DIST): Replace mkheader.awk by mkheader.c
+	(BUILT_SOURCES): Remove extra-h.in.
+	(CLEANFILES): Remove extra-h.in.  Add mkheader.c.
+	(parts_of_gpg_error_h): New.
+	(extra-h.in): Remove rule.
+	(mkheader): Add rule.
+	(gpg-error.h): Change rule to use mkheader.
+
+2014-01-10  Werner Koch  <wk@gnupg.org>
+
+	po: Update de.po.
+
+	Use the generic autogen.sh script.
+	* Makefile.am (EXTRA_DIST): Add autogen.rc remove config.rpath.
+	* autogen.rc: New.
+	* autogen.sh: Update from current GnuPG.
+
+	Move helper scripts to build-aux.
+	* compile, config.guess, config.rpath, config.sub
+	* depcomp, install-sh, ltmain.sh, missing: Move to build-aux/.
+	* configure.ac (AC_CONFIG_AUX_DIR): New.
+
+2013-12-09  Werner Koch  <wk@gnupg.org>
+
+	Add build support for ppc64le.
+	* config.guess, config.sub: Update to latest version (2013-11-29).
+	* m4/libtool.m4: Add patches for ppc64le.
+
+2013-12-09  David 'Digit' Turner  <digit@google.com>
+
+	Update libtool to support Android.
+	* m4/libtool.m4: Add "linux*android*" case.  Taken from the libtool
+	repository.
+
+2013-11-17  Werner Koch  <wk@gnupg.org>
+
+	Add GPG_ERR_MAC_ALGO.
+
+2013-07-15  Werner Koch  <wk@gnupg.org>
+
+	w32: Fix corrupted string output.
+	* src/w32-gettext.c (get_string): Pass the nul of the utf-8 string to
+	the conversion function but keep TRANSLEN without the nul.
+
 2013-06-24  Werner Koch  <wk@gnupg.org>
 
 	Release 1.12.

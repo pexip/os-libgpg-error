@@ -27,7 +27,7 @@ min_automake_version="1.11"
 # another commit, and a push so that the git magic is able to work.
 # See below for the LT versions.
 m4_define([mym4_version_major], [1])
-m4_define([mym4_version_minor], [12])
+m4_define([mym4_version_minor], [13])
 
 # Below is m4 magic to extract and compute the revision number, the
 # decimalized short revision number, a beta version string, and a flag
@@ -51,8 +51,8 @@ AC_INIT([libgpg-error],[mym4_full_version],[http://bugs.gnupg.org])
 #   (Interfaces added:			AGE++)
 #   (Interfaces removed:		AGE=0)
 # Note that added error codes don't constitute an interface change.
-LIBGPG_ERROR_LT_CURRENT=10
-LIBGPG_ERROR_LT_AGE=10
+LIBGPG_ERROR_LT_CURRENT=11
+LIBGPG_ERROR_LT_AGE=11
 LIBGPG_ERROR_LT_REVISION=0
 ################################################
 
@@ -64,11 +64,13 @@ VERSION_NUMBER=m4_esyscmd(printf "0x%02x%02x00" mym4_version_major \
                           mym4_version_minor)
 AC_SUBST(VERSION_NUMBER)
 
+AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/err-sources.h.in])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+AM_SILENT_RULES
 
 # We need to know about the host architecture to avoid spurious
 # warnings.
@@ -82,25 +84,6 @@ AC_PROG_CPP
 AC_PROG_AWK
 AC_CHECK_TOOL(AR, ar, :)
 AC_GNU_SOURCE
-
-LT_PREREQ([2.2.6])
-LT_INIT([win32-dll disable-static])
-LT_LANG([Windows Resource])
-
-
-# We need to compile and run a program on the build machine.
-dnl The AC_PROG_CC_FOR_BUILD macro in the AC archive is broken for
-dnl autoconf 2.57.
-dnl AC_PROG_CC_FOR_BUILD
-AC_MSG_CHECKING(for cc for build)
-if test "$cross_compiling" = "yes"; then
-  CC_FOR_BUILD="${CC_FOR_BUILD-cc}"
-else
-  CC_FOR_BUILD="${CC_FOR_BUILD-$CC}"
-fi
-AC_MSG_RESULT($CC_FOR_BUILD)
-AC_ARG_VAR(CC_FOR_BUILD,[build system C compiler])
-
 
 # Set some internal variables depending on the platform for later use.
 have_w32_system=no
@@ -121,6 +104,30 @@ case "${host}" in
     *)
        ;;
 esac
+
+
+if test "$have_w32_system" != yes; then
+  gl_THREADLIB_EARLY
+fi
+
+
+LT_PREREQ([2.2.6])
+LT_INIT([win32-dll disable-static])
+LT_LANG([Windows Resource])
+
+
+# We need to compile and run a program on the build machine.
+dnl The AC_PROG_CC_FOR_BUILD macro in the AC archive is broken for
+dnl autoconf 2.57.
+dnl AC_PROG_CC_FOR_BUILD
+AC_MSG_CHECKING(for cc for build)
+if test "$cross_compiling" = "yes"; then
+  CC_FOR_BUILD="${CC_FOR_BUILD-cc}"
+else
+  CC_FOR_BUILD="${CC_FOR_BUILD-$CC}"
+fi
+AC_MSG_RESULT($CC_FOR_BUILD)
+AC_ARG_VAR(CC_FOR_BUILD,[build system C compiler])
 
 
 AH_BOTTOM([
@@ -154,16 +161,59 @@ AC_MSG_WARN([[Without strerror_r, gpg_strerror_r might not be thread-safe]]))
      ;;
 esac
 
+AC_CHECK_FUNCS([flockfile])
+
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 
+
+# Check for thread library.
+#
+# Windows has always thread support; thus we don't bother to test for
+# it as it may lead to false results when cross building.
+if test "$have_w32_system" = yes; then
+  AC_DEFINE([USE_WINDOWS_THREADS], [1])
+  LIBTHREAD=
+  LTLIBTHREAD=
+  LIBMULTITHREAD=
+  LTLIBMULTITHREAD=
+  THREADLIB_CPPFLAGS=""
+  AC_SUBST([LIBTHREAD])
+  AC_SUBST([LTLIBTHREAD])
+  AC_SUBST([LIBMULTITHREAD])
+  AC_SUBST([LTLIBMULTITHREAD])
+else
+  gl_LOCK
+  if test "$gl_threads_api" = posix; then
+    AC_CHECK_SIZEOF(pthread_mutex_t,,[AC_INCLUDES_DEFAULT
+                                      #include <pthread.h>])
+  fi
+fi
+
+
 # Substitution used for gpg-error-config
 GPG_ERROR_CONFIG_LIBS="-lgpg-error"
+if test "x$LIBTHREAD" != x; then
+  GPG_ERROR_CONFIG_LIBS="${GPG_ERROR_CONFIG_LIBS} ${LIBTHREAD}"
+fi
+if test "x$LIBMULTITHREAD" != x; then
+  GPG_ERROR_CONFIG_MT_LIBS="${LIBMULTITHREAD}"
+else
+  GPG_ERROR_CONFIG_MT_LIBS=""
+fi
 GPG_ERROR_CONFIG_CFLAGS=""
+if test "x$THREADLIB_CPPFLAGS" != x; then
+  GPG_ERROR_CONFIG_MT_CFLAGS="${THREADLIB_CPPFLAGS}"
+else
+  GPG_ERROR_CONFIG_MT_CFLAGS=""
+fi
 GPG_ERROR_CONFIG_ISUBDIRAFTER=""
 GPG_ERROR_CONFIG_HOST="$host"
 AC_SUBST(GPG_ERROR_CONFIG_LIBS)
 AC_SUBST(GPG_ERROR_CONFIG_CFLAGS)
+AC_SUBST(GPG_ERROR_CONFIG_MT_LIBS)
+AC_SUBST(GPG_ERROR_CONFIG_MT_CFLAGS)
 AC_SUBST(GPG_ERROR_CONFIG_ISUBDIRAFTER)
 AC_SUBST(GPG_ERROR_CONFIG_HOST)
 
@@ -182,6 +232,9 @@ fi
 AM_CONDITIONAL(HAVE_W32_SYSTEM, test "$have_w32_system" = yes)
 AM_CONDITIONAL(HAVE_W64_SYSTEM, test "$have_w64_system" = yes)
 AM_CONDITIONAL(HAVE_W32CE_SYSTEM, test "$have_w32ce_system" = yes)
+AM_CONDITIONAL(CROSS_COMPILING, test x$cross_compiling = xyes)
+
+AC_DEFINE_UNQUOTED(HOST_TRIPLET_STRING, "$host", [The host triplet])
 
 
 #

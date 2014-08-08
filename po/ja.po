@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgpg-error 1.7\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2013-06-24 06:32+0200\n"
+"POT-Creation-Date: 2014-04-15 14:26+0200\n"
 "PO-Revision-Date: 2013-02-23 20:09+0100\n"
 "Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -922,251 +922,267 @@ msgstr "秘密鍵がありません"
 
 #: src/err-codes.h:225
 #, fuzzy
+#| msgid "Invalid digest algorithm"
+msgid "Invalid MAC algorithm"
+msgstr "無効な要約アルゴリズムです"
+
+#: src/err-codes.h:226
+#, fuzzy
 msgid "Operation fully cancelled"
 msgstr "操作がキャンセルされました"
 
-#: src/err-codes.h:226
+#: src/err-codes.h:227
 msgid "Operation not yet finished"
 msgstr "操作がまだ終了していません"
 
-#: src/err-codes.h:227
+#: src/err-codes.h:228
 msgid "Buffer too short"
 msgstr "バッファに入りきりません"
 
-#: src/err-codes.h:228
+#: src/err-codes.h:229
 msgid "Invalid length specifier in S-expression"
 msgstr "S式の中の長さ指定が無効です"
 
-#: src/err-codes.h:229
+#: src/err-codes.h:230
 msgid "String too long in S-expression"
 msgstr "S式の中の文字列が長すぎます"
 
-#: src/err-codes.h:230
+#: src/err-codes.h:231
 msgid "Unmatched parentheses in S-expression"
 msgstr "S式の中の括弧に相手がないものがあります"
 
-#: src/err-codes.h:231
+#: src/err-codes.h:232
 #, fuzzy
 msgid "S-expression not canonical"
 msgstr "\"%expression:1\" は有効な正規表現ではありません。"
 
-#: src/err-codes.h:232
+#: src/err-codes.h:233
 #, fuzzy
 msgid "Bad character in S-expression"
 msgstr "表現にシンタックスエラー"
 
-#: src/err-codes.h:233
+#: src/err-codes.h:234
 #, fuzzy
 msgid "Bad quotation in S-expression"
 msgstr "表現にシンタックスエラー"
 
-#: src/err-codes.h:234
+#: src/err-codes.h:235
 #, fuzzy
 msgid "Zero prefix in S-expression"
 msgstr "表現にシンタックスエラー"
 
-#: src/err-codes.h:235
+#: src/err-codes.h:236
 msgid "Nested display hints in S-expression"
 msgstr ""
 
-#: src/err-codes.h:236
+#: src/err-codes.h:237
 #, fuzzy
 msgid "Unmatched display hints"
 msgstr "ウィンドウマネージャのヒント"
 
-#: src/err-codes.h:237
+#: src/err-codes.h:238
 #, fuzzy
 msgid "Unexpected reserved punctuation in S-expression"
 msgstr "条件式に構文エラー: 予期しないトークン `%s' です"
 
-#: src/err-codes.h:238
+#: src/err-codes.h:239
 msgid "Bad hexadecimal character in S-expression"
 msgstr ""
 
-#: src/err-codes.h:239
+#: src/err-codes.h:240
 msgid "Odd hexadecimal numbers in S-expression"
 msgstr ""
 
-#: src/err-codes.h:240
+#: src/err-codes.h:241
 #, fuzzy
 msgid "Bad octal character in S-expression"
 msgstr "表現にシンタックスエラー"
 
-#: src/err-codes.h:241
+#: src/err-codes.h:242
+msgid "Not possible with a card based key"
+msgstr ""
+
+#: src/err-codes.h:243
+#, fuzzy
+#| msgid "Invalid object"
+msgid "Invalid lock object"
+msgstr "無効なオブジェクト"
+
+#: src/err-codes.h:244
 msgid "General IPC error"
 msgstr "一般的なIPCエラーです"
 
-#: src/err-codes.h:242
+#: src/err-codes.h:245
 #, fuzzy
 msgid "IPC accept call failed"
 msgstr "dia_plugin_init() の呼び出しに失敗しました"
 
-#: src/err-codes.h:243
+#: src/err-codes.h:246
 msgid "IPC connect call failed"
 msgstr "IPCの接続コールに失敗しました"
 
-#: src/err-codes.h:244
+#: src/err-codes.h:247
 msgid "Invalid IPC response"
 msgstr "無効な IPC 応答"
 
-#: src/err-codes.h:245
+#: src/err-codes.h:248
 msgid "Invalid value passed to IPC"
 msgstr "無効な値がIPCに渡されました"
 
-#: src/err-codes.h:246
+#: src/err-codes.h:249
 msgid "Incomplete line passed to IPC"
 msgstr "不完全な行がIPCに渡されました"
 
-#: src/err-codes.h:247
+#: src/err-codes.h:250
 msgid "Line passed to IPC too long"
 msgstr "IPCに渡された行が長すぎます"
 
-#: src/err-codes.h:248
+#: src/err-codes.h:251
 msgid "Nested IPC commands"
 msgstr "IPCコマンドが入れ子になっています"
 
-#: src/err-codes.h:249
+#: src/err-codes.h:252
 #, fuzzy
 msgid "No data callback in IPC"
 msgstr "この属性には '%s' (%p) という属性、またはデータ (%p) はありません"
 
-#: src/err-codes.h:250
+#: src/err-codes.h:253
 msgid "No inquire callback in IPC"
 msgstr ""
 
-#: src/err-codes.h:251
+#: src/err-codes.h:254
 msgid "Not an IPC server"
 msgstr "IPC サーバではありません"
 
-#: src/err-codes.h:252
+#: src/err-codes.h:255
 msgid "Not an IPC client"
 msgstr "IPC クライアントではありません"
 
-#: src/err-codes.h:253
+#: src/err-codes.h:256
 msgid "Problem starting IPC server"
 msgstr "IPCサーバの開始時に問題が発生しました"
 
-#: src/err-codes.h:254
+#: src/err-codes.h:257
 msgid "IPC read error"
 msgstr "IPC 読み取りエラー"
 
-#: src/err-codes.h:255
+#: src/err-codes.h:258
 msgid "IPC write error"
 msgstr "IPC 書き込みエラー"
 
-#: src/err-codes.h:256
+#: src/err-codes.h:259
 msgid "Too much data for IPC layer"
 msgstr "IPC レイヤに対する多すぎるデータです"
 
-#: src/err-codes.h:257
+#: src/err-codes.h:260
 msgid "Unexpected IPC command"
 msgstr "予期しない IPC コマンドです"
 
-#: src/err-codes.h:258
+#: src/err-codes.h:261
 msgid "Unknown IPC command"
 msgstr "不明な IPC コマンドです"
 
-#: src/err-codes.h:259
+#: src/err-codes.h:262
 msgid "IPC syntax error"
 msgstr "IPC 構文エラーです"
 
-#: src/err-codes.h:260
+#: src/err-codes.h:263
 msgid "IPC call has been cancelled"
 msgstr "IPC 呼び出しがキャンセルされました"
 
-#: src/err-codes.h:261
+#: src/err-codes.h:264
 msgid "No input source for IPC"
 msgstr "IPC に対する入力ソースがありません"
 
-#: src/err-codes.h:262
+#: src/err-codes.h:265
 msgid "No output source for IPC"
 msgstr "IPC に対する出力ソースがありません"
 
-#: src/err-codes.h:263
+#: src/err-codes.h:266
 msgid "IPC parameter error"
 msgstr "IPC パラメータエラーです"
 
-#: src/err-codes.h:264
+#: src/err-codes.h:267
 msgid "Unknown IPC inquire"
 msgstr "不明な IPC 問い合わせです"
 
-#: src/err-codes.h:265
+#: src/err-codes.h:268
 msgid "User defined error code 1"
 msgstr "ユーザ定義エラーコード 1"
 
-#: src/err-codes.h:266
+#: src/err-codes.h:269
 msgid "User defined error code 2"
 msgstr "ユーザ定義エラーコード 2"
 
-#: src/err-codes.h:267
+#: src/err-codes.h:270
 msgid "User defined error code 3"
 msgstr "ユーザ定義エラーコード 3"
 
-#: src/err-codes.h:268
+#: src/err-codes.h:271
 msgid "User defined error code 4"
 msgstr "ユーザ定義エラーコード 4"
 
-#: src/err-codes.h:269
+#: src/err-codes.h:272
 msgid "User defined error code 5"
 msgstr "ユーザ定義エラーコード 5"
 
-#: src/err-codes.h:270
+#: src/err-codes.h:273
 msgid "User defined error code 6"
 msgstr "ユーザ定義エラーコード 6"
 
-#: src/err-codes.h:271
+#: src/err-codes.h:274
 msgid "User defined error code 7"
 msgstr "ユーザ定義エラーコード 7"
 
-#: src/err-codes.h:272
+#: src/err-codes.h:275
 msgid "User defined error code 8"
 msgstr "ユーザ定義エラーコード 8"
 
-#: src/err-codes.h:273
+#: src/err-codes.h:276
 msgid "User defined error code 9"
 msgstr "ユーザ定義エラーコード 9"
 
-#: src/err-codes.h:274
+#: src/err-codes.h:277
 msgid "User defined error code 10"
 msgstr "ユーザ定義エラーコード 10"
 
-#: src/err-codes.h:275
+#: src/err-codes.h:278
 msgid "User defined error code 11"
 msgstr "ユーザ定義エラーコード 11"
 
-#: src/err-codes.h:276
+#: src/err-codes.h:279
 msgid "User defined error code 12"
 msgstr "ユーザ定義エラーコード 12"
 
-#: src/err-codes.h:277
+#: src/err-codes.h:280
 msgid "User defined error code 13"
 msgstr "ユーザ定義エラーコード 13"
 
-#: src/err-codes.h:278
+#: src/err-codes.h:281
 msgid "User defined error code 14"
 msgstr "ユーザ定義エラーコード 14"
 
-#: src/err-codes.h:279
+#: src/err-codes.h:282
 msgid "User defined error code 15"
 msgstr "ユーザ定義エラーコード 15"
 
-#: src/err-codes.h:280
+#: src/err-codes.h:283
 msgid "User defined error code 16"
 msgstr "ユーザ定義エラーコード 16"
 
-#: src/err-codes.h:281
+#: src/err-codes.h:284
 msgid "System error w/o errno"
 msgstr "errno が無いシステムエラー"
 
-#: src/err-codes.h:282
+#: src/err-codes.h:285
 msgid "Unknown system error"
 msgstr "不明なシステムエラー"
 
-#: src/err-codes.h:283
+#: src/err-codes.h:286
 msgid "End of file"
 msgstr "ファイル終端 (EOF)"
 
-#: src/err-codes.h:284
+#: src/err-codes.h:287
 msgid "Unknown error code"
 msgstr "不明なエラーコード"
 
