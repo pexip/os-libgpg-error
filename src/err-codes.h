@@ -222,6 +222,7 @@ static const char msgstr[] =
   gettext_noop ("Conflict in the crypto context") "\0"
   gettext_noop ("Broken public key") "\0"
   gettext_noop ("Broken secret key") "\0"
+  gettext_noop ("Invalid MAC algorithm") "\0"
   gettext_noop ("Operation fully cancelled") "\0"
   gettext_noop ("Operation not yet finished") "\0"
   gettext_noop ("Buffer too short") "\0"
@@ -238,6 +239,8 @@ static const char msgstr[] =
   gettext_noop ("Bad hexadecimal character in S-expression") "\0"
   gettext_noop ("Odd hexadecimal numbers in S-expression") "\0"
   gettext_noop ("Bad octal character in S-expression") "\0"
+  gettext_noop ("Not possible with a card based key") "\0"
+  gettext_noop ("Invalid lock object") "\0"
   gettext_noop ("General IPC error") "\0"
   gettext_noop ("IPC accept call failed") "\0"
   gettext_noop ("IPC connect call failed") "\0"
@@ -483,76 +486,79 @@ static const int msgidx[] =
     3391,
     3409,
     3427,
-    3453,
-    3480,
-    3497,
-    3538,
-    3570,
-    3608,
-    3635,
-    3665,
-    3695,
-    3723,
-    3760,
-    3784,
-    3832,
-    3874,
-    3914,
-    3950,
-    3968,
-    3991,
-    4015,
-    4036,
-    4064,
-    4094,
-    4122,
-    4142,
-    4166,
-    4193,
-    4211,
-    4229,
-    4257,
-    4272,
+    3449,
+    3475,
+    3502,
+    3519,
+    3560,
+    3592,
+    3630,
+    3657,
+    3687,
+    3717,
+    3745,
+    3782,
+    3806,
+    3854,
+    3896,
+    3936,
+    3972,
+    4007,
+    4027,
+    4045,
+    4068,
+    4092,
+    4113,
+    4141,
+    4171,
+    4199,
+    4219,
+    4243,
+    4270,
     4288,
-    4316,
-    4339,
-    4359,
-    4376,
-    4404,
-    4428,
+    4306,
+    4334,
+    4349,
+    4365,
+    4393,
+    4416,
+    4436,
     4453,
-    4473,
-    4493,
-    4519,
-    4545,
-    4571,
-    4597,
-    4623,
-    4649,
-    4675,
-    4701,
-    4727,
-    4754,
-    4781,
-    4808,
-    4835,
-    4862,
-    4889,
-    4916,
+    4481,
+    4505,
+    4530,
+    4550,
+    4570,
+    4596,
+    4622,
+    4648,
+    4674,
+    4700,
+    4726,
+    4752,
+    4778,
+    4804,
+    4831,
+    4858,
+    4885,
+    4912,
     4939,
-    4960,
-    4972
+    4966,
+    4993,
+    5016,
+    5037,
+    5049
   };
 
 static GPG_ERR_INLINE int
 msgidxof (int code)
 {
   return (0 ? 0
-  : ((code >= 0) && (code <= 196)) ? (code - 0)
-  : ((code >= 198) && (code <= 213)) ? (code - 1)
-  : ((code >= 257) && (code <= 271)) ? (code - 44)
-  : ((code >= 273) && (code <= 281)) ? (code - 45)
-  : ((code >= 1024) && (code <= 1039)) ? (code - 787)
-  : ((code >= 16381) && (code <= 16383)) ? (code - 16128)
-  : 16384 - 16128);
+  : ((code >= 0) && (code <= 213)) ? (code - 0)
+  : ((code >= 253) && (code <= 254)) ? (code - 39)
+  : ((code >= 257) && (code <= 271)) ? (code - 41)
+  : ((code >= 273) && (code <= 281)) ? (code - 42)
+  : ((code >= 1024) && (code <= 1039)) ? (code - 784)
+  : ((code >= 16381) && (code <= 16383)) ? (code - 16125)
+  : 16384 - 16125);
 }

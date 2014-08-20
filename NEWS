@@ -1,3 +1,28 @@
+Noteworthy changes in version 1.13 (2014-04-15)
+-----------------------------------------------
+
+ * Added a portable mutex API.
+
+ * The AM_PATH_GPG_ERROR macro now defines GPG_ERROR_MT_CFLAGS and
+   GPG_ERROR_MT_LIBS autoconf output variables for use by programs
+   which need gpgrt based thread support.  gpg-error-config has a new
+   option --mt.
+
+ * Interface changes relative to the 1.12 release:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ GPG_ERR_KEY_ON_CARD          NEW.
+ GPG_ERR_MAC_ALGO             NEW.
+ GPG_ERR_INV_LOCK_OBJ         NEW.
+ gpgrt_lock_t                 NEW.
+ GPGRT_LOCK_INITIALIZER       NEW.
+ GPGRT_LOCK_DEFINE            NEW.
+ gpgrt_lock_init              NEW.
+ gpgrt_lock_lock              NEW.
+ gpgrt_lock_unlock            NEW.
+ gpgrt_lock_destroy           NEW.
+ gpgrt_yield                  NEW.
+
+
 Noteworthy changes in version 1.12 (2013-06-24)
 -----------------------------------------------
 
