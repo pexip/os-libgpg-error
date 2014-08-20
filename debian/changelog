@@ -1,6 +1,7 @@
 libgpg-error (1.13-3pexip1) pexip; urgency=low
 
   * New upstream release.
+  * Build-Depend on autopoint as our dh-autoreconf is too old.
 
  -- John-Mark Bell <jmb@pexip.com>  Wed, 20 Aug 2014 18:59:42 +0100
 
