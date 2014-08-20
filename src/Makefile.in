@@ -16,7 +16,7 @@
 @SET_MAKE@
 
 # Makefile.am for libgpg-error.
-# Copyright (C) 2003, 2004 g10 Code GmbH
+# Copyright (C) 2003, 2004, 2014 g10 Code GmbH
 #
 # This file is part of libgpg-error.
 #
@@ -31,8 +31,7 @@
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
-# License along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+# License along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 # We distribute the generated sources err-sources.h and err-codes.h,
 # because they are needed to build the po directory, and they don't
@@ -79,9 +78,13 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = gpg-error$(EXEEXT)
+@HAVE_W32_SYSTEM_FALSE@noinst_PROGRAMS = gen-posix-lock-obj$(EXEEXT)
+@HAVE_W32_SYSTEM_TRUE@noinst_PROGRAMS = gen-w32-lock-obj$(EXEEXT)
 @HAVE_W32_SYSTEM_FALSE@libgpg_error_la_DEPENDENCIES =  \
 @HAVE_W32_SYSTEM_FALSE@	$(am__DEPENDENCIES_1) \
+@HAVE_W32_SYSTEM_FALSE@	$(am__DEPENDENCIES_2) \
 @HAVE_W32_SYSTEM_FALSE@	$(am__DEPENDENCIES_2)
+@CROSS_COMPILING_FALSE@am__append_1 = ./lock-obj-pub.native.h
 subdir = src
 DIST_COMMON = README $(include_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/gpg-error-config.in \
@@ -91,13 +94,14 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/autobuild.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
 	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
 	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/lock.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/m4/threadlib.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = versioninfo.rc gpg-error-config
 CONFIG_CLEAN_VPATH_FILES =
@@ -134,40 +138,70 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 @HAVE_W32_SYSTEM_TRUE@am__DEPENDENCIES_1 = versioninfo.lo
 am__DEPENDENCIES_2 =
-am__libgpg_error_la_SOURCES_DIST = gpg-error.h gettext.h w32-gettext.c \
-	init.c init.h version.c strsource.c strerror.c code-to-errno.c \
+am__libgpg_error_la_SOURCES_DIST = gpg-error.h gettext.h posix-lock.c \
+	posix-lock-obj.h posix-thread.c w32-gettext.c w32-lock.c \
+	w32-lock-obj.h w32-thread.c init.c init.h version.c lock.h \
+	thread.h strsource.c strerror.c code-to-errno.c \
 	code-from-errno.c
-@HAVE_W32_SYSTEM_TRUE@am__objects_1 = libgpg_error_la-w32-gettext.lo
+@HAVE_W32_SYSTEM_FALSE@am__objects_1 = libgpg_error_la-posix-lock.lo \
+@HAVE_W32_SYSTEM_FALSE@	libgpg_error_la-posix-thread.lo
+@HAVE_W32_SYSTEM_TRUE@am__objects_1 = libgpg_error_la-w32-gettext.lo \
+@HAVE_W32_SYSTEM_TRUE@	libgpg_error_la-w32-lock.lo \
+@HAVE_W32_SYSTEM_TRUE@	libgpg_error_la-w32-thread.lo
 am_libgpg_error_la_OBJECTS = $(am__objects_1) libgpg_error_la-init.lo \
 	libgpg_error_la-version.lo libgpg_error_la-strsource.lo \
 	libgpg_error_la-strerror.lo libgpg_error_la-code-to-errno.lo \
 	libgpg_error_la-code-from-errno.lo
 libgpg_error_la_OBJECTS = $(am_libgpg_error_la_OBJECTS)
-libgpg_error_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libgpg_error_la_LDFLAGS) $(LDFLAGS) -o $@
-PROGRAMS = $(bin_PROGRAMS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+libgpg_error_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(AM_CFLAGS) $(CFLAGS) $(libgpg_error_la_LDFLAGS) $(LDFLAGS) \
+	-o $@
+PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
+gen_posix_lock_obj_SOURCES = gen-posix-lock-obj.c
+gen_posix_lock_obj_OBJECTS = gen-posix-lock-obj.$(OBJEXT)
+gen_posix_lock_obj_LDADD = $(LDADD)
+gen_w32_lock_obj_SOURCES = gen-w32-lock-obj.c
+gen_w32_lock_obj_OBJECTS = gen-w32-lock-obj.$(OBJEXT)
+gen_w32_lock_obj_LDADD = $(LDADD)
 am_gpg_error_OBJECTS = gpg_error-strsource-sym.$(OBJEXT) \
 	gpg_error-strerror-sym.$(OBJEXT) gpg_error-gpg-error.$(OBJEXT)
 gpg_error_OBJECTS = $(am_gpg_error_OBJECTS)
 gpg_error_DEPENDENCIES = ./libgpg-error.la
 SCRIPTS = $(bin_SCRIPTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC    " $@;
+AM_V_at = $(am__v_at_@AM_V@)
+am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+am__v_at_0 = @
 CCLD = $(CC)
-LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
-SOURCES = $(libgpg_error_la_SOURCES) $(gpg_error_SOURCES)
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_@AM_V@)
+am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
+am__v_GEN_0 = @echo "  GEN   " $@;
+SOURCES = $(libgpg_error_la_SOURCES) gen-posix-lock-obj.c \
+	gen-w32-lock-obj.c $(gpg_error_SOURCES)
 DIST_SOURCES = $(am__libgpg_error_la_SOURCES_DIST) \
-	$(gpg_error_SOURCES)
+	gen-posix-lock-obj.c gen-w32-lock-obj.c $(gpg_error_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -180,6 +214,7 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
 AS = @AS@
 AUTOCONF = @AUTOCONF@
@@ -214,6 +249,8 @@ GPG_ERROR_CONFIG_CFLAGS = @GPG_ERROR_CONFIG_CFLAGS@
 GPG_ERROR_CONFIG_HOST = @GPG_ERROR_CONFIG_HOST@
 GPG_ERROR_CONFIG_ISUBDIRAFTER = @GPG_ERROR_CONFIG_ISUBDIRAFTER@
 GPG_ERROR_CONFIG_LIBS = @GPG_ERROR_CONFIG_LIBS@
+GPG_ERROR_CONFIG_MT_CFLAGS = @GPG_ERROR_CONFIG_MT_CFLAGS@
+GPG_ERROR_CONFIG_MT_LIBS = @GPG_ERROR_CONFIG_MT_LIBS@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -229,14 +266,18 @@ LIBGPG_ERROR_LT_CURRENT = @LIBGPG_ERROR_LT_CURRENT@
 LIBGPG_ERROR_LT_REVISION = @LIBGPG_ERROR_LT_REVISION@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
+LIBMULTITHREAD = @LIBMULTITHREAD@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBTHREAD = @LIBTHREAD@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
+LTLIBMULTITHREAD = @LTLIBMULTITHREAD@
 LTLIBOBJS = @LTLIBOBJS@
+LTLIBTHREAD = @LTLIBTHREAD@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -327,6 +368,12 @@ top_srcdir = @top_srcdir@
 @HAVE_W32CE_SYSTEM_TRUE@gpg_extra_headers = gpg-extra/errno.h
 @HAVE_W32CE_SYSTEM_FALSE@extra_cppflags = 
 @HAVE_W32CE_SYSTEM_TRUE@extra_cppflags = -idirafter gpg-extra
+
+# Distributed lock object definitions for cross compilation.
+lock_obj_pub = \
+	syscfg/lock-obj-pub.mingw32.h \
+        syscfg/lock-obj-pub.arm-unknown-linux-androideabi.h
+
 lib_LTLIBRARIES = libgpg-error.la
 include_HEADERS = gpg-error.h
 bin_SCRIPTS = gpg-error-config
@@ -335,22 +382,23 @@ m4data_DATA = gpg-error.m4
 EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
 	mkerrnos.awk errnos.in README \
 	mkerrcodes.awk mkerrcodes1.awk mkerrcodes2.awk mkerrcodes.c \
-	mkheader.awk gpg-error.h.in mkw32errmap.c w32-add.h w32ce-add.h \
+	mkheader.c gpg-error.h.in mkw32errmap.c w32-add.h w32ce-add.h \
 	err-sources.h err-codes.h gpg-error-config.in gpg-error.m4 \
-	gpg-error.def.in versioninfo.rc.in
+	gpg-error.def.in versioninfo.rc.in \
+	$(lock_obj_pub)
 
 BUILT_SOURCES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h \
 	err-sources-sym.h err-codes-sym.h errnos-sym.h gpg-error.h \
-	gpg-error.def extra-h.in mkw32errmap.map.c
+	gpg-error.def mkw32errmap.map.c
 
 tmp_files = _mkerrcodes.h _gpg-error.def.h mkw32errmap.tab.h mkw32errmap.map.c
 CLEANFILES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h \
 	gpg-error.h mkerrcodes mkerrcodes.h gpg-error.def mkw32errmap.tab.h \
 	mkw32errmap.map.c err-sources-sym.h err-codes-sym.h errnos-sym.h \
-	gpg-extra/errno.h extra-h.in $(tmp_files)
+	gpg-extra/errno.h mkheader $(tmp_files) lock-obj-pub.native.h
 
-@HAVE_W32_SYSTEM_FALSE@arch_sources = 
-@HAVE_W32_SYSTEM_TRUE@arch_sources = w32-gettext.c
+@HAVE_W32_SYSTEM_FALSE@arch_sources = posix-lock.c posix-lock-obj.h posix-thread.c
+@HAVE_W32_SYSTEM_TRUE@arch_sources = w32-gettext.c w32-lock.c w32-lock-obj.h w32-thread.c
 @HAVE_W32_SYSTEM_TRUE@RCCOMPILE = $(RC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 @HAVE_W32_SYSTEM_TRUE@            -DLOCALEDIR=\"$(localedir)\" $(AM_CPPFLAGS) $(CPPFLAGS)
 
@@ -370,7 +418,7 @@ libgpg_error_la_LDFLAGS = -version-info \
   $(no_undefined) $(export_symbols)
 
 libgpg_error_la_SOURCES = gpg-error.h gettext.h $(arch_sources) \
-	init.c init.h version.c \
+	init.c init.h version.c lock.h thread.h \
 	strsource.c strerror.c code-to-errno.c code-from-errno.c
 
 
@@ -378,10 +426,18 @@ libgpg_error_la_SOURCES = gpg-error.h gettext.h $(arch_sources) \
 # without the extra_cppflags because they may include am -idirafter
 # which is not supported by the RC compiler.
 libgpg_error_la_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" $(extra_cppflags)
-libgpg_error_la_LIBADD = $(gpg_error_res) $(intllibs)
+libgpg_error_la_LIBADD = $(gpg_error_res) $(intllibs) $(LIBTHREAD)
 gpg_error_SOURCES = strsource-sym.c strerror-sym.c gpg-error.c
 gpg_error_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" $(extra_cppflags)
 gpg_error_LDADD = ./libgpg-error.la @LTLIBINTL@
+parts_of_gpg_error_h = gpg-error.h.in err-sources.h.in err-codes.h.in \
+	errnos.in w32-add.h w32ce-add.h $(lock_obj_pub) \
+	$(am__append_1)
+@CROSS_COMPILING_FALSE@pre_mkheader_cmds = :
+
+# If we are cross-compiling we better make sure that no stale native
+# lock include file will be found by mkheader.
+@CROSS_COMPILING_TRUE@pre_mkheader_cmds = -rm lock-obj-pub.native.h 2>/dev/null
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -454,7 +510,7 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libgpg-error.la: $(libgpg_error_la_OBJECTS) $(libgpg_error_la_DEPENDENCIES) $(EXTRA_libgpg_error_la_DEPENDENCIES) 
-	$(libgpg_error_la_LINK) -rpath $(libdir) $(libgpg_error_la_OBJECTS) $(libgpg_error_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libgpg_error_la_LINK) -rpath $(libdir) $(libgpg_error_la_OBJECTS) $(libgpg_error_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -501,9 +557,24 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
+
+clean-noinstPROGRAMS:
+	@list='$(noinst_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
+gen-posix-lock-obj$(EXEEXT): $(gen_posix_lock_obj_OBJECTS) $(gen_posix_lock_obj_DEPENDENCIES) $(EXTRA_gen_posix_lock_obj_DEPENDENCIES) 
+	@rm -f gen-posix-lock-obj$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(gen_posix_lock_obj_OBJECTS) $(gen_posix_lock_obj_LDADD) $(LIBS)
+gen-w32-lock-obj$(EXEEXT): $(gen_w32_lock_obj_OBJECTS) $(gen_w32_lock_obj_DEPENDENCIES) $(EXTRA_gen_w32_lock_obj_DEPENDENCIES) 
+	@rm -f gen-w32-lock-obj$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(gen_w32_lock_obj_OBJECTS) $(gen_w32_lock_obj_LDADD) $(LIBS)
 gpg-error$(EXEEXT): $(gpg_error_OBJECTS) $(gpg_error_DEPENDENCIES) $(EXTRA_gpg_error_DEPENDENCIES) 
 	@rm -f gpg-error$(EXEEXT)
-	$(LINK) $(gpg_error_OBJECTS) $(gpg_error_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(gpg_error_OBJECTS) $(gpg_error_LDADD) $(LIBS)
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || list=; \
@@ -546,128 +617,162 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gen-posix-lock-obj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gen-w32-lock-obj.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gpg_error-gpg-error.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gpg_error-strerror-sym.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gpg_error-strsource-sym.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-code-from-errno.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-code-to-errno.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-init.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-posix-lock.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-posix-thread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-strerror.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-strsource.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-version.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-w32-gettext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-w32-lock.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libgpg_error_la-w32-thread.Plo@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(COMPILE) -c $<
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 .c.lo:
-@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+libgpg_error_la-posix-lock.lo: posix-lock.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-posix-lock.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-posix-lock.Tpo -c -o libgpg_error_la-posix-lock.lo `test -f 'posix-lock.c' || echo '$(srcdir)/'`posix-lock.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-posix-lock.Tpo $(DEPDIR)/libgpg_error_la-posix-lock.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='posix-lock.c' object='libgpg_error_la-posix-lock.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-posix-lock.lo `test -f 'posix-lock.c' || echo '$(srcdir)/'`posix-lock.c
+
+libgpg_error_la-posix-thread.lo: posix-thread.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-posix-thread.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-posix-thread.Tpo -c -o libgpg_error_la-posix-thread.lo `test -f 'posix-thread.c' || echo '$(srcdir)/'`posix-thread.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-posix-thread.Tpo $(DEPDIR)/libgpg_error_la-posix-thread.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='posix-thread.c' object='libgpg_error_la-posix-thread.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-posix-thread.lo `test -f 'posix-thread.c' || echo '$(srcdir)/'`posix-thread.c
 
 libgpg_error_la-w32-gettext.lo: w32-gettext.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-w32-gettext.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-w32-gettext.Tpo -c -o libgpg_error_la-w32-gettext.lo `test -f 'w32-gettext.c' || echo '$(srcdir)/'`w32-gettext.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libgpg_error_la-w32-gettext.Tpo $(DEPDIR)/libgpg_error_la-w32-gettext.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='w32-gettext.c' object='libgpg_error_la-w32-gettext.lo' libtool=yes @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-w32-gettext.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-w32-gettext.Tpo -c -o libgpg_error_la-w32-gettext.lo `test -f 'w32-gettext.c' || echo '$(srcdir)/'`w32-gettext.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-w32-gettext.Tpo $(DEPDIR)/libgpg_error_la-w32-gettext.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='w32-gettext.c' object='libgpg_error_la-w32-gettext.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-w32-gettext.lo `test -f 'w32-gettext.c' || echo '$(srcdir)/'`w32-gettext.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-w32-gettext.lo `test -f 'w32-gettext.c' || echo '$(srcdir)/'`w32-gettext.c
+
+libgpg_error_la-w32-lock.lo: w32-lock.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-w32-lock.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-w32-lock.Tpo -c -o libgpg_error_la-w32-lock.lo `test -f 'w32-lock.c' || echo '$(srcdir)/'`w32-lock.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-w32-lock.Tpo $(DEPDIR)/libgpg_error_la-w32-lock.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='w32-lock.c' object='libgpg_error_la-w32-lock.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-w32-lock.lo `test -f 'w32-lock.c' || echo '$(srcdir)/'`w32-lock.c
+
+libgpg_error_la-w32-thread.lo: w32-thread.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-w32-thread.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-w32-thread.Tpo -c -o libgpg_error_la-w32-thread.lo `test -f 'w32-thread.c' || echo '$(srcdir)/'`w32-thread.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-w32-thread.Tpo $(DEPDIR)/libgpg_error_la-w32-thread.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='w32-thread.c' object='libgpg_error_la-w32-thread.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-w32-thread.lo `test -f 'w32-thread.c' || echo '$(srcdir)/'`w32-thread.c
 
 libgpg_error_la-init.lo: init.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-init.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-init.Tpo -c -o libgpg_error_la-init.lo `test -f 'init.c' || echo '$(srcdir)/'`init.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libgpg_error_la-init.Tpo $(DEPDIR)/libgpg_error_la-init.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='init.c' object='libgpg_error_la-init.lo' libtool=yes @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-init.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-init.Tpo -c -o libgpg_error_la-init.lo `test -f 'init.c' || echo '$(srcdir)/'`init.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-init.Tpo $(DEPDIR)/libgpg_error_la-init.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='init.c' object='libgpg_error_la-init.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-init.lo `test -f 'init.c' || echo '$(srcdir)/'`init.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-init.lo `test -f 'init.c' || echo '$(srcdir)/'`init.c
 
 libgpg_error_la-version.lo: version.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-version.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-version.Tpo -c -o libgpg_error_la-version.lo `test -f 'version.c' || echo '$(srcdir)/'`version.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libgpg_error_la-version.Tpo $(DEPDIR)/libgpg_error_la-version.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='version.c' object='libgpg_error_la-version.lo' libtool=yes @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-version.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-version.Tpo -c -o libgpg_error_la-version.lo `test -f 'version.c' || echo '$(srcdir)/'`version.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-version.Tpo $(DEPDIR)/libgpg_error_la-version.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='version.c' object='libgpg_error_la-version.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-version.lo `test -f 'version.c' || echo '$(srcdir)/'`version.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-version.lo `test -f 'version.c' || echo '$(srcdir)/'`version.c
 
 libgpg_error_la-strsource.lo: strsource.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-strsource.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-strsource.Tpo -c -o libgpg_error_la-strsource.lo `test -f 'strsource.c' || echo '$(srcdir)/'`strsource.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libgpg_error_la-strsource.Tpo $(DEPDIR)/libgpg_error_la-strsource.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strsource.c' object='libgpg_error_la-strsource.lo' libtool=yes @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-strsource.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-strsource.Tpo -c -o libgpg_error_la-strsource.lo `test -f 'strsource.c' || echo '$(srcdir)/'`strsource.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-strsource.Tpo $(DEPDIR)/libgpg_error_la-strsource.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='strsource.c' object='libgpg_error_la-strsource.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-strsource.lo `test -f 'strsource.c' || echo '$(srcdir)/'`strsource.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-strsource.lo `test -f 'strsource.c' || echo '$(srcdir)/'`strsource.c
 
 libgpg_error_la-strerror.lo: strerror.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-strerror.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-strerror.Tpo -c -o libgpg_error_la-strerror.lo `test -f 'strerror.c' || echo '$(srcdir)/'`strerror.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libgpg_error_la-strerror.Tpo $(DEPDIR)/libgpg_error_la-strerror.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strerror.c' object='libgpg_error_la-strerror.lo' libtool=yes @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-strerror.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-strerror.Tpo -c -o libgpg_error_la-strerror.lo `test -f 'strerror.c' || echo '$(srcdir)/'`strerror.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-strerror.Tpo $(DEPDIR)/libgpg_error_la-strerror.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='strerror.c' object='libgpg_error_la-strerror.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-strerror.lo `test -f 'strerror.c' || echo '$(srcdir)/'`strerror.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-strerror.lo `test -f 'strerror.c' || echo '$(srcdir)/'`strerror.c
 
 libgpg_error_la-code-to-errno.lo: code-to-errno.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-code-to-errno.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-code-to-errno.Tpo -c -o libgpg_error_la-code-to-errno.lo `test -f 'code-to-errno.c' || echo '$(srcdir)/'`code-to-errno.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libgpg_error_la-code-to-errno.Tpo $(DEPDIR)/libgpg_error_la-code-to-errno.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='code-to-errno.c' object='libgpg_error_la-code-to-errno.lo' libtool=yes @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-code-to-errno.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-code-to-errno.Tpo -c -o libgpg_error_la-code-to-errno.lo `test -f 'code-to-errno.c' || echo '$(srcdir)/'`code-to-errno.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-code-to-errno.Tpo $(DEPDIR)/libgpg_error_la-code-to-errno.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='code-to-errno.c' object='libgpg_error_la-code-to-errno.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-code-to-errno.lo `test -f 'code-to-errno.c' || echo '$(srcdir)/'`code-to-errno.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-code-to-errno.lo `test -f 'code-to-errno.c' || echo '$(srcdir)/'`code-to-errno.c
 
 libgpg_error_la-code-from-errno.lo: code-from-errno.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-code-from-errno.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-code-from-errno.Tpo -c -o libgpg_error_la-code-from-errno.lo `test -f 'code-from-errno.c' || echo '$(srcdir)/'`code-from-errno.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libgpg_error_la-code-from-errno.Tpo $(DEPDIR)/libgpg_error_la-code-from-errno.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='code-from-errno.c' object='libgpg_error_la-code-from-errno.lo' libtool=yes @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libgpg_error_la-code-from-errno.lo -MD -MP -MF $(DEPDIR)/libgpg_error_la-code-from-errno.Tpo -c -o libgpg_error_la-code-from-errno.lo `test -f 'code-from-errno.c' || echo '$(srcdir)/'`code-from-errno.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libgpg_error_la-code-from-errno.Tpo $(DEPDIR)/libgpg_error_la-code-from-errno.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='code-from-errno.c' object='libgpg_error_la-code-from-errno.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-code-from-errno.lo `test -f 'code-from-errno.c' || echo '$(srcdir)/'`code-from-errno.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libgpg_error_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libgpg_error_la-code-from-errno.lo `test -f 'code-from-errno.c' || echo '$(srcdir)/'`code-from-errno.c
 
 gpg_error-strsource-sym.o: strsource-sym.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-strsource-sym.o -MD -MP -MF $(DEPDIR)/gpg_error-strsource-sym.Tpo -c -o gpg_error-strsource-sym.o `test -f 'strsource-sym.c' || echo '$(srcdir)/'`strsource-sym.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/gpg_error-strsource-sym.Tpo $(DEPDIR)/gpg_error-strsource-sym.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strsource-sym.c' object='gpg_error-strsource-sym.o' libtool=no @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-strsource-sym.o -MD -MP -MF $(DEPDIR)/gpg_error-strsource-sym.Tpo -c -o gpg_error-strsource-sym.o `test -f 'strsource-sym.c' || echo '$(srcdir)/'`strsource-sym.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gpg_error-strsource-sym.Tpo $(DEPDIR)/gpg_error-strsource-sym.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='strsource-sym.c' object='gpg_error-strsource-sym.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-strsource-sym.o `test -f 'strsource-sym.c' || echo '$(srcdir)/'`strsource-sym.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-strsource-sym.o `test -f 'strsource-sym.c' || echo '$(srcdir)/'`strsource-sym.c
 
 gpg_error-strsource-sym.obj: strsource-sym.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-strsource-sym.obj -MD -MP -MF $(DEPDIR)/gpg_error-strsource-sym.Tpo -c -o gpg_error-strsource-sym.obj `if test -f 'strsource-sym.c'; then $(CYGPATH_W) 'strsource-sym.c'; else $(CYGPATH_W) '$(srcdir)/strsource-sym.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/gpg_error-strsource-sym.Tpo $(DEPDIR)/gpg_error-strsource-sym.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strsource-sym.c' object='gpg_error-strsource-sym.obj' libtool=no @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-strsource-sym.obj -MD -MP -MF $(DEPDIR)/gpg_error-strsource-sym.Tpo -c -o gpg_error-strsource-sym.obj `if test -f 'strsource-sym.c'; then $(CYGPATH_W) 'strsource-sym.c'; else $(CYGPATH_W) '$(srcdir)/strsource-sym.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gpg_error-strsource-sym.Tpo $(DEPDIR)/gpg_error-strsource-sym.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='strsource-sym.c' object='gpg_error-strsource-sym.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-strsource-sym.obj `if test -f 'strsource-sym.c'; then $(CYGPATH_W) 'strsource-sym.c'; else $(CYGPATH_W) '$(srcdir)/strsource-sym.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-strsource-sym.obj `if test -f 'strsource-sym.c'; then $(CYGPATH_W) 'strsource-sym.c'; else $(CYGPATH_W) '$(srcdir)/strsource-sym.c'; fi`
 
 gpg_error-strerror-sym.o: strerror-sym.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-strerror-sym.o -MD -MP -MF $(DEPDIR)/gpg_error-strerror-sym.Tpo -c -o gpg_error-strerror-sym.o `test -f 'strerror-sym.c' || echo '$(srcdir)/'`strerror-sym.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/gpg_error-strerror-sym.Tpo $(DEPDIR)/gpg_error-strerror-sym.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strerror-sym.c' object='gpg_error-strerror-sym.o' libtool=no @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-strerror-sym.o -MD -MP -MF $(DEPDIR)/gpg_error-strerror-sym.Tpo -c -o gpg_error-strerror-sym.o `test -f 'strerror-sym.c' || echo '$(srcdir)/'`strerror-sym.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gpg_error-strerror-sym.Tpo $(DEPDIR)/gpg_error-strerror-sym.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='strerror-sym.c' object='gpg_error-strerror-sym.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-strerror-sym.o `test -f 'strerror-sym.c' || echo '$(srcdir)/'`strerror-sym.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-strerror-sym.o `test -f 'strerror-sym.c' || echo '$(srcdir)/'`strerror-sym.c
 
 gpg_error-strerror-sym.obj: strerror-sym.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-strerror-sym.obj -MD -MP -MF $(DEPDIR)/gpg_error-strerror-sym.Tpo -c -o gpg_error-strerror-sym.obj `if test -f 'strerror-sym.c'; then $(CYGPATH_W) 'strerror-sym.c'; else $(CYGPATH_W) '$(srcdir)/strerror-sym.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/gpg_error-strerror-sym.Tpo $(DEPDIR)/gpg_error-strerror-sym.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strerror-sym.c' object='gpg_error-strerror-sym.obj' libtool=no @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-strerror-sym.obj -MD -MP -MF $(DEPDIR)/gpg_error-strerror-sym.Tpo -c -o gpg_error-strerror-sym.obj `if test -f 'strerror-sym.c'; then $(CYGPATH_W) 'strerror-sym.c'; else $(CYGPATH_W) '$(srcdir)/strerror-sym.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gpg_error-strerror-sym.Tpo $(DEPDIR)/gpg_error-strerror-sym.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='strerror-sym.c' object='gpg_error-strerror-sym.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-strerror-sym.obj `if test -f 'strerror-sym.c'; then $(CYGPATH_W) 'strerror-sym.c'; else $(CYGPATH_W) '$(srcdir)/strerror-sym.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-strerror-sym.obj `if test -f 'strerror-sym.c'; then $(CYGPATH_W) 'strerror-sym.c'; else $(CYGPATH_W) '$(srcdir)/strerror-sym.c'; fi`
 
 gpg_error-gpg-error.o: gpg-error.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-gpg-error.o -MD -MP -MF $(DEPDIR)/gpg_error-gpg-error.Tpo -c -o gpg_error-gpg-error.o `test -f 'gpg-error.c' || echo '$(srcdir)/'`gpg-error.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/gpg_error-gpg-error.Tpo $(DEPDIR)/gpg_error-gpg-error.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gpg-error.c' object='gpg_error-gpg-error.o' libtool=no @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-gpg-error.o -MD -MP -MF $(DEPDIR)/gpg_error-gpg-error.Tpo -c -o gpg_error-gpg-error.o `test -f 'gpg-error.c' || echo '$(srcdir)/'`gpg-error.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gpg_error-gpg-error.Tpo $(DEPDIR)/gpg_error-gpg-error.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gpg-error.c' object='gpg_error-gpg-error.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-gpg-error.o `test -f 'gpg-error.c' || echo '$(srcdir)/'`gpg-error.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-gpg-error.o `test -f 'gpg-error.c' || echo '$(srcdir)/'`gpg-error.c
 
 gpg_error-gpg-error.obj: gpg-error.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-gpg-error.obj -MD -MP -MF $(DEPDIR)/gpg_error-gpg-error.Tpo -c -o gpg_error-gpg-error.obj `if test -f 'gpg-error.c'; then $(CYGPATH_W) 'gpg-error.c'; else $(CYGPATH_W) '$(srcdir)/gpg-error.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/gpg_error-gpg-error.Tpo $(DEPDIR)/gpg_error-gpg-error.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gpg-error.c' object='gpg_error-gpg-error.obj' libtool=no @AMDEPBACKSLASH@
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT gpg_error-gpg-error.obj -MD -MP -MF $(DEPDIR)/gpg_error-gpg-error.Tpo -c -o gpg_error-gpg-error.obj `if test -f 'gpg-error.c'; then $(CYGPATH_W) 'gpg-error.c'; else $(CYGPATH_W) '$(srcdir)/gpg-error.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/gpg_error-gpg-error.Tpo $(DEPDIR)/gpg_error-gpg-error.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gpg-error.c' object='gpg_error-gpg-error.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-gpg-error.obj `if test -f 'gpg-error.c'; then $(CYGPATH_W) 'gpg-error.c'; else $(CYGPATH_W) '$(srcdir)/gpg-error.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(gpg_error_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o gpg_error-gpg-error.obj `if test -f 'gpg-error.c'; then $(CYGPATH_W) 'gpg-error.c'; else $(CYGPATH_W) '$(srcdir)/gpg-error.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -846,7 +951,7 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
-	clean-libtool mostlyclean-am
+	clean-libtool clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -921,13 +1026,13 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 .MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
-	clean-generic clean-libLTLIBRARIES clean-libtool ctags \
-	distclean distclean-compile distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-binPROGRAMS \
-	install-binSCRIPTS install-data install-data-am \
-	install-data-local install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am \
+	clean-generic clean-libLTLIBRARIES clean-libtool \
+	clean-noinstPROGRAMS ctags distclean distclean-compile \
+	distclean-generic distclean-libtool distclean-tags distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binPROGRAMS install-binSCRIPTS install-data \
+	install-data-am install-data-local install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
 	install-includeHEADERS install-info install-info-am \
 	install-libLTLIBRARIES install-m4dataDATA install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
@@ -1021,28 +1126,18 @@ errnos-sym.h: Makefile mkstrtable.awk errnos.in
 		-v prefix=GPG_ERR_ -v namespace=errnos_ \
 		$(srcdir)/errnos.in >$@
 
-# We depend on versioninfo.rc because that is build by config.status
-# and thus has up-to-date version numbers.
-extra-h.in: Makefile w32-add.h w32ce-add.h versioninfo.rc
-	-rm extra-h.in
-	echo "/* The version string of this header. */" >>extra-h.in
-	echo "#define GPG_ERROR_VERSION \"$(PACKAGE_VERSION)\"" >>extra-h.in
-	echo >>extra-h.in
-	echo "/* The version number of this header. */" >>extra-h.in
-	echo "#define GPG_ERROR_VERSION_NUMBER $(VERSION_NUMBER)" >>extra-h.in
-	echo >>extra-h.in
-@HAVE_W32_SYSTEM_TRUE@	cat $(srcdir)/w32-add.h >>extra-h.in
-@HAVE_W32CE_SYSTEM_TRUE@	cat $(srcdir)/w32ce-add.h >>extra-h.in
-	echo EOF >>extra-h.in
+mkheader: mkheader.c Makefile
+	$(CC_FOR_BUILD) -g -O0 -I. -I$(srcdir) -o $@ $(srcdir)/mkheader.c
 
-gpg-error.h: Makefile mkheader.awk err-sources.h.in err-codes.h.in \
-	    	 errnos.in extra-h.in gpg-error.h.in
-	$(AWK) -f $(srcdir)/mkheader.awk \
-		$(srcdir)/err-sources.h.in \
-		$(srcdir)/err-codes.h.in \
-		$(srcdir)/errnos.in \
-		extra-h.in \
-		$(srcdir)/gpg-error.h.in > $@
+@CROSS_COMPILING_FALSE@lock-obj-pub.native.h: Makefile gen-posix-lock-obj posix-lock-obj.h
+@CROSS_COMPILING_FALSE@	./gen-posix-lock-obj >$@
+
+# We also depend on versioninfo.rc because that is build by
+# config.status and thus has up-to-date version numbers.
+gpg-error.h: Makefile mkheader $(parts_of_gpg_error_h) versioninfo.rc
+	$(pre_mkheader_cmds)
+	./mkheader $(host_os) $(host_triplet)  $(srcdir)/gpg-error.h.in \
+                   $(PACKAGE_VERSION) $(VERSION_NUMBER) >$@
 
 install-data-local:
 @HAVE_W32CE_SYSTEM_TRUE@	-$(MKDIR_P) "$(DESTDIR)$(includedir)/gpg-extra"

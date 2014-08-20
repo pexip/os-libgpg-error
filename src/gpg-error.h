@@ -1,7 +1,5 @@
-/* Output of mkheader.awk.  DO NOT EDIT.  -*- buffer-read-only: t -*- */
-
-/* gpg-error.h - Public interface to libgpg-error.
-   Copyright (C) 2003, 2004, 2010, 2013 g10 Code GmbH
+/* gpg-error.h - Public interface to libgpg-error.               -*- c -*-
+   Copyright (C) 2003, 2004, 2010, 2013, 2014 g10 Code GmbH
 
    This file is part of libgpg-error.
 
@@ -17,6 +15,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+   Do not edit.  Generated from gpg-error.h.in for x86_64-unknown-linux-gnu.
  */
 
 
@@ -66,7 +66,10 @@ extern "C" {
 
    GPG_ERR_ENABLE_GETTEXT_MACROS: Define to provide macros to map the
    internal gettext API to standard names.  This has only an effect on
-   Windows platforms.  */
+   Windows platforms.
+
+   In addition to the error codes, Libgpg-error also provides a set of
+   functions used by most GnuPG components.  */
 
 
 /* The error source type gpg_err_source_t.
@@ -309,6 +312,7 @@ typedef enum
     GPG_ERR_CRYPT_CTX_CONFLICT = 194,
     GPG_ERR_BROKEN_PUBKEY = 195,
     GPG_ERR_BROKEN_SECKEY = 196,
+    GPG_ERR_MAC_ALGO = 197,
     GPG_ERR_FULLY_CANCELED = 198,
     GPG_ERR_UNFINISHED = 199,
     GPG_ERR_BUFFER_TOO_SHORT = 200,
@@ -325,6 +329,8 @@ typedef enum
     GPG_ERR_SEXP_BAD_HEX_CHAR = 211,
     GPG_ERR_SEXP_ODD_HEX_NUMBERS = 212,
     GPG_ERR_SEXP_BAD_OCT_CHAR = 213,
+    GPG_ERR_KEY_ON_CARD = 253,
+    GPG_ERR_INV_LOCK_OBJ = 254,
     GPG_ERR_ASS_GENERAL = 257,
     GPG_ERR_ASS_ACCEPT_FAILED = 258,
     GPG_ERR_ASS_CONNECT_FAILED = 259,
@@ -666,10 +672,10 @@ void gpg_err_set_errno (int err);
 const char *gpg_error_check_version (const char *req_version);
 
 /* The version string of this header. */
-#define GPG_ERROR_VERSION "1.12"
+#define GPG_ERROR_VERSION "1.13"
 
 /* The version number of this header. */
-#define GPG_ERROR_VERSION_NUMBER 0x010c00
+#define GPG_ERROR_VERSION_NUMBER 0x010d00
 
 
 /* Self-documenting convenience functions.  */
@@ -693,9 +699,56 @@ gpg_error_from_syserror (void)
   return gpg_error (gpg_err_code_from_syserror ());
 }
 
+
+
+/* Lock functions.  */
+
+
+typedef struct
+{
+  long _vers;
+  union {
+    volatile char _priv[40];
+    long _x_align;
+    long *_xp_align;
+  } u;
+} gpgrt_lock_t;
+
+#define GPGRT_LOCK_INITIALIZER {1,{{0,0,0,0,0,0,0,0, \
+                                    0,0,0,0,0,0,0,0, \
+                                    0,0,0,0,0,0,0,0, \
+                                    0,0,0,0,0,0,0,0, \
+                                    0,0,0,0,0,0,0,0}}}
+
+#define GPGRT_LOCK_DEFINE(name) \
+  static gpgrt_lock_t name  = GPGRT_LOCK_INITIALIZER
+
+/* NB: If GPGRT_LOCK_DEFINE is not used, zero out the lock variable
+   before passing it to gpgrt_lock_init.  */
+gpg_err_code_t gpgrt_lock_init (gpgrt_lock_t *lockhd);
+gpg_err_code_t gpgrt_lock_lock (gpgrt_lock_t *lockhd);
+gpg_err_code_t gpgrt_lock_unlock (gpgrt_lock_t *lockhd);
+gpg_err_code_t gpgrt_lock_destroy (gpgrt_lock_t *lockhd);
+
+
+
+/* Thread functions.  */
+
+gpg_err_code_t gpgrt_yield (void);
+
+
+
+
+/* Estream */
+
+
+
 #ifdef __cplusplus
 }
 #endif
-
-
 #endif	/* GPG_ERROR_H */
+/*
+Local Variables:
+buffer-read-only: t
+End:
+*/

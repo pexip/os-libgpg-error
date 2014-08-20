@@ -1,3 +1,64 @@
+libgpg-error (1.13-3pexip1) pexip; urgency=low
+
+  * New upstream release.
+
+ -- John-Mark Bell <jmb@pexip.com>  Wed, 20 Aug 2014 18:59:42 +0100
+
+libgpg-error (1.13-3) unstable; urgency=medium
+
+  * Avoid dumping the native lock-obj header when cross-building, since it
+    will not exist.  I think this resolves the FTCBFS issue.  Thanks to
+    Helmut Grohne for all the useful guidance! (Closes: #753047)
+  * update da.po. Thanks, Joe Hansen! (Closes: #754128)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Thu, 07 Aug 2014 21:32:09 -0400
+
+libgpg-error (1.13-2) unstable; urgency=medium
+
+  * adopt upstream's variant of the hppa tuning.
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Wed, 06 Aug 2014 00:22:25 -0400
+
+libgpg-error (1.13-1) unstable; urgency=medium
+
+  * Adopt by pkg-gnupg team, after conferring with previous maintainer.  Thanks,
+    Jose Carlos Garcia Sogo!
+  * tweak hppa lock-obj struct. (Closes: #757060) Thanks, John David Anglin!
+  * bump standards-version to 3.9.5 (no changes needed)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 05 Aug 2014 09:41:50 -0400
+
+libgpg-error (1.13-0.4) unstable; urgency=medium
+
+  * NMU
+  * include arch-specific lock-obj code as accepted by upstream (another
+    step toward dealing with #753047)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 04 Aug 2014 17:00:45 -0400
+
+libgpg-error (1.13-0.3) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Use dh-autoreconf instead of autotools-dev. Closes: #749522.
+ 
+ -- Matthias Klose <doko@debian.org>  Mon, 04 Aug 2014 11:12:08 +0200
+
+libgpg-error (1.13-0.2) unstable; urgency=medium
+
+  * NMU
+  * print arch-specific lock-obj code after successful build (as a step
+    toward dealing with #753047)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Sun, 20 Jul 2014 23:46:49 -0400
+
+libgpg-error (1.13-0.1) unstable; urgency=low
+
+  * NMU
+  * New upstream release (Closes: #752564)
+  * verify upstream signatures (Closes: #752580)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 24 Jun 2014 17:36:15 -0400
+
 libgpg-error (1.12-0.2pexip1) pexip; urgency=low
 
   * Prepare Pexip packaging
