@@ -1,3 +1,112 @@
+libgpg-error (1.26-2) unstable; urgency=medium
+
+  * bump symbols version for gpgrt_yield to 1.25
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Wed, 18 Jan 2017 11:27:10 -0500
+
+libgpg-error (1.26-1) unstable; urgency=medium
+
+  * new upstream release.
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Sat, 24 Dec 2016 16:09:26 -0500
+
+libgpg-error (1.25-2) unstable; urgency=medium
+
+  * fix misspellings in error descriptions.
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 05 Dec 2016 16:41:25 -0500
+
+libgpg-error (1.25-1) unstable; urgency=medium
+
+  * new upstream version
+  * update debian/watch
+  * remove unused lintian override
+  * refresh patches
+  * update symbols
+  * add all hardening flags
+  * bump to debhelper 10
+  * wrap-and-sort -ast
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Wed, 16 Nov 2016 09:07:14 +0900
+
+libgpg-error (1.24-2) unstable; urgency=medium
+
+  * Drop smurf from uploaders (Closes: #843361)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Thu, 10 Nov 2016 08:30:48 -0800
+
+libgpg-error (1.24-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 15 Jul 2016 01:45:02 +0200
+
+libgpg-error (1.23-1) unstable; urgency=medium
+
+  * new upstream release
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Thu, 16 Jun 2016 19:55:02 -0400
+
+libgpg-error (1.22-2) unstable; urgency=medium
+
+  * added powerpcspe and tilegx configs (Closes: #823630, #823631)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 10 May 2016 11:46:17 -0400
+
+libgpg-error (1.22-1) unstable; urgency=medium
+
+  * new upstream release (Closes: #822343)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 25 Apr 2016 17:18:31 -0400
+
+libgpg-error (1.21-3) unstable; urgency=medium
+
+  * add cross-compiling headers for several other architectures (Closes:
+    #816240, #812832)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 22 Apr 2016 00:51:54 -0400
+
+libgpg-error (1.21-2) unstable; urgency=medium
+
+  * build out-of-tree for cleanliness
+  * added libgpg-error-mingw-w64-dev package, in preparation for
+    cross-building win32-loader component gpgv.exe
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 08 Feb 2016 22:50:50 -0500
+
+libgpg-error (1.21-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 15 Dec 2015 10:31:10 -0500
+
+libgpg-error (1.20-1) unstable; urgency=medium
+
+  * New upstream release
+  * use new upstream default of no embedding build timestamp
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 08 Sep 2015 01:23:12 -0400
+
+libgpg-error (1.19-2) unstable; urgency=medium
+
+  * upload to unstable
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Thu, 04 Jun 2015 09:23:14 -0400
+
+libgpg-error (1.19-1) experimental; urgency=medium
+
+  * New Upstream Version
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 13 Apr 2015 00:16:47 -0400
+
+libgpg-error (1.18-1) experimental; urgency=medium
+
+  * New Upstream Version
+  * debian/patches: dropped most, already applied upstream
+  * avoid breakage with gcc 5 (Closes: #777374)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 16 Mar 2015 13:11:35 -0400
+
 libgpg-error (1.17-3) unstable; urgency=medium
 
   [ David Prévot ]

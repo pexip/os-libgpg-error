@@ -38,7 +38,7 @@ static const char msgstr[] =
   gettext_noop ("Checksum error") "\0"
   gettext_noop ("Bad passphrase") "\0"
   gettext_noop ("Invalid cipher algorithm") "\0"
-  gettext_noop ("Keyring open") "\0"
+  gettext_noop ("Cannot open keyring") "\0"
   gettext_noop ("Invalid packet") "\0"
   gettext_noop ("Invalid armor") "\0"
   gettext_noop ("No user ID") "\0"
@@ -239,6 +239,15 @@ static const char msgstr[] =
   gettext_noop ("Bad hexadecimal character in S-expression") "\0"
   gettext_noop ("Odd hexadecimal numbers in S-expression") "\0"
   gettext_noop ("Bad octal character in S-expression") "\0"
+  gettext_noop ("All subkeys are expired or revoked") "\0"
+  gettext_noop ("Database is corrupted") "\0"
+  gettext_noop ("Server indicated a failure") "\0"
+  gettext_noop ("No name") "\0"
+  gettext_noop ("No key") "\0"
+  gettext_noop ("Legacy key") "\0"
+  gettext_noop ("Request too short") "\0"
+  gettext_noop ("Request too long") "\0"
+  gettext_noop ("Object is in termination state") "\0"
   gettext_noop ("No certificate chain") "\0"
   gettext_noop ("Certificate is too large") "\0"
   gettext_noop ("Invalid record") "\0"
@@ -256,17 +265,20 @@ static const char msgstr[] =
   gettext_noop ("Bad certificate message in handshake") "\0"
   gettext_noop ("Bad certificate request message in handshake") "\0"
   gettext_noop ("Bad certificate verify message in handshake") "\0"
-  gettext_noop ("Bad change cipher messsage in handshake") "\0"
+  gettext_noop ("Bad change cipher message in handshake") "\0"
   gettext_noop ("Bad client hello message in handshake") "\0"
   gettext_noop ("Bad server hello message in handshake") "\0"
-  gettext_noop ("Bad server hello done message in hanshake") "\0"
+  gettext_noop ("Bad server hello done message in handshake") "\0"
   gettext_noop ("Bad finished message in handshake") "\0"
   gettext_noop ("Bad server key exchange message in handshake") "\0"
   gettext_noop ("Bad client key exchange message in handshake") "\0"
   gettext_noop ("Bogus string") "\0"
+  gettext_noop ("Forbidden") "\0"
   gettext_noop ("Key disabled") "\0"
   gettext_noop ("Not possible with a card based key") "\0"
   gettext_noop ("Invalid lock object") "\0"
+  gettext_noop ("True") "\0"
+  gettext_noop ("False") "\0"
   gettext_noop ("General IPC error") "\0"
   gettext_noop ("IPC accept call failed") "\0"
   gettext_noop ("IPC connect call failed") "\0"
@@ -291,6 +303,109 @@ static const char msgstr[] =
   gettext_noop ("No output source for IPC") "\0"
   gettext_noop ("IPC parameter error") "\0"
   gettext_noop ("Unknown IPC inquire") "\0"
+  gettext_noop ("Crypto engine too old") "\0"
+  gettext_noop ("Screen or window too small") "\0"
+  gettext_noop ("Screen or window too large") "\0"
+  gettext_noop ("Required environment variable not set") "\0"
+  gettext_noop ("User ID already exists") "\0"
+  gettext_noop ("Name already exists") "\0"
+  gettext_noop ("Duplicated name") "\0"
+  gettext_noop ("Object is too young") "\0"
+  gettext_noop ("Object is too old") "\0"
+  gettext_noop ("Unknown flag") "\0"
+  gettext_noop ("Invalid execution order") "\0"
+  gettext_noop ("Already fetched") "\0"
+  gettext_noop ("Try again later") "\0"
+  gettext_noop ("System bug detected") "\0"
+  gettext_noop ("Unknown DNS error") "\0"
+  gettext_noop ("Invalid DNS section") "\0"
+  gettext_noop ("Invalid textual address form") "\0"
+  gettext_noop ("Missing DNS query packet") "\0"
+  gettext_noop ("Missing DNS answer packet") "\0"
+  gettext_noop ("Connection closed in DNS") "\0"
+  gettext_noop ("Verification failed in DNS") "\0"
+  gettext_noop ("DNS Timeout") "\0"
+  gettext_noop ("General LDAP error") "\0"
+  gettext_noop ("General LDAP attribute error") "\0"
+  gettext_noop ("General LDAP name error") "\0"
+  gettext_noop ("General LDAP security error") "\0"
+  gettext_noop ("General LDAP service error") "\0"
+  gettext_noop ("General LDAP update error") "\0"
+  gettext_noop ("Experimental LDAP error code") "\0"
+  gettext_noop ("Private LDAP error code") "\0"
+  gettext_noop ("Other general LDAP error") "\0"
+  gettext_noop ("LDAP connecting failed (X)") "\0"
+  gettext_noop ("LDAP referral limit exceeded") "\0"
+  gettext_noop ("LDAP client loop") "\0"
+  gettext_noop ("No LDAP results returned") "\0"
+  gettext_noop ("LDAP control not found") "\0"
+  gettext_noop ("Not supported by LDAP") "\0"
+  gettext_noop ("LDAP connect error") "\0"
+  gettext_noop ("Out of memory in LDAP") "\0"
+  gettext_noop ("Bad parameter to an LDAP routine") "\0"
+  gettext_noop ("User cancelled LDAP operation") "\0"
+  gettext_noop ("Bad LDAP search filter") "\0"
+  gettext_noop ("Unknown LDAP authentication method") "\0"
+  gettext_noop ("Timeout in LDAP") "\0"
+  gettext_noop ("LDAP decoding error") "\0"
+  gettext_noop ("LDAP encoding error") "\0"
+  gettext_noop ("LDAP local error") "\0"
+  gettext_noop ("Cannot contact LDAP server") "\0"
+  gettext_noop ("LDAP success") "\0"
+  gettext_noop ("LDAP operations error") "\0"
+  gettext_noop ("LDAP protocol error") "\0"
+  gettext_noop ("Time limit exceeded in LDAP") "\0"
+  gettext_noop ("Size limit exceeded in LDAP") "\0"
+  gettext_noop ("LDAP compare false") "\0"
+  gettext_noop ("LDAP compare true") "\0"
+  gettext_noop ("LDAP authentication method not supported") "\0"
+  gettext_noop ("Strong(er) LDAP authentication required") "\0"
+  gettext_noop ("Partial LDAP results+referral received") "\0"
+  gettext_noop ("LDAP referral") "\0"
+  gettext_noop ("Administrative LDAP limit exceeded") "\0"
+  gettext_noop ("Critical LDAP extension is unavailable") "\0"
+  gettext_noop ("Confidentiality required by LDAP") "\0"
+  gettext_noop ("LDAP SASL bind in progress") "\0"
+  gettext_noop ("No such LDAP attribute") "\0"
+  gettext_noop ("Undefined LDAP attribute type") "\0"
+  gettext_noop ("Inappropriate matching in LDAP") "\0"
+  gettext_noop ("Constraint violation in LDAP") "\0"
+  gettext_noop ("LDAP type or value exists") "\0"
+  gettext_noop ("Invalid syntax in LDAP") "\0"
+  gettext_noop ("No such LDAP object") "\0"
+  gettext_noop ("LDAP alias problem") "\0"
+  gettext_noop ("Invalid DN syntax in LDAP") "\0"
+  gettext_noop ("LDAP entry is a leaf") "\0"
+  gettext_noop ("LDAP alias dereferencing problem") "\0"
+  gettext_noop ("LDAP proxy authorization failure (X)") "\0"
+  gettext_noop ("Inappropriate LDAP authentication") "\0"
+  gettext_noop ("Invalid LDAP credentials") "\0"
+  gettext_noop ("Insufficient access for LDAP") "\0"
+  gettext_noop ("LDAP server is busy") "\0"
+  gettext_noop ("LDAP server is unavailable") "\0"
+  gettext_noop ("LDAP server is unwilling to perform") "\0"
+  gettext_noop ("Loop detected by LDAP") "\0"
+  gettext_noop ("LDAP naming violation") "\0"
+  gettext_noop ("LDAP object class violation") "\0"
+  gettext_noop ("LDAP operation not allowed on non-leaf") "\0"
+  gettext_noop ("LDAP operation not allowed on RDN") "\0"
+  gettext_noop ("Already exists (LDAP)") "\0"
+  gettext_noop ("Cannot modify LDAP object class") "\0"
+  gettext_noop ("LDAP results too large") "\0"
+  gettext_noop ("LDAP operation affects multiple DSAs") "\0"
+  gettext_noop ("Virtual LDAP list view error") "\0"
+  gettext_noop ("Other LDAP error") "\0"
+  gettext_noop ("Resources exhausted in LCUP") "\0"
+  gettext_noop ("Security violation in LCUP") "\0"
+  gettext_noop ("Invalid data in LCUP") "\0"
+  gettext_noop ("Unsupported scheme in LCUP") "\0"
+  gettext_noop ("Reload required in LCUP") "\0"
+  gettext_noop ("LDAP cancelled") "\0"
+  gettext_noop ("No LDAP operation to cancel") "\0"
+  gettext_noop ("Too late to cancel LDAP") "\0"
+  gettext_noop ("Cannot cancel LDAP") "\0"
+  gettext_noop ("LDAP assertion failed") "\0"
+  gettext_noop ("Proxied authorization denied by LDAP") "\0"
   gettext_noop ("User defined error code 1") "\0"
   gettext_noop ("User defined error code 2") "\0"
   gettext_noop ("User defined error code 3") "\0"
@@ -328,278 +443,393 @@ static const int msgidx[] =
     190,
     205,
     230,
-    243,
-    258,
-    272,
-    283,
-    297,
-    319,
-    335,
-    365,
-    385,
-    409,
-    435,
-    460,
-    478,
-    487,
-    497,
-    513,
-    526,
-    540,
-    559,
-    583,
-    603,
-    619,
-    634,
-    650,
-    666,
-    683,
-    697,
-    713,
-    740,
-    757,
-    777,
-    796,
-    813,
-    833,
-    845,
-    859,
-    872,
-    888,
-    907,
-    926,
-    946,
-    966,
-    980,
-    1002,
-    1022,
-    1030,
-    1034,
-    1048,
-    1071,
-    1079,
-    1094,
-    1107,
-    1122,
-    1151,
-    1180,
-    1203,
-    1219,
-    1235,
-    1255,
-    1268,
-    1283,
-    1300,
-    1316,
-    1333,
-    1350,
-    1362,
-    1375,
-    1406,
-    1427,
-    1447,
-    1468,
-    1490,
-    1502,
-    1517,
-    1525,
-    1538,
-    1547,
-    1565,
-    1576,
-    1587,
-    1601,
-    1621,
-    1634,
-    1646,
-    1660,
-    1672,
-    1692,
-    1711,
-    1731,
-    1753,
-    1777,
-    1798,
-    1821,
-    1842,
-    1857,
-    1868,
-    1888,
-    1901,
-    1914,
-    1931,
-    1953,
-    1967,
-    1987,
-    2003,
-    2017,
-    2028,
-    2048,
-    2071,
-    2092,
-    2107,
-    2128,
-    2150,
-    2166,
-    2180,
-    2196,
-    2210,
-    2227,
-    2239,
-    2271,
-    2291,
-    2303,
-    2313,
-    2325,
-    2343,
-    2364,
-    2376,
-    2391,
-    2408,
-    2423,
-    2439,
-    2453,
-    2472,
-    2491,
-    2514,
-    2535,
-    2559,
-    2577,
-    2599,
-    2622,
-    2640,
-    2652,
-    2670,
-    2687,
-    2701,
-    2718,
-    2733,
-    2756,
-    2775,
-    2788,
-    2807,
-    2831,
-    2858,
-    2871,
-    2896,
-    2907,
-    2926,
-    2938,
-    2954,
-    2972,
-    2999,
+    250,
+    265,
+    279,
+    290,
+    304,
+    326,
+    342,
+    372,
+    392,
+    416,
+    442,
+    467,
+    485,
+    494,
+    504,
+    520,
+    533,
+    547,
+    566,
+    590,
+    610,
+    626,
+    641,
+    657,
+    673,
+    690,
+    704,
+    720,
+    747,
+    764,
+    784,
+    803,
+    820,
+    840,
+    852,
+    866,
+    879,
+    895,
+    914,
+    933,
+    953,
+    973,
+    987,
+    1009,
+    1029,
+    1037,
+    1041,
+    1055,
+    1078,
+    1086,
+    1101,
+    1114,
+    1129,
+    1158,
+    1187,
+    1210,
+    1226,
+    1242,
+    1262,
+    1275,
+    1290,
+    1307,
+    1323,
+    1340,
+    1357,
+    1369,
+    1382,
+    1413,
+    1434,
+    1454,
+    1475,
+    1497,
+    1509,
+    1524,
+    1532,
+    1545,
+    1554,
+    1572,
+    1583,
+    1594,
+    1608,
+    1628,
+    1641,
+    1653,
+    1667,
+    1679,
+    1699,
+    1718,
+    1738,
+    1760,
+    1784,
+    1805,
+    1828,
+    1849,
+    1864,
+    1875,
+    1895,
+    1908,
+    1921,
+    1938,
+    1960,
+    1974,
+    1994,
+    2010,
+    2024,
+    2035,
+    2055,
+    2078,
+    2099,
+    2114,
+    2135,
+    2157,
+    2173,
+    2187,
+    2203,
+    2217,
+    2234,
+    2246,
+    2278,
+    2298,
+    2310,
+    2320,
+    2332,
+    2350,
+    2371,
+    2383,
+    2398,
+    2415,
+    2430,
+    2446,
+    2460,
+    2479,
+    2498,
+    2521,
+    2542,
+    2566,
+    2584,
+    2606,
+    2629,
+    2647,
+    2659,
+    2677,
+    2694,
+    2708,
+    2725,
+    2740,
+    2763,
+    2782,
+    2795,
+    2814,
+    2838,
+    2865,
+    2878,
+    2903,
+    2914,
+    2933,
+    2945,
+    2961,
+    2979,
     3006,
-    3021,
-    3037,
-    3053,
-    3073,
-    3086,
-    3098,
-    3115,
-    3127,
-    3144,
-    3158,
-    3174,
-    3201,
-    3224,
-    3247,
-    3270,
-    3285,
-    3302,
-    3320,
-    3341,
-    3360,
-    3391,
-    3409,
-    3427,
-    3449,
-    3475,
-    3502,
-    3519,
-    3560,
-    3592,
-    3630,
-    3657,
-    3687,
-    3717,
-    3745,
-    3782,
-    3806,
-    3854,
-    3896,
-    3936,
-    3972,
-    3993,
-    4018,
-    4033,
-    4057,
-    4076,
-    4112,
-    4133,
-    4162,
-    4182,
-    4209,
-    4237,
-    4252,
-    4263,
-    4280,
-    4317,
-    4362,
-    4406,
+    3013,
+    3028,
+    3044,
+    3060,
+    3080,
+    3093,
+    3105,
+    3122,
+    3134,
+    3151,
+    3165,
+    3181,
+    3208,
+    3231,
+    3254,
+    3277,
+    3292,
+    3309,
+    3327,
+    3348,
+    3367,
+    3398,
+    3416,
+    3434,
+    3456,
+    3482,
+    3509,
+    3526,
+    3567,
+    3599,
+    3637,
+    3664,
+    3694,
+    3724,
+    3752,
+    3789,
+    3813,
+    3861,
+    3903,
+    3943,
+    3979,
+    4014,
+    4036,
+    4063,
+    4071,
+    4078,
+    4089,
+    4107,
+    4124,
+    4155,
+    4176,
+    4201,
+    4216,
+    4240,
+    4259,
+    4295,
+    4316,
+    4345,
+    4365,
+    4392,
+    4420,
+    4435,
     4446,
-    4484,
-    4522,
-    4564,
-    4598,
-    4643,
-    4688,
-    4701,
-    4714,
-    4749,
-    4769,
-    4787,
-    4810,
-    4834,
-    4855,
-    4883,
-    4913,
-    4941,
-    4961,
-    4985,
-    5012,
-    5030,
-    5048,
-    5076,
-    5091,
-    5107,
-    5135,
-    5158,
-    5178,
-    5195,
-    5223,
-    5247,
-    5272,
-    5292,
-    5312,
-    5338,
-    5364,
-    5390,
-    5416,
-    5442,
-    5468,
-    5494,
-    5520,
-    5546,
-    5573,
-    5600,
-    5627,
-    5654,
-    5681,
-    5708,
-    5735,
-    5758,
-    5779,
-    5791
+    4463,
+    4500,
+    4545,
+    4589,
+    4628,
+    4666,
+    4704,
+    4747,
+    4781,
+    4826,
+    4871,
+    4884,
+    4894,
+    4907,
+    4942,
+    4962,
+    4967,
+    4973,
+    4991,
+    5014,
+    5038,
+    5059,
+    5087,
+    5117,
+    5145,
+    5165,
+    5189,
+    5216,
+    5234,
+    5252,
+    5280,
+    5295,
+    5311,
+    5339,
+    5362,
+    5382,
+    5399,
+    5427,
+    5451,
+    5476,
+    5496,
+    5516,
+    5538,
+    5565,
+    5592,
+    5630,
+    5653,
+    5673,
+    5689,
+    5709,
+    5727,
+    5740,
+    5764,
+    5780,
+    5796,
+    5816,
+    5834,
+    5854,
+    5883,
+    5908,
+    5934,
+    5959,
+    5986,
+    5998,
+    6017,
+    6046,
+    6070,
+    6098,
+    6125,
+    6151,
+    6180,
+    6204,
+    6229,
+    6256,
+    6285,
+    6302,
+    6327,
+    6350,
+    6372,
+    6391,
+    6413,
+    6446,
+    6476,
+    6499,
+    6534,
+    6550,
+    6570,
+    6590,
+    6607,
+    6634,
+    6647,
+    6669,
+    6689,
+    6717,
+    6745,
+    6764,
+    6782,
+    6823,
+    6863,
+    6902,
+    6916,
+    6951,
+    6990,
+    7023,
+    7050,
+    7073,
+    7103,
+    7134,
+    7163,
+    7189,
+    7212,
+    7232,
+    7251,
+    7277,
+    7298,
+    7331,
+    7368,
+    7402,
+    7427,
+    7456,
+    7476,
+    7503,
+    7539,
+    7561,
+    7583,
+    7611,
+    7650,
+    7684,
+    7706,
+    7738,
+    7761,
+    7798,
+    7827,
+    7844,
+    7872,
+    7899,
+    7920,
+    7947,
+    7971,
+    7986,
+    8014,
+    8038,
+    8057,
+    8079,
+    8116,
+    8142,
+    8168,
+    8194,
+    8220,
+    8246,
+    8272,
+    8298,
+    8324,
+    8350,
+    8377,
+    8404,
+    8431,
+    8458,
+    8485,
+    8512,
+    8539,
+    8562,
+    8583,
+    8595
   };
 
 static GPG_ERR_INLINE int
@@ -607,11 +837,22 @@ msgidxof (int code)
 {
   return (0 ? 0
   : ((code >= 0) && (code <= 213)) ? (code - 0)
-  : ((code >= 226) && (code <= 250)) ? (code - 12)
-  : ((code >= 252) && (code <= 254)) ? (code - 13)
-  : ((code >= 257) && (code <= 271)) ? (code - 15)
-  : ((code >= 273) && (code <= 281)) ? (code - 16)
-  : ((code >= 1024) && (code <= 1039)) ? (code - 758)
-  : ((code >= 16381) && (code <= 16383)) ? (code - 16099)
-  : 16384 - 16099);
+  : ((code >= 217) && (code <= 271)) ? (code - 3)
+  : ((code >= 273) && (code <= 281)) ? (code - 4)
+  : ((code >= 300) && (code <= 312)) ? (code - 22)
+  : ((code >= 666) && (code <= 666)) ? (code - 375)
+  : ((code >= 711) && (code <= 718)) ? (code - 419)
+  : ((code >= 721) && (code <= 729)) ? (code - 421)
+  : ((code >= 750) && (code <= 752)) ? (code - 441)
+  : ((code >= 754) && (code <= 782)) ? (code - 442)
+  : ((code >= 784) && (code <= 789)) ? (code - 443)
+  : ((code >= 800) && (code <= 804)) ? (code - 453)
+  : ((code >= 815) && (code <= 822)) ? (code - 463)
+  : ((code >= 832) && (code <= 839)) ? (code - 472)
+  : ((code >= 844) && (code <= 844)) ? (code - 476)
+  : ((code >= 848) && (code <= 848)) ? (code - 479)
+  : ((code >= 881) && (code <= 891)) ? (code - 511)
+  : ((code >= 1024) && (code <= 1039)) ? (code - 643)
+  : ((code >= 16381) && (code <= 16383)) ? (code - 15984)
+  : 16384 - 15984);
 }
