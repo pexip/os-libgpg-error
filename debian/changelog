@@ -1,3 +1,9 @@
+libgpg-error (1.26-2pexip1) pexip; urgency=medium
+
+  * Migrate to Stretch
+
+ -- John-Mark Bell <jmb@pexip.com>  Tue, 10 Jul 2018 11:16:00 +0000
+
 libgpg-error (1.26-2) unstable; urgency=medium
 
   * bump symbols version for gpgrt_yield to 1.25
