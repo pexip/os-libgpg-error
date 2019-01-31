@@ -1,15 +1,15 @@
 # Japanese messages for GnuPG libgpg-error
-# Copyright (C) 2010, 2012, 2014, 2015 Free Software Foundation, Inc.
+# Copyright (C) 2010, 2012, 2014, 2015, 2016 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgpg-error package.
 # Yasuaki Taniguchi <yasuakit@gmail.com>, 2010.
 # Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>, 2012.
-# NIIBE Yutaka <gniibe@fsij.org>, 2014, 2015, 2016.
+# NIIBE Yutaka <gniibe@fsij.org>, 2014, 2015, 2016, 2017.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgpg-error 1.19\n"
+"Project-Id-Version: libgpg-error 1.27\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2016-12-21 13:55+0100\n"
-"PO-Revision-Date: 2016-02-26 09:42+0900\n"
+"POT-Creation-Date: 2019-01-28 08:03+0100\n"
+"PO-Revision-Date: 2018-09-06 09:58+0900\n"
 "Last-Translator: NIIBE Yutaka <gniibe@fsij.org>\n"
 "Language-Team: none\n"
 "Language: ja\n"
@@ -164,7 +164,7 @@ msgstr "無効な暗号アルゴリズムです"
 
 #: src/err-codes.h:41
 msgid "Cannot open keyring"
-msgstr "鍵リングオープン"
+msgstr "鍵リングが開けません"
 
 #: src/err-codes.h:42
 msgid "Invalid packet"
@@ -968,7 +968,7 @@ msgstr "S式に間違った8進キャラクタがあります"
 
 #: src/err-codes.h:242
 msgid "All subkeys are expired or revoked"
-msgstr ""
+msgstr "すべての副鍵が期限切れか失効しています"
 
 #: src/err-codes.h:243
 msgid "Database is corrupted"
@@ -1223,531 +1223,587 @@ msgid "Unknown IPC inquire"
 msgstr "不明なIPC問い合わせです"
 
 #: src/err-codes.h:306
-#, fuzzy
-#| msgid "No crypto engine"
 msgid "Crypto engine too old"
-msgstr "暗号エンジンがありません"
+msgstr "暗号エンジンが古すぎます"
 
 #: src/err-codes.h:307
 msgid "Screen or window too small"
-msgstr ""
+msgstr "スクリーンまたはウィンドウが小さすぎます"
 
 #: src/err-codes.h:308
 msgid "Screen or window too large"
-msgstr ""
+msgstr "スクリーンまたはウィンドウが大きすぎます"
 
 #: src/err-codes.h:309
 msgid "Required environment variable not set"
-msgstr ""
+msgstr "必要な環境変数が設定されていません"
 
 #: src/err-codes.h:310
-#, fuzzy
-#| msgid "Already exists (LDAP)"
 msgid "User ID already exists"
-msgstr "既に存在します (LDAP)"
+msgstr "User IDが既に存在します"
 
 #: src/err-codes.h:311
-#, fuzzy
-#| msgid "Already exists (LDAP)"
 msgid "Name already exists"
-msgstr "既に存在します (LDAP)"
+msgstr "名前が既に存在します"
 
 #: src/err-codes.h:312
-#, fuzzy
-#| msgid "Duplicated value"
 msgid "Duplicated name"
-msgstr "重複した値です"
+msgstr "重複した名前です"
 
 #: src/err-codes.h:313
-#, fuzzy
-#| msgid "Certificate too young"
 msgid "Object is too young"
-msgstr "証明書が若すぎます"
+msgstr "オブジェクトが若すぎます"
 
 #: src/err-codes.h:314
-#, fuzzy
-#| msgid "Provided object is too short"
 msgid "Object is too old"
-msgstr "与えられたオブジェクトが小さすぎます"
+msgstr "オブジェクトが古すぎます"
 
 #: src/err-codes.h:315
-#, fuzzy
-#| msgid "Unknown name"
 msgid "Unknown flag"
-msgstr "不明な名前です"
+msgstr "不明なフラグです"
 
 #: src/err-codes.h:316
-#, fuzzy
-#| msgid "Invalid operation code"
 msgid "Invalid execution order"
-msgstr "無効な操作コードです"
+msgstr "無効な実効順です"
 
 #: src/err-codes.h:317
 msgid "Already fetched"
-msgstr ""
+msgstr "すでにフェッチされてます"
 
 #: src/err-codes.h:318
 msgid "Try again later"
-msgstr ""
+msgstr "後で再度試してください"
 
 #: src/err-codes.h:319
-msgid "System bug detected"
-msgstr ""
+msgid "Wrong name"
+msgstr "間違った名前です"
 
 #: src/err-codes.h:320
-#, fuzzy
-#| msgid "Unknown system error"
-msgid "Unknown DNS error"
-msgstr "不明なシステムエラー"
+msgid "System bug detected"
+msgstr "システムのバグが検出されました"
 
 #: src/err-codes.h:321
-#, fuzzy
-#| msgid "Invalid OID string"
-msgid "Invalid DNS section"
-msgstr "無効な OID 文字列です"
+msgid "Unknown DNS error"
+msgstr "不明なDNSエラー"
 
 #: src/err-codes.h:322
-#, fuzzy
-#| msgid "Invalid S-expression"
-msgid "Invalid textual address form"
-msgstr "無効な S-式です"
+msgid "Invalid DNS section"
+msgstr "無効な DNS セクションです"
 
 #: src/err-codes.h:323
-#, fuzzy
-#| msgid "Missing issuer certificate"
-msgid "Missing DNS query packet"
-msgstr "発行元証明書がありません"
+msgid "Invalid textual address form"
+msgstr "無効なテクストのアドレス形式です"
 
 #: src/err-codes.h:324
-msgid "Missing DNS answer packet"
-msgstr ""
+msgid "Missing DNS query packet"
+msgstr "DNSクエリのパケットがありません"
 
 #: src/err-codes.h:325
-msgid "Connection closed in DNS"
-msgstr ""
+msgid "Missing DNS answer packet"
+msgstr "DNSの返答パケットが欠如しています"
 
 #: src/err-codes.h:326
-#, fuzzy
-#| msgid "Decryption failed"
-msgid "Verification failed in DNS"
-msgstr "復号に失敗しました"
+msgid "Connection closed in DNS"
+msgstr "DNSの接続が閉じられました"
 
 #: src/err-codes.h:327
-#, fuzzy
-#| msgid "Timeout"
-msgid "DNS Timeout"
-msgstr "タイムアウトです"
+msgid "Verification failed in DNS"
+msgstr "DNSで検証に失敗しました"
 
 #: src/err-codes.h:328
+msgid "DNS Timeout"
+msgstr "DNSタイムアウトです"
+
+#: src/err-codes.h:329
 msgid "General LDAP error"
 msgstr "一般LDAPエラーです"
 
-#: src/err-codes.h:329
+#: src/err-codes.h:330
 msgid "General LDAP attribute error"
 msgstr "一般LDAP属性エラーです"
 
-#: src/err-codes.h:330
+#: src/err-codes.h:331
 msgid "General LDAP name error"
 msgstr "一般LDAPエラーです"
 
-#: src/err-codes.h:331
+#: src/err-codes.h:332
 msgid "General LDAP security error"
 msgstr "一般Assuanエラーです"
 
-#: src/err-codes.h:332
+#: src/err-codes.h:333
 msgid "General LDAP service error"
 msgstr "一般LDAPサーバエラーです"
 
-#: src/err-codes.h:333
+#: src/err-codes.h:334
 msgid "General LDAP update error"
 msgstr "一般LDAP更新エラーです"
 
-#: src/err-codes.h:334
+#: src/err-codes.h:335
 msgid "Experimental LDAP error code"
 msgstr "実験的LDAPエラーコード"
 
-#: src/err-codes.h:335
+#: src/err-codes.h:336
 msgid "Private LDAP error code"
 msgstr "プライベートLDAPエラーコード"
 
-#: src/err-codes.h:336
+#: src/err-codes.h:337
 msgid "Other general LDAP error"
 msgstr "その他の一般LDAPエラーです"
 
-#: src/err-codes.h:337
+#: src/err-codes.h:338
 msgid "LDAP connecting failed (X)"
 msgstr "LDAP接続が失敗しました (X)"
 
-#: src/err-codes.h:338
+#: src/err-codes.h:339
 msgid "LDAP referral limit exceeded"
 msgstr "LDAP参照制限を越えました"
 
-#: src/err-codes.h:339
+#: src/err-codes.h:340
 msgid "LDAP client loop"
 msgstr "LDAPクライアントのループ"
 
-#: src/err-codes.h:340
+#: src/err-codes.h:341
 msgid "No LDAP results returned"
 msgstr "LDAPの結果が返されませんでした"
 
-#: src/err-codes.h:341
+#: src/err-codes.h:342
 msgid "LDAP control not found"
 msgstr "LDAP制御が見つかりませんでした"
 
-#: src/err-codes.h:342
+#: src/err-codes.h:343
 msgid "Not supported by LDAP"
 msgstr "LDAPでサポートされていません"
 
-#: src/err-codes.h:343
+#: src/err-codes.h:344
 msgid "LDAP connect error"
 msgstr "LDAP connectエラーです"
 
-#: src/err-codes.h:344
+#: src/err-codes.h:345
 msgid "Out of memory in LDAP"
 msgstr "LDAPでメモリがなくなりました"
 
-#: src/err-codes.h:345
+#: src/err-codes.h:346
 msgid "Bad parameter to an LDAP routine"
 msgstr "LDAPルーチンに対する不正なパラメータです"
 
-#: src/err-codes.h:346
+#: src/err-codes.h:347
 msgid "User cancelled LDAP operation"
 msgstr "ユーザがLDAP操作をキャンセルしました"
 
-#: src/err-codes.h:347
+#: src/err-codes.h:348
 msgid "Bad LDAP search filter"
 msgstr "誤ったLDAP検索フィルタです"
 
-#: src/err-codes.h:348
+#: src/err-codes.h:349
 msgid "Unknown LDAP authentication method"
 msgstr "不明のLDAP認証方式です"
 
-#: src/err-codes.h:349
+#: src/err-codes.h:350
 msgid "Timeout in LDAP"
 msgstr "LDAPでタイムアウトです"
 
-#: src/err-codes.h:350
+#: src/err-codes.h:351
 msgid "LDAP decoding error"
 msgstr "LDAPデコードのエラー"
 
-#: src/err-codes.h:351
+#: src/err-codes.h:352
 msgid "LDAP encoding error"
 msgstr "LDAPエンコードのエラー"
 
-#: src/err-codes.h:352
+#: src/err-codes.h:353
 msgid "LDAP local error"
 msgstr "LDAPローカルエラー"
 
-#: src/err-codes.h:353
+#: src/err-codes.h:354
 msgid "Cannot contact LDAP server"
 msgstr "LDAPサーバに連絡できません"
 
-#: src/err-codes.h:354
+#: src/err-codes.h:355
 msgid "LDAP success"
 msgstr "LDAP成功です"
 
-#: src/err-codes.h:355
+#: src/err-codes.h:356
 msgid "LDAP operations error"
 msgstr "LDAP操作エラーです"
 
-#: src/err-codes.h:356
+#: src/err-codes.h:357
 msgid "LDAP protocol error"
 msgstr "LDAPプロトコル違反"
 
-#: src/err-codes.h:357
+#: src/err-codes.h:358
 msgid "Time limit exceeded in LDAP"
 msgstr "LDAPで時間制限を越えました"
 
-#: src/err-codes.h:358
+#: src/err-codes.h:359
 msgid "Size limit exceeded in LDAP"
 msgstr "LDAPでサイズ制限を越えました"
 
-#: src/err-codes.h:359
+#: src/err-codes.h:360
 msgid "LDAP compare false"
 msgstr "LDAP比較 偽"
 
-#: src/err-codes.h:360
+#: src/err-codes.h:361
 msgid "LDAP compare true"
 msgstr "LDAP比較 真"
 
-#: src/err-codes.h:361
+#: src/err-codes.h:362
 msgid "LDAP authentication method not supported"
 msgstr "LDAP認証方式はサポートされません"
 
-#: src/err-codes.h:362
+#: src/err-codes.h:363
 msgid "Strong(er) LDAP authentication required"
 msgstr "強いLDAP認証が必要です"
 
-#: src/err-codes.h:363
+#: src/err-codes.h:364
 msgid "Partial LDAP results+referral received"
 msgstr "部分的LDAP結果/参照を受信しました"
 
-#: src/err-codes.h:364
+#: src/err-codes.h:365
 msgid "LDAP referral"
 msgstr "LDAP参照"
 
-#: src/err-codes.h:365
+#: src/err-codes.h:366
 msgid "Administrative LDAP limit exceeded"
 msgstr "管理LDAP制限を越えました"
 
-#: src/err-codes.h:366
+#: src/err-codes.h:367
 msgid "Critical LDAP extension is unavailable"
 msgstr "クリティカルなLDAP拡張が利用可能ではありません"
 
-#: src/err-codes.h:367
+#: src/err-codes.h:368
 msgid "Confidentiality required by LDAP"
 msgstr "LDAPにより秘匿性が必要です"
 
-#: src/err-codes.h:368
+#: src/err-codes.h:369
 msgid "LDAP SASL bind in progress"
 msgstr "LDAP SASLバインドが進んでいます"
 
-#: src/err-codes.h:369
+#: src/err-codes.h:370
 msgid "No such LDAP attribute"
 msgstr "そのようなLDAP属性がありません"
 
-#: src/err-codes.h:370
+#: src/err-codes.h:371
 msgid "Undefined LDAP attribute type"
 msgstr "未定義のLDAP属性型です"
 
-#: src/err-codes.h:371
+#: src/err-codes.h:372
 msgid "Inappropriate matching in LDAP"
 msgstr "LDAPの不適切なマッチングです"
 
-#: src/err-codes.h:372
+#: src/err-codes.h:373
 msgid "Constraint violation in LDAP"
 msgstr "LDAP制約違反です"
 
-#: src/err-codes.h:373
+#: src/err-codes.h:374
 msgid "LDAP type or value exists"
 msgstr "LDAP型あるいは値が存在します"
 
-#: src/err-codes.h:374
+#: src/err-codes.h:375
 msgid "Invalid syntax in LDAP"
 msgstr "LDAPの無効な構文です"
 
-#: src/err-codes.h:375
+#: src/err-codes.h:376
 msgid "No such LDAP object"
 msgstr "そのようなLDAPオブジェクトはありません"
 
-#: src/err-codes.h:376
+#: src/err-codes.h:377
 msgid "LDAP alias problem"
 msgstr "LDAPエイリアスの問題です"
 
-#: src/err-codes.h:377
+#: src/err-codes.h:378
 msgid "Invalid DN syntax in LDAP"
 msgstr "LDAPの無効なDN構文状態です"
 
-#: src/err-codes.h:378
+#: src/err-codes.h:379
 msgid "LDAP entry is a leaf"
 msgstr "LDAPエントリがリーフです"
 
-#: src/err-codes.h:379
+#: src/err-codes.h:380
 msgid "LDAP alias dereferencing problem"
 msgstr "LDAPエイリアスのデレファレンス問題です"
 
-#: src/err-codes.h:380
+#: src/err-codes.h:381
 msgid "LDAP proxy authorization failure (X)"
 msgstr "LDAPプロキシの認証失敗です(X)"
 
-#: src/err-codes.h:381
+#: src/err-codes.h:382
 msgid "Inappropriate LDAP authentication"
 msgstr "不適切なLDAP認証です"
 
-#: src/err-codes.h:382
+#: src/err-codes.h:383
 msgid "Invalid LDAP credentials"
 msgstr "無効なLDAPクレデンシャルです"
 
-#: src/err-codes.h:383
+#: src/err-codes.h:384
 msgid "Insufficient access for LDAP"
 msgstr "LDAPの不十分なアクセスです"
 
-#: src/err-codes.h:384
+#: src/err-codes.h:385
 msgid "LDAP server is busy"
 msgstr "LDAPサーバがビジーです"
 
-#: src/err-codes.h:385
+#: src/err-codes.h:386
 msgid "LDAP server is unavailable"
 msgstr "LDAPサーバが利用可能ではありません"
 
-#: src/err-codes.h:386
+#: src/err-codes.h:387
 msgid "LDAP server is unwilling to perform"
 msgstr "LDAPサーバが実行を進めたくありません"
 
-#: src/err-codes.h:387
+#: src/err-codes.h:388
 msgid "Loop detected by LDAP"
 msgstr "LDAPでループが検出されました"
 
-#: src/err-codes.h:388
+#: src/err-codes.h:389
 msgid "LDAP naming violation"
 msgstr "LDAP名前違反です"
 
-#: src/err-codes.h:389
+#: src/err-codes.h:390
 msgid "LDAP object class violation"
 msgstr "LDAPオブジェクトクラス違反です"
 
-#: src/err-codes.h:390
+#: src/err-codes.h:391
 msgid "LDAP operation not allowed on non-leaf"
 msgstr "LDAP操作は非リーフには許されません"
 
-#: src/err-codes.h:391
+#: src/err-codes.h:392
 msgid "LDAP operation not allowed on RDN"
 msgstr "LDAP操作はRDNには許されません"
 
-#: src/err-codes.h:392
+#: src/err-codes.h:393
 msgid "Already exists (LDAP)"
 msgstr "既に存在します (LDAP)"
 
-#: src/err-codes.h:393
+#: src/err-codes.h:394
 msgid "Cannot modify LDAP object class"
 msgstr "LDAPオブジェクト・クラスを修正できません"
 
-#: src/err-codes.h:394
+#: src/err-codes.h:395
 msgid "LDAP results too large"
 msgstr "LDAP結果が大きすぎます"
 
-#: src/err-codes.h:395
+#: src/err-codes.h:396
 msgid "LDAP operation affects multiple DSAs"
 msgstr "LDAP操作は複数のDSAに関与します"
 
-#: src/err-codes.h:396
+#: src/err-codes.h:397
 msgid "Virtual LDAP list view error"
 msgstr "バーチャルLDAPリストviewエラー"
 
-#: src/err-codes.h:397
+#: src/err-codes.h:398
 msgid "Other LDAP error"
 msgstr "その他のLDAPエラーです"
 
-#: src/err-codes.h:398
+#: src/err-codes.h:399
 msgid "Resources exhausted in LCUP"
 msgstr "LCUPで資源を使い果たしました"
 
-#: src/err-codes.h:399
+#: src/err-codes.h:400
 msgid "Security violation in LCUP"
 msgstr "LCUPのセキュリティ違反"
 
-#: src/err-codes.h:400
+#: src/err-codes.h:401
 msgid "Invalid data in LCUP"
 msgstr "LCUPの無効なデータです"
 
-#: src/err-codes.h:401
+#: src/err-codes.h:402
 msgid "Unsupported scheme in LCUP"
 msgstr "LCUPのサポートされていないスキームです"
 
-#: src/err-codes.h:402
+#: src/err-codes.h:403
 msgid "Reload required in LCUP"
 msgstr "LCUPでリロードが必要です"
 
-#: src/err-codes.h:403
+#: src/err-codes.h:404
 msgid "LDAP cancelled"
 msgstr "LDAPがキャンセルされました"
 
-#: src/err-codes.h:404
+#: src/err-codes.h:405
 msgid "No LDAP operation to cancel"
 msgstr "キャンセルするLDAP操作がありません"
 
-#: src/err-codes.h:405
+#: src/err-codes.h:406
 msgid "Too late to cancel LDAP"
 msgstr "LDAPをキャンセルするには遅すぎます"
 
-#: src/err-codes.h:406
+#: src/err-codes.h:407
 msgid "Cannot cancel LDAP"
 msgstr "LDAPをキャンセルできません"
 
-#: src/err-codes.h:407
+#: src/err-codes.h:408
 msgid "LDAP assertion failed"
 msgstr "LDAPアサーションに失敗しました"
 
-#: src/err-codes.h:408
+#: src/err-codes.h:409
 msgid "Proxied authorization denied by LDAP"
 msgstr "LDAPでプロキシの認証が拒否されました"
 
-#: src/err-codes.h:409
+#: src/err-codes.h:410
 msgid "User defined error code 1"
 msgstr "ユーザ定義エラーコード 1"
 
-#: src/err-codes.h:410
+#: src/err-codes.h:411
 msgid "User defined error code 2"
 msgstr "ユーザ定義エラーコード 2"
 
-#: src/err-codes.h:411
+#: src/err-codes.h:412
 msgid "User defined error code 3"
 msgstr "ユーザ定義エラーコード 3"
 
-#: src/err-codes.h:412
+#: src/err-codes.h:413
 msgid "User defined error code 4"
 msgstr "ユーザ定義エラーコード 4"
 
-#: src/err-codes.h:413
+#: src/err-codes.h:414
 msgid "User defined error code 5"
 msgstr "ユーザ定義エラーコード 5"
 
-#: src/err-codes.h:414
+#: src/err-codes.h:415
 msgid "User defined error code 6"
 msgstr "ユーザ定義エラーコード 6"
 
-#: src/err-codes.h:415
+#: src/err-codes.h:416
 msgid "User defined error code 7"
 msgstr "ユーザ定義エラーコード 7"
 
-#: src/err-codes.h:416
+#: src/err-codes.h:417
 msgid "User defined error code 8"
 msgstr "ユーザ定義エラーコード 8"
 
-#: src/err-codes.h:417
+#: src/err-codes.h:418
 msgid "User defined error code 9"
 msgstr "ユーザ定義エラーコード 9"
 
-#: src/err-codes.h:418
+#: src/err-codes.h:419
 msgid "User defined error code 10"
 msgstr "ユーザ定義エラーコード 10"
 
-#: src/err-codes.h:419
+#: src/err-codes.h:420
 msgid "User defined error code 11"
 msgstr "ユーザ定義エラーコード 11"
 
-#: src/err-codes.h:420
+#: src/err-codes.h:421
 msgid "User defined error code 12"
 msgstr "ユーザ定義エラーコード 12"
 
-#: src/err-codes.h:421
+#: src/err-codes.h:422
 msgid "User defined error code 13"
 msgstr "ユーザ定義エラーコード 13"
 
-#: src/err-codes.h:422
+#: src/err-codes.h:423
 msgid "User defined error code 14"
 msgstr "ユーザ定義エラーコード 14"
 
-#: src/err-codes.h:423
+#: src/err-codes.h:424
 msgid "User defined error code 15"
 msgstr "ユーザ定義エラーコード 15"
 
-#: src/err-codes.h:424
+#: src/err-codes.h:425
 msgid "User defined error code 16"
 msgstr "ユーザ定義エラーコード 16"
 
-#: src/err-codes.h:425
+#: src/err-codes.h:426
 msgid "System error w/o errno"
 msgstr "errno が無いシステムエラー"
 
-#: src/err-codes.h:426
+#: src/err-codes.h:427
 msgid "Unknown system error"
 msgstr "不明なシステムエラー"
 
-#: src/err-codes.h:427
+#: src/err-codes.h:428
 msgid "End of file"
 msgstr "ファイル終端"
 
-#: src/err-codes.h:428
+#: src/err-codes.h:429
 msgid "Unknown error code"
 msgstr "不明なエラーコード"
 
-#: src/gpg-error.c:450
-#, c-format
-msgid "Usage: %s GPG-ERROR [...]\n"
-msgstr "使用法: %s GPG-ERROR [...]\n"
+#: src/argparse.c:318
+msgid "argument not expected"
+msgstr "引数は期待されていません"
 
-#: src/gpg-error.c:633
+#: src/argparse.c:320
+msgid "read error"
+msgstr "読み込みエラー"
+
+#: src/argparse.c:322
+msgid "keyword too long"
+msgstr "キーワードが長すぎます"
+
+#: src/argparse.c:324
+msgid "missing argument"
+msgstr "引数がありません"
+
+#: src/argparse.c:326
+msgid "invalid argument"
+msgstr "無効な引数"
+
+#: src/argparse.c:328
+msgid "invalid command"
+msgstr "無効なコマンド"
+
+#: src/argparse.c:330
+msgid "invalid alias definition"
+msgstr "無効なエイリアス定義です"
+
+#: src/argparse.c:332
+msgid "out of core"
+msgstr "メモリがありません"
+
+#: src/argparse.c:334
+msgid "invalid option"
+msgstr "無効なオプション"
+
+#: src/argparse.c:343
 #, c-format
-msgid "%s: warning: could not recognize %s\n"
-msgstr "%s: 警告: %s を認識できませんでした\n"
+msgid "missing argument for option \"%.50s\"\n"
+msgstr "オプション\"%.50s\"に引数がありません\n"
+
+#: src/argparse.c:345
+#, c-format
+msgid "invalid argument for option \"%.50s\"\n"
+msgstr "オプション\"%.50s\"には無効な引数です\n"
+
+#: src/argparse.c:347
+#, c-format
+msgid "option \"%.50s\" does not expect an argument\n"
+msgstr "オプション\"%.50s\"は引数をとりません\n"
+
+#: src/argparse.c:350
+#, c-format
+msgid "invalid command \"%.50s\"\n"
+msgstr "無効なコマンド \"%.50s\"\n"
+
+#: src/argparse.c:352
+#, c-format
+msgid "option \"%.50s\" is ambiguous\n"
+msgstr "オプション\"%.50s\"はあいまいです\n"
+
+#: src/argparse.c:354
+#, c-format
+msgid "command \"%.50s\" is ambiguous\n"
+msgstr "コマンド\"%.50s\"はあいまいです\n"
+
+#: src/argparse.c:356
+msgid "out of core\n"
+msgstr "メモリがありません\n"
+
+#: src/argparse.c:358
+#, c-format
+msgid "invalid option \"%.50s\"\n"
+msgstr "無効なオプション \"%.50s\"\n"
+
+#: src/gpg-error.c:458
+msgid "Please report bugs to <https://bugs.gnupg.org>.\n"
+msgstr "バグは<https://bugs.gnupg.org>に報告してください。\n"
+
+#: src/gpg-error.c:658
+#, c-format
+msgid "warning: could not recognize %s\n"
+msgstr "警告: %s を認識できませんでした\n"
+
+#~ msgid "Usage: %s GPG-ERROR [...]\n"
+#~ msgstr "使用法: %s GPG-ERROR [...]\n"
+
+#~ msgid "Keyring open"
+#~ msgstr "鍵リングオープン"

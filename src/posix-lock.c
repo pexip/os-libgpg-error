@@ -33,23 +33,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <assert.h>
 
 #if USE_POSIX_THREADS
 # include <pthread.h>
 #endif
 
-#include "gpg-error.h"
+#include "gpgrt-int.h"
 #include "lock.h"
 #include "posix-lock-obj.h"
-
-
-/*
- * Functions called before and after blocking syscalls.
- * gpgrt_set_syscall_clamp is used to set them.
- */
-static void (*pre_lock_func)(void);
-static void (*post_lock_func)(void);
 
 
 #if USE_POSIX_THREADS
@@ -98,8 +89,9 @@ use_pthread_p (void)
           void *retval;
           if (pthread_join (thread, &retval) != 0)
             {
-              assert (!"pthread_join");
-              abort ();
+              fputs ("gpgrt fatal: pthread_join in use_pthread_p failed\n",
+                     stderr);
+              _gpgrt_abort ();
             }
           result = 1;
         }
@@ -111,17 +103,6 @@ use_pthread_p (void)
 #endif /*USE_POSIX_THREADS*/
 
 
-/* Helper to set the clamp functions.  This is called as a helper from
- * _gpgrt_set_syscall_clamp to keep the function pointers local. */
-void
-_gpgrt_lock_set_lock_clamp (void (*pre)(void), void (*post)(void))
-{
-  pre_lock_func = pre;
-  post_lock_func = post;
-}
-
-
-
 static _gpgrt_lock_t *
 get_lock_object (gpgrt_lock_t *lockhd)
 {
@@ -129,13 +110,13 @@ get_lock_object (gpgrt_lock_t *lockhd)
 
   if (lock->vers != LOCK_ABI_VERSION)
     {
-      assert (!"lock ABI version");
-      abort ();
+      fputs ("gpgrt fatal: lock ABI version mismatch\n", stderr);
+      _gpgrt_abort ();
     }
   if (sizeof (gpgrt_lock_t) < sizeof (_gpgrt_lock_t))
     {
-      assert (!"sizeof lock obj");
-      abort ();
+      fputs ("gpgrt fatal: sizeof lock obj\n", stderr);
+      _gpgrt_abort ();
     }
 
   return lock;
@@ -155,8 +136,8 @@ _gpgrt_lock_init (gpgrt_lock_t *lockhd)
     {
       if (sizeof (gpgrt_lock_t) < sizeof (_gpgrt_lock_t))
         {
-          assert (!"sizeof lock obj");
-          abort ();
+          fputs ("gpgrt fatal: sizeof lock obj\n", stderr);
+          _gpgrt_abort ();
         }
       lock->vers = LOCK_ABI_VERSION;
     }
@@ -168,7 +149,7 @@ _gpgrt_lock_init (gpgrt_lock_t *lockhd)
     {
       rc = pthread_mutex_init (&lock->u.mtx, NULL);
       if (rc)
-        rc = gpg_err_code_from_errno (rc);
+        rc = _gpg_err_code_from_errno (rc);
     }
   else
     rc = 0; /* Threads are not used.  */
@@ -189,13 +170,11 @@ _gpgrt_lock_lock (gpgrt_lock_t *lockhd)
 #if USE_POSIX_THREADS
   if (use_pthread_p())
     {
-      if (pre_lock_func)
-        pre_lock_func ();
+      _gpgrt_pre_syscall ();
       rc = pthread_mutex_lock (&lock->u.mtx);
       if (rc)
-        rc = gpg_err_code_from_errno (rc);
-      if (post_lock_func)
-        post_lock_func ();
+        rc = _gpg_err_code_from_errno (rc);
+      _gpgrt_post_syscall ();
     }
   else
     rc = 0; /* Threads are not used.  */
@@ -218,7 +197,7 @@ _gpgrt_lock_trylock (gpgrt_lock_t *lockhd)
     {
       rc = pthread_mutex_trylock (&lock->u.mtx);
       if (rc)
-        rc = gpg_err_code_from_errno (rc);
+        rc = _gpg_err_code_from_errno (rc);
     }
   else
     rc = 0; /* Threads are not used.  */
@@ -241,7 +220,7 @@ _gpgrt_lock_unlock (gpgrt_lock_t *lockhd)
     {
       rc = pthread_mutex_unlock (&lock->u.mtx);
       if (rc)
-        rc = gpg_err_code_from_errno (rc);
+        rc = _gpg_err_code_from_errno (rc);
     }
   else
     rc = 0; /* Threads are not used.  */
@@ -266,7 +245,7 @@ _gpgrt_lock_destroy (gpgrt_lock_t *lockhd)
     {
       rc = pthread_mutex_destroy (&lock->u.mtx);
       if (rc)
-        rc = gpg_err_code_from_errno (rc);
+        rc = _gpg_err_code_from_errno (rc);
       else
         {
           /* Re-init the mutex so that it can be re-used.  */
