@@ -6,6 +6,9 @@
 /* The time this package was configured for a build */
 #undef BUILD_TIMESTAMP
 
+/* Defined to use log_clock timestamps */
+#undef ENABLE_LOG_CLOCK
+
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
 #undef ENABLE_NLS
@@ -29,14 +32,23 @@
    don't. */
 #undef HAVE_DECL_STRERROR_R
 
+/* Define to 1 if you have the <direct.h> header file. */
+#undef HAVE_DIRECT_H
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
 /* Define to 1 if you have the `flockfile' function. */
 #undef HAVE_FLOCKFILE
 
+/* Define to 1 if you have the `fork' function. */
+#undef HAVE_FORK
+
 /* Defined if a GCC style "__attribute__ ((aligned (n))" is supported */
 #undef HAVE_GCC_ATTRIBUTE_ALIGNED
+
+/* Define to 1 if you have the `getrlimit' function. */
+#undef HAVE_GETRLIMIT
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
@@ -50,8 +62,11 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define if you have <langinfo.h> and nl_langinfo(THOUSANDS_SEP). */
-#undef HAVE_LANGINFO_THOUSANDS_SEP
+/* Define if you have <langinfo.h> and nl_langinfo(THOUSEP). */
+#undef HAVE_LANGINFO_THOUSEP
+
+/* Define to 1 if you have a fully functional readline library. */
+#undef HAVE_LIBREADLINE
 
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
@@ -68,6 +83,9 @@
 /* Define to 1 if you have the `memrchr' function. */
 #undef HAVE_MEMRCHR
 
+/* Define to 1 if you have the `mmap' function. */
+#undef HAVE_MMAP
+
 /* Define if the <pthread.h> defines PTHREAD_MUTEX_RECURSIVE. */
 #undef HAVE_PTHREAD_MUTEX_RECURSIVE
 
@@ -77,11 +95,26 @@
 /* Define to 1 if the system has the type `ptrdiff_t'. */
 #undef HAVE_PTRDIFF_T
 
+/* Define to 1 if you have the `rand' function. */
+#undef HAVE_RAND
+
+/* Define to 1 if you have the `setenv' function. */
+#undef HAVE_SETENV
+
+/* Define to 1 if you have the <signal.h> header file. */
+#undef HAVE_SIGNAL_H
+
+/* Define to 1 if you have the `stat' function. */
+#undef HAVE_STAT
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `stpcpy' function. */
+#undef HAVE_STPCPY
 
 /* Define to 1 if you have the `strerror_r' function. */
 #undef HAVE_STRERROR_R
@@ -91,6 +124,9 @@
 
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strlwr' function. */
+#undef HAVE_STRLWR
 
 /* Define to 1 if you have the <sys/select.h> header file. */
 #undef HAVE_SYS_SELECT_H
@@ -116,6 +152,12 @@
 /* Define to 1 if you have the `vasprintf' function. */
 #undef HAVE_VASPRINTF
 
+/* Define to 1 if you have the `vfork' function. */
+#undef HAVE_VFORK
+
+/* Define to 1 if you have the <vfork.h> header file. */
+#undef HAVE_VFORK_H
+
 /* Defined if we run on WindowsCE */
 #undef HAVE_W32CE_SYSTEM
 
@@ -125,12 +167,21 @@
 /* Defined if we run on 64 bit W32 API system */
 #undef HAVE_W64_SYSTEM
 
+/* Define to 1 if `fork' works. */
+#undef HAVE_WORKING_FORK
+
+/* Define to 1 if `vfork' works. */
+#undef HAVE_WORKING_VFORK
+
 /* The host triplet */
 #undef HOST_TRIPLET_STRING
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #undef LT_OBJDIR
+
+/* Defined if mkdir() does not take permission flags */
+#undef MKDIR_TAKES_ONE_ARG
 
 /* Name of package */
 #undef PACKAGE
@@ -231,6 +282,9 @@
 /* Version number of package */
 #undef VERSION
 
+/* Expose all libc features (__DARWIN_C_FULL). */
+#undef _DARWIN_C_SOURCE
+
 /* Enable large inode numbers on Mac OS X 10.5.  */
 #ifndef _DARWIN_USE_64_BIT_INODE
 # define _DARWIN_USE_64_BIT_INODE 1
@@ -259,9 +313,15 @@
    not define. */
 #undef intmax_t
 
+/* Define to `int' if <sys/types.h> does not define. */
+#undef pid_t
+
 /* Define to the widest unsigned integer type if <stdint.h> and <inttypes.h>
    do not define. */
 #undef uintmax_t
+
+/* Define as `fork' if `vfork' does not work. */
+#undef vfork
 
 
 /* Force using of NLS for W32 even if no libintl has been found.  This is
@@ -278,4 +338,6 @@
 #define GPG_ERR_ENABLE_GETTEXT_MACROS 1
 #define GPG_ERR_ENABLE_ERRNO_MACROS 1
 #define GPGRT_ENABLE_ES_MACROS 1
+#define GPGRT_ENABLE_LOG_MACROS 1
+#define GPGRT_ENABLE_ARGPARSE_MACROS 1
 

@@ -1,14 +1,14 @@
 # Russian translation for libgpg-error.
-# Copyright (C) 2015 Free Software Foundation, Inc.
+# Copyright (C) 2018 Free Software Foundation, Inc.
 # This file is distributed under the same license as the original package.
-# Ineiev <ineiev@gnu.org>, 2014, 2015
+# Ineiev <ineiev@gnu.org>, 2014, 2015, 2018
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgpg-error\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2016-12-21 13:55+0100\n"
-"PO-Revision-Date: 2015-09-27 12:04+0000\n"
+"POT-Creation-Date: 2019-01-28 08:03+0100\n"
+"PO-Revision-Date: 2018-03-21 19:03+0100\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <gnupg-ru@gnupg.org>\n"
 "Language: ru\n"
@@ -966,29 +966,23 @@ msgstr "Плохой восьмеричный символ в S-выражени
 
 #: src/err-codes.h:242
 msgid "All subkeys are expired or revoked"
-msgstr ""
+msgstr "Все подключи просрочены или отозваны"
 
 #: src/err-codes.h:243
-#, fuzzy
-#| msgid "Data not encrypted"
 msgid "Database is corrupted"
-msgstr "Данные не зашифрованы"
+msgstr "База данных повреждена"
 
 #: src/err-codes.h:244
 msgid "Server indicated a failure"
-msgstr ""
+msgstr "Сервер указал на сбой"
 
 #: src/err-codes.h:245
-#, fuzzy
-#| msgid "Unknown name"
 msgid "No name"
-msgstr "Неизвестное имя"
+msgstr "Нет имени"
 
 #: src/err-codes.h:246
-#, fuzzy
-#| msgid "No public key"
 msgid "No key"
-msgstr "Нет открытого ключа"
+msgstr "Нет ключа"
 
 #: src/err-codes.h:247
 msgid "Legacy key"
@@ -1124,11 +1118,11 @@ msgstr "Недопустимый объект блокировки"
 
 #: src/err-codes.h:280
 msgid "True"
-msgstr ""
+msgstr "Истина"
 
 #: src/err-codes.h:281
 msgid "False"
-msgstr ""
+msgstr "Ложь"
 
 #: src/err-codes.h:282
 msgid "General IPC error"
@@ -1227,531 +1221,584 @@ msgid "Unknown IPC inquire"
 msgstr "Неизвестный запрос IPC"
 
 #: src/err-codes.h:306
-#, fuzzy
-#| msgid "No crypto engine"
 msgid "Crypto engine too old"
-msgstr "Нет криптомеханизма"
+msgstr "Криптомеханизм слишком стар"
 
 #: src/err-codes.h:307
 msgid "Screen or window too small"
-msgstr ""
+msgstr "Экран или окно слишком мало"
 
 #: src/err-codes.h:308
 msgid "Screen or window too large"
-msgstr ""
+msgstr "Экран или окно слишком велико"
 
 #: src/err-codes.h:309
 msgid "Required environment variable not set"
-msgstr ""
+msgstr "Требуемая переменная среды не установлена"
 
 #: src/err-codes.h:310
-#, fuzzy
-#| msgid "Already exists (LDAP)"
 msgid "User ID already exists"
-msgstr "Уже есть (LDAP)"
+msgstr "Идентификатор пользователя уже существует"
 
 #: src/err-codes.h:311
-#, fuzzy
-#| msgid "Already exists (LDAP)"
 msgid "Name already exists"
-msgstr "Уже есть (LDAP)"
+msgstr "Имя уже существует"
 
 #: src/err-codes.h:312
-#, fuzzy
-#| msgid "Duplicated value"
 msgid "Duplicated name"
-msgstr "Величина продублирована"
+msgstr "Имя продублировано"
 
 #: src/err-codes.h:313
-#, fuzzy
-#| msgid "Certificate too young"
 msgid "Object is too young"
-msgstr "Сертификат слишком новый"
+msgstr "Объект слишком нов"
 
 #: src/err-codes.h:314
-#, fuzzy
-#| msgid "Provided object is too short"
 msgid "Object is too old"
-msgstr "Введенный объект слишком мал"
+msgstr "Объект слишком стар"
 
 #: src/err-codes.h:315
-#, fuzzy
-#| msgid "Unknown name"
 msgid "Unknown flag"
-msgstr "Неизвестное имя"
+msgstr "Неизвестный признак"
 
 #: src/err-codes.h:316
-#, fuzzy
-#| msgid "Invalid operation code"
 msgid "Invalid execution order"
-msgstr "Недопустимый код операции"
+msgstr "Недопустимый порядок выполнения"
 
 #: src/err-codes.h:317
 msgid "Already fetched"
-msgstr ""
+msgstr "Уже доставлено"
 
 #: src/err-codes.h:318
 msgid "Try again later"
-msgstr ""
+msgstr "Повторите попытку позднее"
 
 #: src/err-codes.h:319
-msgid "System bug detected"
-msgstr ""
+msgid "Wrong name"
+msgstr "Неверное имя"
 
 #: src/err-codes.h:320
-#, fuzzy
-#| msgid "Unknown system error"
-msgid "Unknown DNS error"
-msgstr "Неизвестная системная ошибка"
+msgid "System bug detected"
+msgstr "Обнаружена ошибка в системе"
 
 #: src/err-codes.h:321
-#, fuzzy
-#| msgid "Invalid OID string"
-msgid "Invalid DNS section"
-msgstr "Недопустимая строка OID"
+msgid "Unknown DNS error"
+msgstr "Неизвестная ошибка DNS"
 
 #: src/err-codes.h:322
-#, fuzzy
-#| msgid "Invalid S-expression"
-msgid "Invalid textual address form"
-msgstr "Недопустимое S-выражение"
+msgid "Invalid DNS section"
+msgstr "Недопустимый раздел DNS"
 
 #: src/err-codes.h:323
-#, fuzzy
-#| msgid "Missing issuer certificate"
-msgid "Missing DNS query packet"
-msgstr "Не хватает сертификата издателя"
+msgid "Invalid textual address form"
+msgstr "Недопустимая текстуальная форма адреса"
 
 #: src/err-codes.h:324
-msgid "Missing DNS answer packet"
-msgstr ""
+msgid "Missing DNS query packet"
+msgstr "Не хватает пакета запроса DNS"
 
 #: src/err-codes.h:325
-msgid "Connection closed in DNS"
-msgstr ""
+msgid "Missing DNS answer packet"
+msgstr "Не хватает ответного пакета DNS"
 
 #: src/err-codes.h:326
-#, fuzzy
-#| msgid "Decryption failed"
-msgid "Verification failed in DNS"
-msgstr "Сбой расшифровки"
+msgid "Connection closed in DNS"
+msgstr "В DNS прервано соединение"
 
 #: src/err-codes.h:327
-#, fuzzy
-#| msgid "Timeout"
-msgid "DNS Timeout"
-msgstr "Лимит времени"
+msgid "Verification failed in DNS"
+msgstr "Сбой проверки в DNS"
 
 #: src/err-codes.h:328
+msgid "DNS Timeout"
+msgstr "Лимит времени DNS"
+
+#: src/err-codes.h:329
 msgid "General LDAP error"
 msgstr "Общая ошибка LDAP"
 
-#: src/err-codes.h:329
+#: src/err-codes.h:330
 msgid "General LDAP attribute error"
 msgstr "Общая ошибка в атрибуте LDAP"
 
-#: src/err-codes.h:330
+#: src/err-codes.h:331
 msgid "General LDAP name error"
 msgstr "Общая ошибка в имени LDAP"
 
-#: src/err-codes.h:331
+#: src/err-codes.h:332
 msgid "General LDAP security error"
 msgstr "Общая ошибка безопасности LDAP"
 
-#: src/err-codes.h:332
+#: src/err-codes.h:333
 msgid "General LDAP service error"
 msgstr "Общая ошибка службы LDAP"
 
-#: src/err-codes.h:333
+#: src/err-codes.h:334
 msgid "General LDAP update error"
 msgstr "Общая ошибка обновления LDAP"
 
-#: src/err-codes.h:334
+#: src/err-codes.h:335
 msgid "Experimental LDAP error code"
 msgstr "Экспериментальный код ошибки LDAP"
 
-#: src/err-codes.h:335
+#: src/err-codes.h:336
 msgid "Private LDAP error code"
 msgstr "Внутренний код ошибки LDAP"
 
-#: src/err-codes.h:336
+#: src/err-codes.h:337
 msgid "Other general LDAP error"
 msgstr "Другая общая ошибка LDAP"
 
-#: src/err-codes.h:337
+#: src/err-codes.h:338
 msgid "LDAP connecting failed (X)"
 msgstr "Отказ соединения LDAP (X)"
 
-#: src/err-codes.h:338
+#: src/err-codes.h:339
 msgid "LDAP referral limit exceeded"
 msgstr "Исчерпан лимит ссылок LDAP"
 
-#: src/err-codes.h:339
+#: src/err-codes.h:340
 msgid "LDAP client loop"
 msgstr "Цикл клиента LDAP"
 
-#: src/err-codes.h:340
+#: src/err-codes.h:341
 msgid "No LDAP results returned"
 msgstr "Нет результатов LDAP"
 
-#: src/err-codes.h:341
+#: src/err-codes.h:342
 msgid "LDAP control not found"
 msgstr "Элемент управления LDAP не найден"
 
-#: src/err-codes.h:342
+#: src/err-codes.h:343
 msgid "Not supported by LDAP"
 msgstr "Не поддерживается функцией LDAP"
 
-#: src/err-codes.h:343
+#: src/err-codes.h:344
 msgid "LDAP connect error"
 msgstr "Ошибка соединения LDAP"
 
-#: src/err-codes.h:344
+#: src/err-codes.h:345
 msgid "Out of memory in LDAP"
 msgstr "Исчерпана память в LDAP"
 
-#: src/err-codes.h:345
+#: src/err-codes.h:346
 msgid "Bad parameter to an LDAP routine"
 msgstr "Неверный параметр процедуры LDAP"
 
-#: src/err-codes.h:346
+#: src/err-codes.h:347
 msgid "User cancelled LDAP operation"
 msgstr "Пользователь отменил операцию LDAP"
 
-#: src/err-codes.h:347
+#: src/err-codes.h:348
 msgid "Bad LDAP search filter"
 msgstr "Плохой фильтр поиска LDAP"
 
-#: src/err-codes.h:348
+#: src/err-codes.h:349
 msgid "Unknown LDAP authentication method"
 msgstr "Неизвестный метод аутентификации LDAP"
 
-#: src/err-codes.h:349
+#: src/err-codes.h:350
 msgid "Timeout in LDAP"
 msgstr "Лимит времени в LDAP"
 
-#: src/err-codes.h:350
+#: src/err-codes.h:351
 msgid "LDAP decoding error"
 msgstr "Ошибка декодирования LDAP"
 
-#: src/err-codes.h:351
+#: src/err-codes.h:352
 msgid "LDAP encoding error"
 msgstr "Ошибка кодирования LDAP"
 
-#: src/err-codes.h:352
+#: src/err-codes.h:353
 msgid "LDAP local error"
 msgstr "Локальная ошибка LDAP"
 
-#: src/err-codes.h:353
+#: src/err-codes.h:354
 msgid "Cannot contact LDAP server"
 msgstr "Не удалось связаться с сервером LDAP"
 
-#: src/err-codes.h:354
+#: src/err-codes.h:355
 msgid "LDAP success"
 msgstr "Успешное выполнение LDAP"
 
-#: src/err-codes.h:355
+#: src/err-codes.h:356
 msgid "LDAP operations error"
 msgstr "Ошибка операций LDAP"
 
-#: src/err-codes.h:356
+#: src/err-codes.h:357
 msgid "LDAP protocol error"
 msgstr "Ошибка протокола LDAP"
 
-#: src/err-codes.h:357
+#: src/err-codes.h:358
 msgid "Time limit exceeded in LDAP"
 msgstr "Исчерпан лимит времени в LDAP"
 
-#: src/err-codes.h:358
+#: src/err-codes.h:359
 msgid "Size limit exceeded in LDAP"
 msgstr "Исчерпан лимит размера в LDAP"
 
-#: src/err-codes.h:359
+#: src/err-codes.h:360
 msgid "LDAP compare false"
 msgstr "Сравнение LDAP: ложь"
 
-#: src/err-codes.h:360
+#: src/err-codes.h:361
 msgid "LDAP compare true"
 msgstr "Сравнение LDAP: истина"
 
-#: src/err-codes.h:361
+#: src/err-codes.h:362
 msgid "LDAP authentication method not supported"
 msgstr "Метод аутентификации LDAP не поддерживается"
 
-#: src/err-codes.h:362
+#: src/err-codes.h:363
 msgid "Strong(er) LDAP authentication required"
 msgstr "Требуется (более) сильная аутентификация LDAP"
 
-#: src/err-codes.h:363
+#: src/err-codes.h:364
 msgid "Partial LDAP results+referral received"
 msgstr "Получены частичные результаты LDAP со ссылкой"
 
-#: src/err-codes.h:364
+#: src/err-codes.h:365
 msgid "LDAP referral"
 msgstr "Ссылка LDAP"
 
-#: src/err-codes.h:365
+#: src/err-codes.h:366
 msgid "Administrative LDAP limit exceeded"
 msgstr "Исчерпан административный лимит LDAP"
 
-#: src/err-codes.h:366
+#: src/err-codes.h:367
 msgid "Critical LDAP extension is unavailable"
 msgstr "Недоступно критичное расширение LDAP"
 
-#: src/err-codes.h:367
+#: src/err-codes.h:368
 msgid "Confidentiality required by LDAP"
 msgstr "Конфиденциальность, требуемая LDAP"
 
-#: src/err-codes.h:368
+#: src/err-codes.h:369
 msgid "LDAP SASL bind in progress"
 msgstr "Выполняется связка SASL LDAP"
 
-#: src/err-codes.h:369
+#: src/err-codes.h:370
 msgid "No such LDAP attribute"
 msgstr "Такого атрибута LDAP нет"
 
-#: src/err-codes.h:370
+#: src/err-codes.h:371
 msgid "Undefined LDAP attribute type"
 msgstr "Неопределенный тип атрибута LDAP"
 
-#: src/err-codes.h:371
+#: src/err-codes.h:372
 msgid "Inappropriate matching in LDAP"
 msgstr "Неподходящее соответствие в LDAP"
 
-#: src/err-codes.h:372
+#: src/err-codes.h:373
 msgid "Constraint violation in LDAP"
 msgstr "Нарушение ограничений в LDAP"
 
-#: src/err-codes.h:373
+#: src/err-codes.h:374
 msgid "LDAP type or value exists"
 msgstr "Тип или значение LDAP существует"
 
-#: src/err-codes.h:374
+#: src/err-codes.h:375
 msgid "Invalid syntax in LDAP"
 msgstr "Ошибка синтаксиса в LDAP"
 
-#: src/err-codes.h:375
+#: src/err-codes.h:376
 msgid "No such LDAP object"
 msgstr "Такого объекта LDAP нет"
 
-#: src/err-codes.h:376
+#: src/err-codes.h:377
 msgid "LDAP alias problem"
 msgstr "Проблема синонима LDAP"
 
-#: src/err-codes.h:377
+#: src/err-codes.h:378
 msgid "Invalid DN syntax in LDAP"
 msgstr "Ошибка синтаксиса DN в LDAP"
 
-#: src/err-codes.h:378
+#: src/err-codes.h:379
 msgid "LDAP entry is a leaf"
 msgstr "Элемент LDAP - лист"
 
-#: src/err-codes.h:379
+#: src/err-codes.h:380
 msgid "LDAP alias dereferencing problem"
 msgstr "Проблема разыменования синонима LDAP"
 
-#: src/err-codes.h:380
+#: src/err-codes.h:381
 msgid "LDAP proxy authorization failure (X)"
 msgstr "Отказ авторизации промежуточного сервера (X)"
 
-#: src/err-codes.h:381
+#: src/err-codes.h:382
 msgid "Inappropriate LDAP authentication"
 msgstr "Неподходящая аутентификация LDAP"
 
-#: src/err-codes.h:382
+#: src/err-codes.h:383
 msgid "Invalid LDAP credentials"
 msgstr "Неверная верительная грамота LDAP"
 
-#: src/err-codes.h:383
+#: src/err-codes.h:384
 msgid "Insufficient access for LDAP"
 msgstr "Недостаточный доступ для LDAP"
 
-#: src/err-codes.h:384
+#: src/err-codes.h:385
 msgid "LDAP server is busy"
 msgstr "Сервер LDAP занят"
 
-#: src/err-codes.h:385
+#: src/err-codes.h:386
 msgid "LDAP server is unavailable"
 msgstr "Сервер LDAP недоступен"
 
-#: src/err-codes.h:386
+#: src/err-codes.h:387
 msgid "LDAP server is unwilling to perform"
 msgstr "Сервер LDAP отказывается работать"
 
-#: src/err-codes.h:387
+#: src/err-codes.h:388
 msgid "Loop detected by LDAP"
 msgstr "Функцией LDAP обнаружен цикл"
 
-#: src/err-codes.h:388
+#: src/err-codes.h:389
 msgid "LDAP naming violation"
 msgstr "Нарушение в именах LDAP"
 
-#: src/err-codes.h:389
+#: src/err-codes.h:390
 msgid "LDAP object class violation"
 msgstr "Нарушение в классе объекта LDAP"
 
-#: src/err-codes.h:390
+#: src/err-codes.h:391
 msgid "LDAP operation not allowed on non-leaf"
 msgstr "Операция LDAP допустима только для листов"
 
-#: src/err-codes.h:391
+#: src/err-codes.h:392
 msgid "LDAP operation not allowed on RDN"
 msgstr "Операция LDAP над RDN не разрешена"
 
-#: src/err-codes.h:392
+#: src/err-codes.h:393
 msgid "Already exists (LDAP)"
 msgstr "Уже есть (LDAP)"
 
-#: src/err-codes.h:393
+#: src/err-codes.h:394
 msgid "Cannot modify LDAP object class"
 msgstr "Невозможно изменить класс объекта LDAP"
 
-#: src/err-codes.h:394
+#: src/err-codes.h:395
 msgid "LDAP results too large"
 msgstr "Слишком большой объем результатов LDAP"
 
-#: src/err-codes.h:395
+#: src/err-codes.h:396
 msgid "LDAP operation affects multiple DSAs"
 msgstr "Операция LDAP влияет на многие DSA"
 
-#: src/err-codes.h:396
+#: src/err-codes.h:397
 msgid "Virtual LDAP list view error"
 msgstr "Ошибка просмотра виртуального списка LDAP"
 
-#: src/err-codes.h:397
+#: src/err-codes.h:398
 msgid "Other LDAP error"
 msgstr "Другая ошибка LDAP"
 
-#: src/err-codes.h:398
+#: src/err-codes.h:399
 msgid "Resources exhausted in LCUP"
 msgstr "Нехватка ресурсов в LCUP"
 
-#: src/err-codes.h:399
+#: src/err-codes.h:400
 msgid "Security violation in LCUP"
 msgstr "Нарушение безопасности в LCUP"
 
-#: src/err-codes.h:400
+#: src/err-codes.h:401
 msgid "Invalid data in LCUP"
 msgstr "Недопустимые данные в LCUP"
 
-#: src/err-codes.h:401
+#: src/err-codes.h:402
 msgid "Unsupported scheme in LCUP"
 msgstr "Схема не поддерживается в LCUP"
 
-#: src/err-codes.h:402
+#: src/err-codes.h:403
 msgid "Reload required in LCUP"
 msgstr "Требуется перезапуск в LCUP"
 
-#: src/err-codes.h:403
+#: src/err-codes.h:404
 msgid "LDAP cancelled"
 msgstr "Отбой LDAP"
 
-#: src/err-codes.h:404
+#: src/err-codes.h:405
 msgid "No LDAP operation to cancel"
 msgstr "Нет операции LDAP, которую можно было бы отменить"
 
-#: src/err-codes.h:405
+#: src/err-codes.h:406
 msgid "Too late to cancel LDAP"
 msgstr "Отменять LDAP слишком поздно"
 
-#: src/err-codes.h:406
+#: src/err-codes.h:407
 msgid "Cannot cancel LDAP"
 msgstr "Не удается отменить LDAP"
 
-#: src/err-codes.h:407
+#: src/err-codes.h:408
 msgid "LDAP assertion failed"
 msgstr "Отказ в установке LDAP"
 
-#: src/err-codes.h:408
+#: src/err-codes.h:409
 msgid "Proxied authorization denied by LDAP"
 msgstr "LDAP отказал в опосредованной авторизации"
 
-#: src/err-codes.h:409
+#: src/err-codes.h:410
 msgid "User defined error code 1"
 msgstr "Пользовательский код ошибки 1"
 
-#: src/err-codes.h:410
+#: src/err-codes.h:411
 msgid "User defined error code 2"
 msgstr "Пользовательский код ошибки 2"
 
-#: src/err-codes.h:411
+#: src/err-codes.h:412
 msgid "User defined error code 3"
 msgstr "Пользовательский код ошибки 3"
 
-#: src/err-codes.h:412
+#: src/err-codes.h:413
 msgid "User defined error code 4"
 msgstr "Пользовательский код ошибки 4"
 
-#: src/err-codes.h:413
+#: src/err-codes.h:414
 msgid "User defined error code 5"
 msgstr "Пользовательский код ошибки 5"
 
-#: src/err-codes.h:414
+#: src/err-codes.h:415
 msgid "User defined error code 6"
 msgstr "Пользовательский код ошибки 6"
 
-#: src/err-codes.h:415
+#: src/err-codes.h:416
 msgid "User defined error code 7"
 msgstr "Пользовательский код ошибки 7"
 
-#: src/err-codes.h:416
+#: src/err-codes.h:417
 msgid "User defined error code 8"
 msgstr "Пользовательский код ошибки 8"
 
-#: src/err-codes.h:417
+#: src/err-codes.h:418
 msgid "User defined error code 9"
 msgstr "Пользовательский код ошибки 9"
 
-#: src/err-codes.h:418
+#: src/err-codes.h:419
 msgid "User defined error code 10"
 msgstr "Пользовательский код ошибки 10"
 
-#: src/err-codes.h:419
+#: src/err-codes.h:420
 msgid "User defined error code 11"
 msgstr "Пользовательский код ошибки 11"
 
-#: src/err-codes.h:420
+#: src/err-codes.h:421
 msgid "User defined error code 12"
 msgstr "Пользовательский код ошибки 12"
 
-#: src/err-codes.h:421
+#: src/err-codes.h:422
 msgid "User defined error code 13"
 msgstr "Пользовательский код ошибки 13"
 
-#: src/err-codes.h:422
+#: src/err-codes.h:423
 msgid "User defined error code 14"
 msgstr "Пользовательский код ошибки 14"
 
-#: src/err-codes.h:423
+#: src/err-codes.h:424
 msgid "User defined error code 15"
 msgstr "Пользовательский код ошибки 15"
 
-#: src/err-codes.h:424
+#: src/err-codes.h:425
 msgid "User defined error code 16"
 msgstr "Пользовательский код ошибки 16"
 
-#: src/err-codes.h:425
+#: src/err-codes.h:426
 msgid "System error w/o errno"
 msgstr "Системная ошибка без номера"
 
-#: src/err-codes.h:426
+#: src/err-codes.h:427
 msgid "Unknown system error"
 msgstr "Неизвестная системная ошибка"
 
-#: src/err-codes.h:427
+#: src/err-codes.h:428
 msgid "End of file"
 msgstr "Конец файла"
 
-#: src/err-codes.h:428
+#: src/err-codes.h:429
 msgid "Unknown error code"
 msgstr "Неизвестный код ошибки"
 
-#: src/gpg-error.c:450
-#, c-format
-msgid "Usage: %s GPG-ERROR [...]\n"
-msgstr "Вызов: %s GPG-ERROR [...]\n"
+#: src/argparse.c:318
+msgid "argument not expected"
+msgstr "неожиданный параметр"
 
-#: src/gpg-error.c:633
+#: src/argparse.c:320
+msgid "read error"
+msgstr "ошибка чтения"
+
+#: src/argparse.c:322
+msgid "keyword too long"
+msgstr "слишком длинное ключевое слово"
+
+#: src/argparse.c:324
+msgid "missing argument"
+msgstr "пропущен аргумент"
+
+#: src/argparse.c:326
+msgid "invalid argument"
+msgstr "недопустимый аргумент"
+
+#: src/argparse.c:328
+msgid "invalid command"
+msgstr "недопустимая команда"
+
+#: src/argparse.c:330
+msgid "invalid alias definition"
+msgstr "недопустимое определение синонима"
+
+#: src/argparse.c:332
+msgid "out of core"
+msgstr "нехватка выделенной памяти"
+
+#: src/argparse.c:334
+msgid "invalid option"
+msgstr "недопустимый параметр"
+
+#: src/argparse.c:343
 #, c-format
-msgid "%s: warning: could not recognize %s\n"
-msgstr "%s: внимание: не распознано %s\n"
+msgid "missing argument for option \"%.50s\"\n"
+msgstr "не хватает аргумента для параметра \"%.50s\"\n"
+
+#: src/argparse.c:345
+#, c-format
+msgid "invalid argument for option \"%.50s\"\n"
+msgstr "недопустимый аргумент для параметра \"%.50s\"\n"
+
+#: src/argparse.c:347
+#, c-format
+msgid "option \"%.50s\" does not expect an argument\n"
+msgstr "у параметра \"%.50s\" не должно быть аргумента\n"
+
+#: src/argparse.c:350
+#, c-format
+msgid "invalid command \"%.50s\"\n"
+msgstr "недопустимая команда \"%.50s\"\n"
+
+#: src/argparse.c:352
+#, c-format
+msgid "option \"%.50s\" is ambiguous\n"
+msgstr "параметр \"%.50s\" неоднозначен\n"
+
+#: src/argparse.c:354
+#, c-format
+msgid "command \"%.50s\" is ambiguous\n"
+msgstr "команда \"%.50s\" неоднозначна\n"
+
+#: src/argparse.c:356
+msgid "out of core\n"
+msgstr "нехватка выделенной памяти\n"
+
+#: src/argparse.c:358
+#, c-format
+msgid "invalid option \"%.50s\"\n"
+msgstr "недопустимый параметр \"%.50s\"\n"
+
+#: src/gpg-error.c:458
+msgid "Please report bugs to <https://bugs.gnupg.org>.\n"
+msgstr "Об ошибках сообщайте по адресу <https://bugs.gnupg.org>.\n"
+
+#: src/gpg-error.c:658
+#, c-format
+msgid "warning: could not recognize %s\n"
+msgstr "внимание: не распознано %s\n"
+
+#~ msgid "Usage: %s GPG-ERROR [...]\n"
+#~ msgstr "Вызов: %s GPG-ERROR [...]\n"

@@ -1,3 +1,192 @@
+libgpg-error (1.35-1) unstable; urgency=medium
+
+  * New upstream version
+  * refresh patches
+  * Standards-Version: bump to 4.3.0 (no changes needed)
+  * move to debhelper 12
+  * updated symbols
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Thu, 31 Jan 2019 18:02:11 -0500
+
+libgpg-error (1.33-3) unstable; urgency=medium
+
+  * mark libgpg-error-mingw-w64-dev Multi-Arch: foreign
+    (thanks, Multiarch hinter!)
+  * avoid the -unknown suffix in gpgrt version string
+  * added new "build" autopkgtest
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 14 Dec 2018 19:27:25 -0500
+
+libgpg-error (1.33-2) unstable; urgency=medium
+
+  * fix up autopkgtest
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 14 Dec 2018 15:17:04 -0500
+
+libgpg-error (1.33-1) unstable; urgency=medium
+
+  * New upstream release
+  * Re-export upstream signing key without extra signatures.
+  * refresh patches
+  * ship correct manpages for gpgrt-config
+  * update symbols file
+  * add Build-Depends-Package to symbols file
+  * ship gpg-error.pc for pkg-config
+  * remember that we ship l10n files from the windows 64-bit build
+  * remember that we do not ship gpgrt-config.1 from the arch-indep builds
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 14 Dec 2018 11:04:31 -0500
+
+libgpg-error (1.32-3) unstable; urgency=medium
+
+  * indicate that libgpg-error-l10n Enhances: libgpg-error0
+  * ship l10n files from arch-indep build (Closes: #911377)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 19 Oct 2018 19:33:46 +0200
+
+libgpg-error (1.32-2) unstable; urgency=medium
+
+  [ Sven Joachim ]
+  * Move the translation files to a new libgpg-error-l10n package
+    (Closes: #872806)
+
+  [ Wookey ]
+  * Add support for arm64ilp32 (Closes: #869605)
+
+  [ Daniel Kahn Gillmor ]
+  * Standards-Version: bumped to 4.2.1 (no changes needed)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 12 Oct 2018 10:04:28 -0400
+
+libgpg-error (1.32-1) unstable; urgency=medium
+
+  * new upstream release
+  * fixup patch
+  * Standards-Version: bump to 4.1.5 (no changes needed)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 13 Jul 2018 00:38:04 -0400
+
+libgpg-error (1.31-1) unstable; urgency=medium
+
+  * new upstream release
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Wed, 02 May 2018 17:18:07 -0400
+
+libgpg-error (1.30-1) unstable; urgency=medium
+
+  * new upstream release
+  * drop patches already upstream
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 01 May 2018 14:52:37 -0400
+
+libgpg-error (1.29-4) unstable; urgency=medium
+
+  * split out new gpgrt-tools package (Closes: #895770)
+  * clean up package descriptions
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 16 Apr 2018 15:21:22 -0700
+
+libgpg-error (1.29-3) unstable; urgency=medium
+
+  * fix yat2m build for cross-compilation
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Sat, 14 Apr 2018 14:49:44 -0400
+
+libgpg-error (1.29-2) unstable; urgency=medium
+
+  * Add texinfo to build-depends
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 13 Apr 2018 17:11:52 -0400
+
+libgpg-error (1.29-1) unstable; urgency=medium
+
+  * New upstream release
+  * drop patches already upstream
+  * refresh patches; import bugfix from upstream
+  * update symbols with more gpgrt_* symbols
+  * d/clean: clean up doc/gpgrt.info
+  * Standards-Version: bump to 4.1.4 (no changes needed)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Thu, 12 Apr 2018 19:26:37 -0400
+
+libgpg-error (1.28-2) unstable; urgency=medium
+
+  * avoid FTBFS on arm* (Closes: #893370)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 19 Mar 2018 17:20:31 +0000
+
+libgpg-error (1.28-1) unstable; urgency=medium
+
+  * new upstream release
+  * use DEP-14 branch naming
+  * d/control: add Rules-Requires-Root: no
+  * drop patches already upstream
+  * refresh patch
+  * do not import generated doc/gpgrt.info with import-orig
+  * d/rules: drop unnecessary options for dh 11
+  * fix w32 builds using upstream patch
+  * update symbols
+  * symlink manpage for gpg-error-config to gpgrt-config
+  * note lintian-override for windows .la files
+  * gpgrt-config is subject to the same reasoning as gpg-error-config.
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 16 Mar 2018 21:21:36 +0000
+
+libgpg-error (1.27-6) unstable; urgency=medium
+
+  * ship yat2m using upstream patches
+  * use compiler flags for yat2m
+  * fleshed out d/copyright
+  * move to debhelper 11
+  * Standards-Version: bump to 4.1.3 (no changes needed)
+  * move Vcs: to salsa
+  * d/copyright: Format: use https
+  * use secure upstream source URL
+  * use https for lists.gnupg.org
+  * add manpage for yat2m
+  * reduce priority to optional
+  * VERSION gets removed during reconf, drop it during import-orig
+  * libgpg-error-dev: ship errorref.txt
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 05 Feb 2018 18:39:54 -0500
+
+libgpg-error (1.27-5) unstable; urgency=medium
+
+  * try to avoid embedding the build path in cross-compiled Windows
+    packages
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 07 Nov 2017 02:16:01 +0100
+
+libgpg-error (1.27-4) unstable; urgency=medium
+
+  * yat2m updates from upstream, now respects SOURCE_DATE_EPOCH
+  * add ia64-unknown-linux-gnu lock-obj definitions
+  * Standards-Version: bump to 4.1.1 (extra → optional)
+  * drop explicit dependency on dh-autoreconf
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 27 Oct 2017 13:24:38 -0400
+
+libgpg-error (1.27-3) unstable; urgency=medium
+
+  * fix header in debian/copyright (Closes: #863659)
+  * more bugfixes and cleanup from upstream
+  * move to unstable
+  * bump Standards-Version to 4.0.0 (no changes needed)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 26 Jun 2017 12:01:18 -0400
+
+libgpg-error (1.27-2) experimental; urgency=medium
+
+  * Removed Jose Carlos Garcia Sogo from uploaders (Closes #862623)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 16 May 2017 12:40:27 -0400
+
+libgpg-error (1.27-1) experimental; urgency=medium
+
+  * New upstream version (in experimental due to the freeze).
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Sun, 05 Mar 2017 00:26:34 +0100
+
 libgpg-error (1.26-2pexip1) pexip; urgency=medium
 
   * Migrate to Stretch
@@ -155,7 +344,7 @@ libgpg-error (1.17-1) unstable; urgency=medium
     introduced there. (Closes: #765430)
   * use upstream's manpage for gpg-error-config
   * bump Standards-Version to 3.9.6 (no changes needed)
- 
+
  -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Mon, 29 Sep 2014 11:39:00 -0400
 
 libgpg-error (1.16-2) unstable; urgency=medium
@@ -183,7 +372,7 @@ libgpg-error (1.15-1) unstable; urgency=medium
   * update the text of gpg-error-config.1, since it has not been called
     libgpg-error-config for years
   * update gpg-error-config to mention --mt
-  * debian/copyright: use DEP5 
+  * debian/copyright: use DEP5
   * adopt new symbol visibility (GPG_ERROR_1.0) from upstream
   * fix locking problem at close with patch from upstream
 
@@ -240,7 +429,7 @@ libgpg-error (1.13-0.3) unstable; urgency=medium
 
   * Non-maintainer upload.
   * Use dh-autoreconf instead of autotools-dev. Closes: #749522.
- 
+
  -- Matthias Klose <doko@debian.org>  Mon, 04 Aug 2014 11:12:08 +0200
 
 libgpg-error (1.13-0.2) unstable; urgency=medium
@@ -316,7 +505,7 @@ libgpg-error (1.10-3.1) unstable; urgency=low
 
 libgpg-error (1.10-3) unstable; urgency=low
 
-  * Do not install .la file (Closes: #657156) 
+  * Do not install .la file (Closes: #657156)
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Thu, 02 Feb 2012 21:56:39 +0000
 
@@ -421,13 +610,13 @@ libgpg-error (1.4-1) unstable; urgency=low
 
 libgpg-error (1.2-1) unstable; urgency=low
 
-  * New upstream version. 
+  * New upstream version.
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Sat,  4 Mar 2006 15:53:20 +0100
 
 libgpg-error (1.1-4) unstable; urgency=low
 
-  * In addition to relibtoolizing we have to upgrade lib-*.m4 files, 
+  * In addition to relibtoolizing we have to upgrade lib-*.m4 files,
   which are hidden in gettext source. (Closes: #319103)
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Sun, 31 Jul 2005 14:47:25 +0200
@@ -443,7 +632,7 @@ libgpg-error (1.1-2) unstable; urgency=low
 
   * Include relibtoolize patch again. (Closes: #319103)
   * This package is priority optional. Changed control file to match
-    ftp-master overrides (Closes: #318221) 
+    ftp-master overrides (Closes: #318221)
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Fri, 29 Jul 2005 00:08:13 +0200
 
@@ -453,7 +642,7 @@ libgpg-error (1.1-1) unstable; urgency=low
   * New upstream release.
      + It does now compile in Hurd (Closes: #307922)
      + German PO file corrections by Jens Seidel. (Closes: #313977)
-  * Bumped Standars-Version. No changes needed. 
+  * Bumped Standars-Version. No changes needed.
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Thu, 14 Jul 2005 01:23:18 +0300
 
@@ -467,7 +656,7 @@ libgpg-error (1.0-1) unstable; urgency=low
     + 05_Makefile.am: new, remove use of local m4/
     + 06_Makefile.in: new, remove using local m4/ and m4/libtool (which is not
     distributed with upstream sources)
-    + 10_relibtoolize: updated, changing to libtool 1.5 
+    + 10_relibtoolize: updated, changing to libtool 1.5
 
  -- Jose Carlos Garcia Sogo <jsogo@debian.org>  Mon,  2 Aug 2004 13:03:06 +0200
 
