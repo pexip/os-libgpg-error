@@ -59,6 +59,7 @@ lock_obj_pub = \
         syscfg/lock-obj-pub.m68k-unknown-linux-gnu.h        \
         syscfg/lock-obj-pub.mips-unknown-linux-gnu.h        \
         syscfg/lock-obj-pub.mips64el-unknown-linux-gnuabi64.h \
+        syscfg/lock-obj-pub.mips64-unknown-linux-gnuabi64.h \
         syscfg/lock-obj-pub.mipsel-unknown-linux-gnu.h      \
 	syscfg/lock-obj-pub.nios2-unknown-linux-gnu.h       \
         syscfg/lock-obj-pub.or1k-unknown-linux-gnu.h        \
@@ -138,7 +139,6 @@ SUFFIXES = .rc .lo
 	$(LTRCCOMPILE) -i "$<" -o "$@"
 
 gpg_error_res = versioninfo.lo
-no_undefined = -no-undefined
 export_symbols = -export-symbols gpg-error.def
 # i686-w64-mingw32.gcc version 4.9.1 takes the long long helper
 # functions from libgcc_s_sjlj-1.dll and not from a static libgcc.  As
@@ -157,7 +157,6 @@ uninstall-def-file:
 
 libgpg_error_la_DEPENDENCIES = $(gpg_error_res) gpg-error.def
 intllibs =
-socklibs = -lws2_32
 
 #
 # }}} End Windows part
@@ -168,7 +167,6 @@ else
 #
 arch_sources = posix-lock.c posix-lock-obj.h posix-thread.c spawn-posix.c
 gpg_error_res =
-no_undefined =
 export_symbols =
 extra_ltoptions =
 
@@ -176,12 +174,13 @@ install-def-file:
 uninstall-def-file:
 
 intllibs = @LTLIBINTL@
-socklibs =
 
 endif
 #
 # }}} End Unix part
 #
+
+socklibs = @GPG_ERROR_CONFIG_LIBS_PRIVATE@
 
 if HAVE_LD_VERSION_SCRIPT
   libgpg_error_vers_opt = -Wl,--version-script=$(srcdir)/gpg-error.vers
@@ -190,7 +189,7 @@ else
 endif
 
 libgpg_error_la_LDFLAGS = \
-  $(no_undefined) $(export_symbols) $(libgpg_error_vers_opt) \
+  -no-undefined $(export_symbols) $(libgpg_error_vers_opt) \
   $(extra_ltoptions) -version-info \
   @LIBGPG_ERROR_LT_CURRENT@:@LIBGPG_ERROR_LT_REVISION@:@LIBGPG_ERROR_LT_AGE@
 
@@ -200,6 +199,7 @@ libgpg_error_la_SOURCES = gettext.h $(arch_sources) \
 	strsource.c strerror.c code-to-errno.c code-from-errno.c \
 	visibility.c visibility.h \
 	sysutils.c \
+	stringutils.c \
 	syscall-clamp.c \
 	logging.c \
 	b64dec.c b64enc.c \
@@ -279,13 +279,15 @@ gpg-error.def: Makefile gpg-error.def.in
 # It is correct to use $(CC_FOR_BUILD) here.  We want to run the
 # program at build time.
 mkerrcodes$(EXEEXT_FOR_BUILD): mkerrcodes.c mkerrcodes.h Makefile
-	$(CC_FOR_BUILD) -I. -I$(srcdir) -o $@ $(srcdir)/mkerrcodes.c
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) \
+	$(CPPFLAGS_FOR_BUILD) -I. -I$(srcdir) -o $@ $(srcdir)/mkerrcodes.c
 
 if HAVE_W32CE_SYSTEM
 # It is correct to use $(CC_FOR_BUILD) here.  We want to run the
 # program at build time.
 mkw32errmap$(EXEEXT_FOR_BUILD): mkw32errmap.c mkw32errmap.tab.h Makefile
-	$(CC_FOR_BUILD) -I. -I$(srcdir) -o $@ $(srcdir)/mkw32errmap.c
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) \
+	$(CPPFLAGS_FOR_BUILD) -I. -I$(srcdir) -o $@ $(srcdir)/mkw32errmap.c
 endif
 
 code-from-errno.h: mkerrcodes$(EXEEXT_FOR_BUILD) Makefile
@@ -293,12 +295,13 @@ code-from-errno.h: mkerrcodes$(EXEEXT_FOR_BUILD) Makefile
 
 errnos-sym.h: Makefile mkstrtable.awk errnos.in
 	$(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=2 -v nogettext=1 \
-		-v prefix=GPG_ERR_ -v namespace=errnos_ \
+		-v prefix=GPG_ERR_ -v pkg_namespace=errnos_ \
 		$(srcdir)/errnos.in >$@
 
 
 mkheader$(EXEEXT_FOR_BUILD): mkheader.c Makefile
-	$(CC_FOR_BUILD) -g -O0 -I. -I$(srcdir) -o $@ $(srcdir)/mkheader.c
+	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) \
+	$(CPPFLAGS_FOR_BUILD) -g -I. -I$(srcdir) -o $@ $(srcdir)/mkheader.c
 
 parts_of_gpg_error_h = 	 	\
 	gpg-error.h.in  	\
@@ -316,12 +319,19 @@ pre_mkheader_cmds = if test -f lock-obj-pub.native.h; \
                     then rm lock-obj-pub.native.h; fi
 mkheader_opts = --cross
 else
+if HAVE_GENERATED_LOCK_OBJ_H
+# lock-obj-pub.native.h is generated at configure time
+pre_mkheader_cmds = :
+mkheader_opts =
+parts_of_gpg_error_h += ./lock-obj-pub.native.h
+else
 pre_mkheader_cmds = :
 mkheader_opts =
 parts_of_gpg_error_h += ./lock-obj-pub.native.h
 
 ./lock-obj-pub.native.h: Makefile gen-posix-lock-obj$(EXEEXT) posix-lock-obj.h
 	./gen-posix-lock-obj >$@
+endif
 endif
 
 # We also depend on versioninfo.rc because that is build by
@@ -338,11 +348,12 @@ gpgrt.h: gpg-error.h
 
 gpg-error-config: gpgrt-config gpg-error-config-old
 	@echo $(ECHO_N) "Confirm gpg-error-config works... $(ECHO_C)"
-	@if $(srcdir)/gpg-error-config-test.sh --old-new; then \
+	@if ./gpg-error-config-test.sh --old-new; then \
 	  echo "good";                                         \
 	else                                                   \
 	  echo "no";                                           \
 	  echo "***  Please report to <https://bugs.gnupg.org> with gpg-error-config-test.log"; \
+	  exit 1; \
 	fi
 	cp gpg-error-config-old $@
 
