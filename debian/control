@@ -17,7 +17,7 @@ Homepage: https://www.gnupg.org/related_software/libgpg-error/
 Vcs-Git: https://salsa.debian.org/debian/libgpg-error.git
 Vcs-Browser: https://salsa.debian.org/debian/libgpg-error
 Rules-Requires-Root: no
-XS-Pexip-Upstream: http://ftp.debian.org/debian/ buster
+XS-Pexip-Upstream: http://deb.debian.org/debian/ bullseye
 
 Package: libgpg-error-dev
 Section: libdevel
