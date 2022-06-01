@@ -126,11 +126,13 @@ _gpgrt_get_errorcount (int clear)
 }
 
 
-/* Increment the error count as maintainer by the log functions.  */
+/* Increment the error count as maintained by the log functions.  */
 void
 _gpgrt_inc_errorcount (void)
 {
-   errorcount++;
+  /* Protect against counter overflow.  */
+  if (errorcount < 30000)
+    errorcount++;
 }
 
 
@@ -255,9 +257,10 @@ fun_writer (void *cookie_arg, const void *buffer, size_t size)
 #ifndef HAVE_W32_SYSTEM
           memset (&srvr_addr, 0, sizeof srvr_addr);
           srvr_addr_un.sun_family = af;
-          if (!*name && (name = socket_dir_cb ()) && *name)
+          if (!*name)
             {
-              if (strlen (name) + 7 < sizeof (srvr_addr_un.sun_path)-1)
+              if ((name = socket_dir_cb ()) && *name
+                  && strlen (name) + 7 < sizeof (srvr_addr_un.sun_path)-1)
                 {
                   strncpy (srvr_addr_un.sun_path,
                            name, sizeof (srvr_addr_un.sun_path)-1);
@@ -270,7 +273,7 @@ fun_writer (void *cookie_arg, const void *buffer, size_t size)
             }
           else
             {
-              if (*name && strlen (name) < sizeof (srvr_addr_un.sun_path)-1)
+              if (strlen (name) < sizeof (srvr_addr_un.sun_path)-1)
                 {
                   strncpy (srvr_addr_un.sun_path,
                            name, sizeof (srvr_addr_un.sun_path)-1);
@@ -699,7 +702,7 @@ _gpgrt_log_get_stream ()
 }
 
 
-/* A fiter used with the fprintf_sf function to sanitize the args for
+/* A filter used with the fprintf_sf function to sanitize the args for
  * "%s" format specifiers.  */
 static char *
 fmt_string_filter (const char *string, int no, void *opaque)
@@ -1052,11 +1055,7 @@ _gpgrt_logv_internal (int level, int ignore_arg_ptr, const char *extrastring,
 
   /* Bumb the error counter for log_error.  */
   if (level == GPGRT_LOGLVL_ERROR)
-    {
-      /* Protect against counter overflow.  */
-      if (errorcount < 30000)
-        errorcount++;
-    }
+    _gpgrt_inc_errorcount ();
 
   return length;
 }
