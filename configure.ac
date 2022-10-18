@@ -1,5 +1,5 @@
 # configure.ac for libgpg-error
-# Copyright (C) 2003, 2004, 2006, 2010, 2013-2020 g10 Code GmbH
+# Copyright (C) 2003, 2004, 2006, 2010, 2013-2022 g10 Code GmbH
 #
 # This file is part of libgpg-error.
 #
@@ -19,7 +19,7 @@
 
 # (Process this file with autoconf to produce a configure script.)
 # The following lines are used by ./autogen.sh.
-AC_PREREQ(2.59)
+AC_PREREQ([2.69])
 min_automake_version="1.14"
 
 # To build a release you need to create a tag with the version number
@@ -29,7 +29,7 @@ min_automake_version="1.14"
 # See below for the LT versions.
 m4_define([mym4_package],[libgpg-error])
 m4_define([mym4_major], [1])
-m4_define([mym4_minor], [38])
+m4_define([mym4_minor], [46])
 
 # Below is m4 magic to extract and compute the revision number, the
 # decimalized short revision number, a beta version string, and a flag
@@ -42,16 +42,16 @@ m4_define([mym4_version],      m4_argn(4, mym4_verslist))
 m4_define([mym4_revision],     m4_argn(7, mym4_verslist))
 m4_define([mym4_revision_dec], m4_argn(8, mym4_verslist))
 m4_esyscmd([echo ]mym4_version[>VERSION])
-AC_INIT([mym4_package],[mym4_version], [https://bugs.gnupg.org])
+AC_INIT([mym4_package],[mym4_version],[https://bugs.gnupg.org])
 # LT Version numbers, remember to change them just *before* a release.
 #   (Code changed:			REVISION++)
 #   (Interfaces added/removed/changed:	CURRENT++, REVISION=0)
 #   (Interfaces added:			AGE++)
 #   (Interfaces removed:		AGE=0)
 # Note that added error codes don't constitute an interface change.
-LIBGPG_ERROR_LT_CURRENT=29
-LIBGPG_ERROR_LT_AGE=29
-LIBGPG_ERROR_LT_REVISION=0
+LIBGPG_ERROR_LT_CURRENT=33
+LIBGPG_ERROR_LT_AGE=33
+LIBGPG_ERROR_LT_REVISION=1
 ################################################
 
 AC_SUBST(LIBGPG_ERROR_LT_CURRENT)
@@ -65,7 +65,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([serial-tests dist-bzip2])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/err-sources.h.in])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_SILENT_RULES
 
@@ -80,7 +80,9 @@ AM_PROG_CC_C_O
 AC_PROG_CPP
 AC_PROG_AWK
 AC_CHECK_TOOL(AR, ar, :)
-AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
+
+AM_LANGINFO_CODESET
 
 # Taken from mpfr-4.0.1, then modified for LDADD_FOR_TESTS_KLUDGE
 dnl Under Linux, make sure that the old dtags are used if LD_LIBRARY_PATH
@@ -120,15 +122,10 @@ AC_SUBST([LDADD_FOR_TESTS_KLUDGE])
 # Set some variables depending on the platform for later use.
 have_w32_system=no
 have_w64_system=no
-have_w32ce_system=no
 case "${host}" in
     x86_64-*mingw32*)
         have_w32_system=yes
         have_w64_system=yes
-        ;;
-    *-mingw32ce*)
-        have_w32_system=yes
-        have_w32ce_system=yes
         ;;
     *-mingw32*)
         have_w32_system=yes
@@ -136,7 +133,7 @@ case "${host}" in
     *-apple-darwin*)
         # This is the equivalent of the _GNU_SOURCE feature-test-macro
         # on GNU libc systems.
-        AC_DEFINE(_DARWIN_C_SOURCE, 900000L,
+        AC_DEFINE(_DARWIN_C_SOURCE, 1,
                   Expose all libc features (__DARWIN_C_FULL).)
         ;;
     *)
@@ -182,14 +179,22 @@ AH_BOTTOM([
 #define GPGRT_ENABLE_ARGPARSE_MACROS 1
 ])
 
+# We used to provide gpg-error-config command always.  Now, it's
+# gpgrt-config command with gpg-error.pc configuration file, which
+# does same thing.  gpg-error-config command is deprecated.
+AC_ARG_ENABLE(install-gpg-error-config,
+  AS_HELP_STRING([--enable-install-gpg-error-config],
+                 [install gpg-error-config command]),
+  install_gpg_error_config=$enableval)
+AM_CONDITIONAL(INSTALL_GPG_ERROR_CONFIG,
+               test "$install_gpg_error_config" = "yes")
 
 # Note, that autogen.sh greps for the next line.
 AM_GNU_GETTEXT_VERSION([0.19.3])
 AM_GNU_GETTEXT([external])
 
 # Checks for header files.
-AC_HEADER_STDC
-AC_CHECK_HEADERS([stdlib.h locale.h stdint.h sys/select.h sys/time.h \
+AC_CHECK_HEADERS([locale.h stdint.h sys/select.h sys/time.h \
                   signal.h poll.h pwd.h])
 
 AC_FUNC_STRERROR_R
@@ -213,7 +218,7 @@ AC_SUBST(INSTALLSHELLPATH)
 
 AC_FUNC_FORK
 AC_CHECK_FUNCS([flockfile vasprintf mmap rand strlwr stpcpy setenv stat \
-                getrlimit getpwnam getpwuid getpwnam_r getpwuid_r ])
+                getrlimit getpwnam getpwuid getpwnam_r getpwuid_r inet_pton])
 
 
 #
@@ -224,20 +229,6 @@ AC_C_CONST
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)
 AC_CHECK_SIZEOF(long long)
-AC_HEADER_TIME
-AC_CHECK_SIZEOF(time_t,,[[
-#include <stdio.h>
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-]])
 
 GNUPG_FUNC_MKDIR_TAKES_ONE_ARG
 
@@ -444,7 +435,7 @@ case "${host}" in
         ;;
 esac
 AC_ARG_ENABLE([ld-version-script],
-              AC_HELP_STRING([--enable-ld-version-script],
+              AS_HELP_STRING([--enable-ld-version-script],
                              [enable/disable use of linker version script.
                               (default is system dependent)]),
               [have_ld_version_script=$enableval],
@@ -475,6 +466,7 @@ else
   if test "$gl_threads_api" = posix; then
     AC_CHECK_SIZEOF(pthread_mutex_t,,[AC_INCLUDES_DEFAULT
                                       #include <pthread.h>])
+    AC_CHECK_HEADERS([sys/single_threaded.h])
   fi
 fi
 
@@ -516,7 +508,7 @@ GNUPG_CHECK_READLINE
 estream_INIT
 
 #
-# Substitution used for gpg-error-config
+# Substitution used for gpg-error-config and gpg-error.pc
 #
 GPG_ERROR_CONFIG_LIBS="$config_libs"
 if test "x$LIBTHREAD" != x; then
@@ -527,11 +519,7 @@ if test "x$LIBMULTITHREAD" != x; then
 else
   GPG_ERROR_CONFIG_MT_LIBS=""
 fi
-if test "$have_w32ce_system" = yes; then
-  GPG_ERROR_CONFIG_CFLAGS="-idirafter \${includedir}/gpg-extra"
-else
-  GPG_ERROR_CONFIG_CFLAGS=""
-fi
+GPG_ERROR_CONFIG_CFLAGS=""
 if test "x$THREADLIB_CPPFLAGS" != x; then
   GPG_ERROR_CONFIG_MT_CFLAGS="${THREADLIB_CPPFLAGS}"
 else
@@ -544,32 +532,32 @@ case "$includedir" in
   '${prefix}/include')
     if test "$prefix" != / -a "$prefix" != /usr; then
       if test -z "$GPG_ERROR_CONFIG_CFLAGS"; then
-        GPG_ERROR_CONFIG_CFLAGS="-I$includedir"
+        GPG_ERROR_CONFIG_CFLAGS="-I\${includedir}"
       else
-        GPG_ERROR_CONFIG_CFLAGS="-I$includedir $GPG_ERROR_CONFIG_CFLAGS"
+        GPG_ERROR_CONFIG_CFLAGS="-I\${includedir} $GPG_ERROR_CONFIG_CFLAGS"
       fi
     fi
     ;;
   *)
     if test -z "$GPG_ERROR_CONFIG_CFLAGS"; then
-      GPG_ERROR_CONFIG_CFLAGS="-I$includedir"
+      GPG_ERROR_CONFIG_CFLAGS="-I\${includedir}"
     else
-      GPG_ERROR_CONFIG_CFLAGS="-I$includedir $GPG_ERROR_CONFIG_CFLAGS"
+      GPG_ERROR_CONFIG_CFLAGS="-I\${includedir} $GPG_ERROR_CONFIG_CFLAGS"
     fi
     ;;
 esac
 case "$libdir" in
   /usr/lib|/usr/lib64|/lib|/lib64) ;;
-  '${exec_prefix}/lib')
+  '${exec_prefix}/lib'|'${exec_prefix}/lib64')
     if test "$exec_prefix" = "NONE"; then
       if test "$prefix" != / -a "$prefix" != /usr; then
-        GPG_ERROR_CONFIG_LIBS="-L$libdir $GPG_ERROR_CONFIG_LIBS"
+        GPG_ERROR_CONFIG_LIBS="-L\${libdir} $GPG_ERROR_CONFIG_LIBS"
       fi
     elif test "$exec_prefix" != / -a "$exec_prefix" != /usr; then
-      GPG_ERROR_CONFIG_LIBS="-L$libdir $GPG_ERROR_CONFIG_LIBS"
+      GPG_ERROR_CONFIG_LIBS="-L\${libdir} $GPG_ERROR_CONFIG_LIBS"
     fi
     ;;
-  *) GPG_ERROR_CONFIG_LIBS="-L$libdir $GPG_ERROR_CONFIG_LIBS" ;;
+  *) GPG_ERROR_CONFIG_LIBS="-L\${libdir} $GPG_ERROR_CONFIG_LIBS" ;;
 esac
 
 AC_SUBST(GPG_ERROR_CONFIG_LIBS)
@@ -589,21 +577,30 @@ if test "$have_w32_system" = yes; then
     if test "$have_w64_system" = yes; then
       AC_DEFINE(HAVE_W64_SYSTEM,1,[Defined if we run on 64 bit W32 API system])
     fi
-    if test "$have_w32ce_system" = yes; then
-      AC_DEFINE(HAVE_W32CE_SYSTEM,1,[Defined if we run on WindowsCE])
-    fi
     force_use_syscfg=yes
 fi
-if test x$cross_compiling = xyes; then
+if test x"$gl_use_threads" = xno; then
+  lock_obj_h_generated=yes
+  if test ! -d src; then mkdir src; fi
+  host=$host $srcdir/src/gen-lock-obj.sh --disable-threads \
+    >src/lock-obj-pub.native.h
+  AC_MSG_NOTICE([generated src/lock-obj-pub.native.h for $host])
+elif test x$cross_compiling = xyes; then
   case $host in
-    *-*-linux*)
-    lock_obj_h_generated=yes
-    LOCK_ABI_VERSION=1 host=$host host_alias=$host_alias \
-        CC=$CC OBJDUMP=$host_alias-objdump \
-        ac_ext=$ac_ext ac_objext=$ac_objext \
-        AWK=$AWK $srcdir/src/gen-lock-obj.sh \
-        >src/lock-obj-pub.native.h
-    AC_MSG_NOTICE([generated src/lock-obj-pub.native.h])
+    *-*-linux-gnu* | *-*-linux-musl*)
+    AC_CHECK_TOOL(OBJDUMP, [objdump])
+    if test -n "$OBJDUMP"; then
+      lock_obj_h_generated=yes
+      if test ! -d src; then mkdir src; fi
+      LOCK_ABI_VERSION=1 host=$host host_alias=$host_alias \
+          CC=$CC OBJDUMP=$OBJDUMP \
+          ac_ext=$ac_ext ac_objext=$ac_objext \
+          AWK=$AWK $srcdir/src/gen-lock-obj.sh \
+          >src/lock-obj-pub.native.h
+      AC_MSG_NOTICE([generated src/lock-obj-pub.native.h using $host_alias-objdump and $AWK])
+    else
+      force_use_syscfg=yes
+    fi
     ;;
     *)
     force_use_syscfg=yes
@@ -613,10 +610,22 @@ fi
 
 AM_CONDITIONAL(HAVE_W32_SYSTEM, test "$have_w32_system" = yes)
 AM_CONDITIONAL(HAVE_W64_SYSTEM, test "$have_w64_system" = yes)
-AM_CONDITIONAL(HAVE_W32CE_SYSTEM, test "$have_w32ce_system" = yes)
 AM_CONDITIONAL(CROSS_COMPILING, test x$cross_compiling = xyes)
 AM_CONDITIONAL(FORCE_USE_SYSCFG, test x$force_use_syscfg = xyes)
 AM_CONDITIONAL(HAVE_GENERATED_LOCK_OBJ_H, test x$lock_obj_h_generated = xyes)
+
+have_lock_optimization=no
+if test "$gl_threads_api" = posix; then
+  if test x$ac_cv_header_sys_single_threaded_h = xyes; then
+    have_lock_optimization=yes
+  else
+    case "${host_os}" in
+      *-gnu*) have_lock_optimization=yes ;;
+      * ) ;;
+    esac
+  fi
+fi
+AM_CONDITIONAL(HAVE_LOCK_OPTIMIZATION, test "$have_lock_optimization" = yes)
 
 AC_DEFINE_UNQUOTED(HOST_TRIPLET_STRING, "$host", [The host triplet])
 
@@ -628,7 +637,7 @@ AC_DEFINE_UNQUOTED(HOST_TRIPLET_STRING, "$host", [The host triplet])
 #
 AC_MSG_CHECKING([whether to enable log_clock])
 AC_ARG_ENABLE(log_clock,
-              AC_HELP_STRING([--enable-log-clock],
+              AS_HELP_STRING([--enable-log-clock],
                              [enable log_clock timestamps]),
               enable_log_clock=$enableval, enable_log_clock=no)
 AC_MSG_RESULT($enable_log_clock)
@@ -643,7 +652,7 @@ fi
 build_gpgscm=no
 #AC_MSG_CHECKING([whether to build gpgscm])
 #AC_ARG_ENABLE(gpgscm,
-#              AC_HELP_STRING([--enable-gpgscm],
+#              AS_HELP_STRING([--enable-gpgscm],
 #                             [build the gpgscm tool]),
 #              build_gpgscm=$enableval, build_gpgscm=no)
 #AC_MSG_RESULT($build_gpgscm)
@@ -655,7 +664,7 @@ AM_CONDITIONAL([BUILD_GPGSCM], [test "x$build_gpgscm" != xno])
 # misbehaving autoconf tests in case the user supplied -Werror.
 #
 AC_ARG_ENABLE(werror,
-   AC_HELP_STRING([--enable-werror],
+   AS_HELP_STRING([--enable-werror],
                   [append -Werror to CFLAGS]),
                   [if test $enableval = yes ; then
                       CFLAGS="$CFLAGS -Werror"
@@ -679,7 +688,7 @@ AC_SUBST(BUILD_VERSION)
 AC_SUBST(BUILD_FILEVERSION)
 
 AC_ARG_ENABLE([build-timestamp],
-  AC_HELP_STRING([--enable-build-timestamp],
+  AS_HELP_STRING([--enable-build-timestamp],
                  [set an explicit build timestamp for reproducibility.
                   (default is the current time in ISO-8601 format)]),
      [if test "$enableval" = "yes"; then
@@ -694,18 +703,18 @@ AC_DEFINE_UNQUOTED(BUILD_TIMESTAMP, "$BUILD_TIMESTAMP",
 
 
 
-AC_ARG_ENABLE(languages, AC_HELP_STRING([--disable-languages],
+AC_ARG_ENABLE(languages, AS_HELP_STRING([--disable-languages],
                         [do not build support for other languages than C]))
 AM_CONDITIONAL([LANGUAGES_SOME], [test "x$enable_languages" != xno])
 
 build_doc=yes
-AC_ARG_ENABLE([doc], AC_HELP_STRING([--disable-doc],
+AC_ARG_ENABLE([doc], AS_HELP_STRING([--disable-doc],
                                     [do not build the documentation]),
                      build_doc=$enableval, build_doc=yes)
 AM_CONDITIONAL([BUILD_DOC], [test "x$build_doc" != xno])
 
 build_tests=yes
-AC_ARG_ENABLE([tests], AC_HELP_STRING([--disable-tests],
+AC_ARG_ENABLE([tests], AS_HELP_STRING([--disable-tests],
                                     [do not build the tests]),
                      build_tests=$enableval, build_tests=yes)
 AM_CONDITIONAL([BUILD_TESTS], [test "x$build_tests" != xno])

@@ -1,14 +1,14 @@
 # Russian translation for libgpg-error.
-# Copyright (C) 2020 Free Software Foundation, Inc.
+# Copyright (C) 2021 Free Software Foundation, Inc.
 # This file is distributed under the same license as the original package.
-# Ineiev <ineiev@gnu.org>, 2014, 2015, 2018, 2019, 2020
+# Ineiev <ineiev@gnu.org>, 2014, 2015, 2018, 2019, 2020, 2021
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgpg-error\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2020-05-29 15:01+0200\n"
-"PO-Revision-Date: 2020-02-13 19:03+0100\n"
+"POT-Creation-Date: 2022-10-07 11:24+0200\n"
+"PO-Revision-Date: 2021-10-12 10:43+0100\n"
 "Last-Translator: Ineiev <ineiev@gnu.org>\n"
 "Language-Team: Russian <gnupg-ru@gnupg.org>\n"
 "Language: ru\n"
@@ -81,30 +81,34 @@ msgid "Assuan"
 msgstr "Assuan"
 
 #: src/err-sources.h:44
+msgid "TPM2d"
+msgstr ""
+
+#: src/err-sources.h:45
 msgid "TLS"
 msgstr "TLS"
 
-#: src/err-sources.h:45
+#: src/err-sources.h:46
 msgid "Any source"
 msgstr "Любой источник"
 
-#: src/err-sources.h:46
+#: src/err-sources.h:47
 msgid "User defined source 1"
 msgstr "Пользовательский источник 1"
 
-#: src/err-sources.h:47
+#: src/err-sources.h:48
 msgid "User defined source 2"
 msgstr "Пользовательский источник 2"
 
-#: src/err-sources.h:48
+#: src/err-sources.h:49
 msgid "User defined source 3"
 msgstr "Пользовательский источник 3"
 
-#: src/err-sources.h:49
+#: src/err-sources.h:50
 msgid "User defined source 4"
 msgstr "Пользовательский источник 4"
 
-#: src/err-sources.h:50
+#: src/err-sources.h:51
 msgid "Unknown source"
 msgstr "Неизвестный источник"
 
@@ -1884,129 +1888,119 @@ msgstr "Конец файла"
 msgid "Unknown error code"
 msgstr "Неизвестный код ошибки"
 
-#: src/argparse.c:468
+#: src/argparse.c:494
 msgid "argument not expected"
 msgstr "неожиданный параметр"
 
-#: src/argparse.c:470
+#: src/argparse.c:496
 msgid "read error"
 msgstr "ошибка чтения"
 
-#: src/argparse.c:472
+#: src/argparse.c:498
 msgid "keyword too long"
 msgstr "слишком длинное ключевое слово"
 
-#: src/argparse.c:474
+#: src/argparse.c:500
 msgid "missing argument"
 msgstr "пропущен аргумент"
 
-#: src/argparse.c:476
+#: src/argparse.c:502
 msgid "invalid argument"
 msgstr "недопустимый аргумент"
 
-#: src/argparse.c:478
+#: src/argparse.c:504
 msgid "invalid command"
 msgstr "недопустимая команда"
 
-#: src/argparse.c:480
+#: src/argparse.c:506
 msgid "invalid alias definition"
 msgstr "недопустимое определение синонима"
 
-#: src/argparse.c:482 src/argparse.c:519
-#, fuzzy
-#| msgid "LDAP operations error"
+#: src/argparse.c:508 src/argparse.c:545
 msgid "permission error"
-msgstr "Ошибка операций LDAP"
+msgstr "ошибка допуска"
 
-#: src/argparse.c:484 src/argparse.c:517
+#: src/argparse.c:510 src/argparse.c:543
 msgid "out of core"
 msgstr "нехватка выделенной памяти"
 
-#: src/argparse.c:488 src/argparse.c:523
-#, fuzzy
-#| msgid "invalid command"
+#: src/argparse.c:514 src/argparse.c:549
 msgid "invalid meta command"
-msgstr "недопустимая команда"
+msgstr "недопустимая метакоманда"
 
-#: src/argparse.c:490 src/argparse.c:525
-#, fuzzy
-#| msgid "Unknown command"
+#: src/argparse.c:516 src/argparse.c:551
 msgid "unknown meta command"
-msgstr "Неизвестная команда"
+msgstr "неизвестная метакоманда"
 
-#: src/argparse.c:492 src/argparse.c:527
-#, fuzzy
-#| msgid "Unexpected IPC command"
+#: src/argparse.c:518 src/argparse.c:553
 msgid "unexpected meta command"
-msgstr "Неожиданная команда IPC"
+msgstr "неожиданная метакоманда"
 
-#: src/argparse.c:494
+#: src/argparse.c:520
 msgid "invalid option"
 msgstr "недопустимый параметр"
 
-#: src/argparse.c:504
+#: src/argparse.c:530
 #, c-format
 msgid "missing argument for option \"%.50s\"\n"
 msgstr "не хватает аргумента для параметра \"%.50s\"\n"
 
-#: src/argparse.c:506
+#: src/argparse.c:532
 #, c-format
 msgid "invalid argument for option \"%.50s\"\n"
 msgstr "недопустимый аргумент для параметра \"%.50s\"\n"
 
-#: src/argparse.c:508
+#: src/argparse.c:534
 #, c-format
 msgid "option \"%.50s\" does not expect an argument\n"
 msgstr "у параметра \"%.50s\" не должно быть аргумента\n"
 
-#: src/argparse.c:511
+#: src/argparse.c:537
 #, c-format
 msgid "invalid command \"%.50s\"\n"
 msgstr "недопустимая команда \"%.50s\"\n"
 
-#: src/argparse.c:513
+#: src/argparse.c:539
 #, c-format
 msgid "option \"%.50s\" is ambiguous\n"
 msgstr "параметр \"%.50s\" неоднозначен\n"
 
-#: src/argparse.c:515
+#: src/argparse.c:541
 #, c-format
 msgid "command \"%.50s\" is ambiguous\n"
 msgstr "команда \"%.50s\" неоднозначна\n"
 
-#: src/argparse.c:529
+#: src/argparse.c:555
 #, c-format
 msgid "invalid option \"%.50s\"\n"
 msgstr "недопустимый параметр \"%.50s\"\n"
 
-#: src/argparse.c:1658 src/argparse.c:1753
+#: src/argparse.c:2297 src/argparse.c:2393
 #, c-format
 msgid "Note: no default option file '%s'\n"
-msgstr ""
+msgstr "Замечание: нет файла параметров по умолчанию '%s'\n"
 
-#: src/argparse.c:1668 src/argparse.c:1760
+#: src/argparse.c:2307 src/argparse.c:2400
 #, c-format
 msgid "reading options from '%s'\n"
-msgstr ""
+msgstr "чтение параметров из '%s'\n"
 
-#: src/argparse.c:1745
+#: src/argparse.c:2385
 #, c-format
 msgid "option file '%s': %s\n"
-msgstr ""
+msgstr "файл параметров '%s': %s\n"
 
-#: src/argparse.c:2183
+#: src/argparse.c:2823
 #, c-format
 msgid "Note: ignoring option \"--%s\" due to global config\n"
 msgstr ""
+"Замечание: параметр \"--%s\" игнорируется согласно глобальной конфигурации\n"
 
 #: src/gpg-error.c:522
 msgid "Please report bugs to <https://bugs.gnupg.org>.\n"
 msgstr "Об ошибках сообщайте по адресу <https://bugs.gnupg.org>.\n"
 
-#: src/gpg-error.c:729
+#: src/gpg-error.c:762
 #, c-format
 msgid "warning: could not recognize %s\n"
 msgstr "внимание: не распознано %s\n"
-
-#~ msgid "out of core\n"
-#~ msgstr "нехватка выделенной памяти\n"

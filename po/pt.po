@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgpg-error 1.17\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2020-05-29 15:01+0200\n"
-"PO-Revision-Date: 2018-03-21 19:03+0100\n"
+"POT-Creation-Date: 2022-10-07 11:24+0200\n"
+"PO-Revision-Date: 2021-03-22 10:42+0100\n"
 "Last-Translator: Paulo Tomé <paulo.jorge.tome@gmail.com>\n"
 "Language-Team: Portuguese <traduz@debian.pt.org>\n"
 "Language: pt\n"
@@ -83,30 +83,34 @@ msgid "Assuan"
 msgstr "Assuan"
 
 #: src/err-sources.h:44
+msgid "TPM2d"
+msgstr "TPM2d"
+
+#: src/err-sources.h:45
 msgid "TLS"
 msgstr "TLS"
 
-#: src/err-sources.h:45
+#: src/err-sources.h:46
 msgid "Any source"
 msgstr "Qualquer fonte"
 
-#: src/err-sources.h:46
+#: src/err-sources.h:47
 msgid "User defined source 1"
 msgstr "Fonte definida pelo utilizador 1"
 
-#: src/err-sources.h:47
+#: src/err-sources.h:48
 msgid "User defined source 2"
 msgstr "Fonte definida pelo utilizador 2"
 
-#: src/err-sources.h:48
+#: src/err-sources.h:49
 msgid "User defined source 3"
 msgstr "Fonte definida pelo utilizador 3"
 
-#: src/err-sources.h:49
+#: src/err-sources.h:50
 msgid "User defined source 4"
 msgstr "Fonte definida pelo utilizador 4"
 
-#: src/err-sources.h:50
+#: src/err-sources.h:51
 msgid "Unknown source"
 msgstr "Fonte não conhecida"
 
@@ -2032,126 +2036,126 @@ msgstr "Fim do ficheiro"
 msgid "Unknown error code"
 msgstr "Código de erro desconhecido"
 
-#: src/argparse.c:468
+#: src/argparse.c:494
 #, fuzzy
 msgid "argument not expected"
 msgstr "a escrever chave privada para `%s'\n"
 
-#: src/argparse.c:470
+#: src/argparse.c:496
 #, fuzzy
 msgid "read error"
 msgstr "erro de leitura"
 
-#: src/argparse.c:472
+#: src/argparse.c:498
 #, fuzzy
 msgid "keyword too long"
 msgstr "frase secreta demasiado longa\n"
 
-#: src/argparse.c:474
+#: src/argparse.c:500
 #, fuzzy
 msgid "missing argument"
 msgstr "argumento inválido"
 
-#: src/argparse.c:476
+#: src/argparse.c:502
 #, fuzzy
 #| msgid "invalid armor"
 msgid "invalid argument"
 msgstr "armadura inválida"
 
-#: src/argparse.c:478
+#: src/argparse.c:504
 #, fuzzy
 msgid "invalid command"
 msgstr "comandos em conflito\n"
 
-#: src/argparse.c:480
+#: src/argparse.c:506
 #, fuzzy
 msgid "invalid alias definition"
 msgstr "opções de importação inválidas\n"
 
-#: src/argparse.c:482 src/argparse.c:519
+#: src/argparse.c:508 src/argparse.c:545
 #, fuzzy
 #| msgid "Configuration error"
 msgid "permission error"
 msgstr "Erro de configuração"
 
-#: src/argparse.c:484 src/argparse.c:517
+#: src/argparse.c:510 src/argparse.c:543
 #, fuzzy
 msgid "out of core"
 msgstr "não processado"
 
-#: src/argparse.c:488 src/argparse.c:523
+#: src/argparse.c:514 src/argparse.c:549
 #, fuzzy
 msgid "invalid meta command"
 msgstr "comandos em conflito\n"
 
-#: src/argparse.c:490 src/argparse.c:525
+#: src/argparse.c:516 src/argparse.c:551
 #, fuzzy
 #| msgid "Unknown command"
 msgid "unknown meta command"
 msgstr "Comando desconhecido"
 
-#: src/argparse.c:492 src/argparse.c:527
+#: src/argparse.c:518 src/argparse.c:553
 #, fuzzy
 #| msgid "Unexpected IPC command"
 msgid "unexpected meta command"
 msgstr "Comando IPC inesperado"
 
-#: src/argparse.c:494
+#: src/argparse.c:520
 #, fuzzy
 msgid "invalid option"
 msgstr "opções de importação inválidas\n"
 
-#: src/argparse.c:504
+#: src/argparse.c:530
 #, c-format
 msgid "missing argument for option \"%.50s\"\n"
 msgstr ""
 
-#: src/argparse.c:506
+#: src/argparse.c:532
 #, fuzzy, c-format
 msgid "invalid argument for option \"%.50s\"\n"
 msgstr "opções de importação inválidas\n"
 
-#: src/argparse.c:508
+#: src/argparse.c:534
 #, c-format
 msgid "option \"%.50s\" does not expect an argument\n"
 msgstr ""
 
-#: src/argparse.c:511
+#: src/argparse.c:537
 #, fuzzy, c-format
 msgid "invalid command \"%.50s\"\n"
 msgstr "Comando inválido (tente \"help\")\n"
 
-#: src/argparse.c:513
+#: src/argparse.c:539
 #, c-format
 msgid "option \"%.50s\" is ambiguous\n"
 msgstr ""
 
-#: src/argparse.c:515
+#: src/argparse.c:541
 #, c-format
 msgid "command \"%.50s\" is ambiguous\n"
 msgstr ""
 
-#: src/argparse.c:529
+#: src/argparse.c:555
 #, fuzzy, c-format
 msgid "invalid option \"%.50s\"\n"
 msgstr "opções de importação inválidas\n"
 
-#: src/argparse.c:1658 src/argparse.c:1753
+#: src/argparse.c:2297 src/argparse.c:2393
 #, c-format
 msgid "Note: no default option file '%s'\n"
 msgstr ""
 
-#: src/argparse.c:1668 src/argparse.c:1760
+#: src/argparse.c:2307 src/argparse.c:2400
 #, c-format
 msgid "reading options from '%s'\n"
 msgstr ""
 
-#: src/argparse.c:1745
+#: src/argparse.c:2385
 #, c-format
 msgid "option file '%s': %s\n"
 msgstr ""
 
-#: src/argparse.c:2183
+#: src/argparse.c:2823
 #, c-format
 msgid "Note: ignoring option \"--%s\" due to global config\n"
 msgstr ""
@@ -2160,7 +2164,7 @@ msgstr ""
 msgid "Please report bugs to <https://bugs.gnupg.org>.\n"
 msgstr ""
 
-#: src/gpg-error.c:729
+#: src/gpg-error.c:762
 #, c-format
 msgid "warning: could not recognize %s\n"
 msgstr "aviso: não consegui reconhecer %s\n"

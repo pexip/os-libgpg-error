@@ -1,6 +1,1 @@
 0001-Remove-upstream-git-fanciness.patch
-0002-build-Fix-cross-compiling-into-a-separate-build-dir.patch
-0003-build-On-cross-build-detect-host-s-objdump.patch
-0004-build-Fix-command-line-to-make-src-dir.patch
-0005-build-Fix-the-gpg-error-config-test-for-cross-build.patch
-0006-include-gen-lock-obj.sh.patch
