@@ -39,7 +39,6 @@
 #include "gpgrt-int.h"
 
 
-
 /* Return true if FD is valid.  */
 int
 _gpgrt_fd_valid_p (int fd)
@@ -225,6 +224,94 @@ _gpgrt_setenv (const char *name, const char *value, int overwrite)
 }
 
 
+#ifdef HAVE_W32_SYSTEM
+/* Convert an UTF-8 encode file name to wchar.  If the file name is
+ * close to the limit of MAXPATH the API functions will fail.  The
+ * method to overcome this API limitation is to use a prefix which
+ * bypasses the checking by CreateFile.  This also required to first
+ * convert the name to an absolute file name.  */
+wchar_t *
+_gpgrt_fname_to_wchar (const char *fname)
+{
+  wchar_t *wname;
+  wchar_t *wfullpath = NULL;
+  int success = 0;
+
+  wname = _gpgrt_utf8_to_wchar (fname);
+  if (!wname)
+    return NULL;
+
+  if (!strncmp (fname, "\\\\?\\", 4))
+    success = 1; /* Already translated.  */
+  else if (wcslen (wname) > 230)
+    {
+      int wlen = 1024;
+      int extralen;
+      DWORD res;
+      wchar_t *w;
+
+    try_again:
+      wfullpath = xtrymalloc (wlen * sizeof *wfullpath);
+      if (!wfullpath)
+        goto leave;
+
+      if (*fname == '\\' && fname[1] == '\\' && fname[2])
+        {
+          wcscpy (wfullpath, L"\\\\?\\UNC\\");
+          extralen = 8;
+        }
+      else
+        {
+          wcscpy (wfullpath, L"\\\\?\\");
+          extralen = 4;
+        }
+      res = GetFullPathNameW (wname, wlen-extralen, wfullpath+extralen, NULL);
+      if (!res)
+        {
+          _gpgrt_w32_set_errno (-1);
+          goto leave;
+        }
+      else if (res >= wlen - extralen)
+        {
+          /* Truncated - increase to the desired length.  */
+          if (wlen > 1024)
+            {
+              /* We should never get to here.  */
+              errno = ENAMETOOLONG;
+              goto leave;
+            }
+          /* GetFullPathNameW indicated the required buffer length.  */
+          _gpgrt_free_wchar (wfullpath);
+          wfullpath = NULL;
+          wlen = res + extralen;
+          goto try_again;
+        }
+      _gpgrt_free_wchar (wname);
+      wname = wfullpath;
+      wfullpath = NULL;
+      /* Need to make sure that all slashes are mapped. */
+      for (w = wname; *w; w++)
+        if (*w == L'/')
+          *w = L'\\';
+      success = 1;
+    }
+  else
+    success = 1;
+
+ leave:
+  _gpgrt_free_wchar (wfullpath);
+  if (!success)
+    {
+      _gpgrt_free_wchar (wname);
+      wname = NULL;
+    }
+  return wname;
+}
+
+#endif /*HAVE_W32_SYSTEM*/
+
+
+
 #ifndef HAVE_W32_SYSTEM
 static mode_t
 modestr_to_mode (const char *modestr)
@@ -269,29 +356,37 @@ modestr_to_mode (const char *modestr)
  * write allowed, execution allowed with the first group for the user,
  * the second for the group and the third for all others.  If the
  * string is shorter than above the missing mode characters are meant
- * to be not set.  */
+ * to be not set.
+ *
+ * Note that in addition to returning an gpg-error error code ERRNO is
+ * also set by this function.
+ */
 gpg_err_code_t
 _gpgrt_mkdir (const char *name, const char *modestr)
 {
-#ifdef HAVE_W32CE_SYSTEM
+#ifdef HAVE_W32_SYSTEM
   wchar_t *wname;
+  gpg_err_code_t ec;
   (void)modestr;
 
-  wname = utf8_to_wchar (name);
+  /* Note: Fixme: We should set appropriate permissions.  */
+  wname = _gpgrt_fname_to_wchar (name);
   if (!wname)
     return _gpg_err_code_from_syserror ();
+
   if (!CreateDirectoryW (wname, NULL))
     {
-      xfree (wname);
-      return _gpg_err_code_from_syserror ();
+      _gpgrt_w32_set_errno (-1);
+      ec = _gpg_err_code_from_syserror ();
     }
-  xfree (wname);
-  return 0;
+  else
+    ec = 0;
+
+  _gpgrt_free_wchar (wname);
+  return ec;
+
 #elif MKDIR_TAKES_ONE_ARG
   (void)modestr;
-  /* Note: In the case of W32 we better use CreateDirectory and try to
-     set appropriate permissions.  However using mkdir is easier
-     because this sets ERRNO.  */
   if (mkdir (name))
     return _gpg_err_code_from_syserror ();
   return 0;
@@ -304,13 +399,35 @@ _gpgrt_mkdir (const char *name, const char *modestr)
 
 
 /* A simple wrapper around chdir.  NAME is expected to be utf8
- * encoded.  */
+ * encoded.  Note that in addition to returning an gpg-error error
+ * code ERRNO is also set by this function.  */
 gpg_err_code_t
 _gpgrt_chdir (const char *name)
 {
+#ifdef HAVE_W32_SYSTEM
+  wchar_t *wname;
+  gpg_err_code_t ec;
+
+  /* Note that the \\?\ trick does not work with SetCurrentDirectoryW
+   * Thus we use the plain conversion function.  */
+  wname = _gpgrt_utf8_to_wchar (name);
+  if (!wname)
+    return _gpg_err_code_from_syserror ();
+  if (!SetCurrentDirectoryW (wname))
+    {
+      _gpgrt_w32_set_errno (-1);
+      ec = _gpg_err_code_from_syserror ();
+    }
+  else
+    ec = 0;
+  _gpgrt_free_wchar (wname);
+  return ec;
+
+#else /*!HAVE_W32_SYSTEM*/
   if (chdir (name))
     return _gpg_err_code_from_syserror ();
   return 0;
+#endif /*!HAVE_W32_SYSTEM*/
 }
 
 
@@ -319,6 +436,35 @@ _gpgrt_chdir (const char *name)
 char *
 _gpgrt_getcwd (void)
 {
+#if defined(HAVE_W32_SYSTEM)
+  wchar_t wbuffer[MAX_PATH + sizeof(wchar_t)];
+  DWORD wlen;
+  char *buf, *p;
+
+  wlen = GetCurrentDirectoryW (MAX_PATH, wbuffer);
+  if (!wlen)
+    {
+      _gpgrt_w32_set_errno (-1);
+      return NULL;
+
+    }
+  else if (wlen > MAX_PATH)
+    {
+      /* FWIW: I tried to use GetFullPathNameW (L".") but found no way
+       * to execute a test program at a too long cwd.  */
+      _gpg_err_set_errno (ENAMETOOLONG);
+      return NULL;
+    }
+  buf = _gpgrt_wchar_to_utf8 (wbuffer, wlen);
+  if (buf)
+    {
+      for (p=buf; *p; p++)
+        if (*p == '\\')
+          *p = '/';
+    }
+  return buf;
+
+#else /*Unix*/
   char *buffer;
   size_t size = 100;
 
@@ -327,18 +473,52 @@ _gpgrt_getcwd (void)
       buffer = xtrymalloc (size+1);
       if (!buffer)
         return NULL;
-#ifdef HAVE_W32CE_SYSTEM
-      strcpy (buffer, "/");  /* Always "/".  */
-      return buffer;
-#else
       if (getcwd (buffer, size) == buffer)
         return buffer;
       xfree (buffer);
       if (errno != ERANGE)
         return NULL;
       size *= 2;
-#endif
     }
+#endif /*Unix*/
+}
+
+
+/* Wrapper around access to handle file name encoding under Windows.
+ * Returns 0 if FNAME can be accessed in MODE or an error code.  ERRNO
+ * is also set on error. */
+gpg_err_code_t
+_gpgrt_access (const char *fname, int mode)
+{
+  gpg_err_code_t ec;
+
+#ifdef HAVE_W32_SYSTEM
+  wchar_t *wfname;
+  DWORD attribs;
+
+  wfname = _gpgrt_fname_to_wchar (fname);
+  if (!wfname)
+    return _gpg_err_code_from_syserror ();
+
+  attribs = GetFileAttributesW (wfname);
+  if (attribs == (DWORD)(-1))
+    ec = _gpgrt_w32_get_last_err_code ();
+  else
+    {
+      if ((mode & W_OK) && (attribs & FILE_ATTRIBUTE_READONLY))
+        {
+          _gpg_err_set_errno (EACCES);
+          ec = _gpg_err_code_from_syserror ();
+        }
+      else
+        ec = 0;
+    }
+  _gpgrt_free_wchar (wfname);
+#else /* Unix */
+  ec = access (fname, mode)? _gpg_err_code_from_syserror () : 0;
+#endif /* Unix */
+
+  return ec;
 }
 
 
@@ -386,16 +566,27 @@ _gpgrt_getusername (void)
   char *result = NULL;
 
 #ifdef HAVE_W32_SYSTEM
-  char tmp[1];
-  DWORD size = 1;
+  wchar_t wtmp[1];
+  wchar_t *wbuf;
+  DWORD wsize = 1;
+  char *buf;
 
-  GetUserNameA (tmp, &size);
-  result = _gpgrt_malloc (size);
-  if (result && !GetUserNameA (result, &size))
+  GetUserNameW (wtmp, &wsize);
+  wbuf = _gpgrt_malloc (wsize * sizeof *wbuf);
+  if (!wbuf)
     {
-      xfree (result);
-      result = NULL;
+      _gpgrt_w32_set_errno (-1);
+      return NULL;
     }
+  if (!GetUserNameW (wbuf, &wsize))
+    {
+      _gpgrt_w32_set_errno (-1);
+      xfree (wbuf);
+      return NULL;
+    }
+  buf = _gpgrt_wchar_to_utf8 (wbuf, wsize);
+  xfree (wbuf);
+  return buf;
 
 #else /* !HAVE_W32_SYSTEM */
 

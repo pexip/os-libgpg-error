@@ -251,6 +251,12 @@ gpgrt_fclose (estream_t stream)
 }
 
 int
+gpgrt_fcancel (estream_t stream)
+{
+  return _gpgrt_fcancel (stream);
+}
+
+int
 gpgrt_fclose_snatch (estream_t stream, void **r_buffer, size_t *r_buflen)
 {
   return _gpgrt_fclose_snatch (stream, r_buffer, r_buflen);
@@ -841,6 +847,12 @@ gpgrt_getcwd (void)
   return _gpgrt_getcwd ();
 }
 
+gpg_err_code_t
+gpgrt_access (const char *fname, int mode)
+{
+  return _gpgrt_access (fname, mode);
+}
+
 
 
 gpgrt_b64state_t
@@ -1228,6 +1240,31 @@ gpgrt_absfnameconcat (const char *first, ... )
 /* For consistency reasons we use function wrappers also for Windows
  * specific function despite that they are technically not needed.  */
 #ifdef HAVE_W32_SYSTEM
+
+void
+gpgrt_free_wchar (wchar_t *wstring)
+{
+  if (wstring)
+    _gpgrt_free_wchar (wstring);
+}
+
+wchar_t *
+gpgrt_fname_to_wchar (const char *fname)
+{
+  return _gpgrt_fname_to_wchar (fname);
+}
+
+wchar_t *
+gpgrt_utf8_to_wchar (const char *string)
+{
+  return _gpgrt_utf8_to_wchar (string);
+}
+
+char *
+gpgrt_wchar_to_utf8 (const wchar_t *string)
+{
+  return _gpgrt_wchar_to_utf8 (string, (size_t)(-1));
+}
 
 char *
 gpgrt_w32_reg_query_string (const char *root, const char *dir, const char *name)

@@ -30,17 +30,6 @@
 #include "gettext.h"
 #include "init.h"
 
-#ifdef HAVE_W32CE_SYSTEM
-# include "mkw32errmap.map.c"  /* Generated map_w32codes () */
-# ifndef TLS_OUT_OF_INDEXES
-#  define TLS_OUT_OF_INDEXES 0xFFFFFFFF
-# endif
-# ifndef __MINGW32CE__
-#  /* Replace the Mingw32CE provided abort function.  */
-#  define abort() do { TerminateProcess (GetCurrentProcess(), 8); } while (0)
-# endif
-#endif
-
 
 /* Locale directory support.  */
 
@@ -407,18 +396,26 @@ _gpgrt_strconcat (const char *s1, ...)
 void
 _gpgrt_free (void *a)
 {
+  int save_errno;
+
+  if (!a)
+    return;  /* Shortcut */
+
+  /* In case ERRNO is set we better save it so that the free machinery
+   * may not accidentally change ERRNO.  We restore it only if it was
+   * already set to comply with the usual C semantic for ERRNO.
+   * See also https://dev.gnupg.org/T5393#146261  */
+  save_errno = errno;
   _gpgrt_realloc (a, 0);
+  if (save_errno && save_errno != errno)
+    _gpg_err_set_errno (save_errno);
 }
 
 
 void
 _gpg_err_set_errno (int err)
 {
-#ifdef HAVE_W32CE_SYSTEM
-  SetLastError (err);
-#else /*!HAVE_W32CE_SYSTEM*/
   errno = err;
-#endif /*!HAVE_W32CE_SYSTEM*/
 }
 
 
@@ -635,54 +632,6 @@ get_tls (void)
 
   return tls;
 }
-
-
-/* Return the value of the ERRNO variable.  This needs to be a
-   function so that we can have a per-thread ERRNO.  This is used only
-   on WindowsCE because that OS misses an errno.   */
-#ifdef HAVE_W32CE_SYSTEM
-int
-_gpg_w32ce_get_errno (void)
-{
-  return map_w32codes ( GetLastError () );
-}
-#endif /*HAVE_W32CE_SYSTEM*/
-
-
-/* Replacement strerror function for WindowsCE.  */
-#ifdef HAVE_W32CE_SYSTEM
-char *
-_gpg_w32ce_strerror (int err)
-{
-  struct tls_space_s *tls = get_tls ();
-  wchar_t tmpbuf[STRBUFFER_SIZE];
-  int n;
-
-  if (err == -1)
-    err = _gpg_w32ce_get_errno ();
-
-  /* Note: On a German HTC Touch Pro2 device I also tried
-     LOCALE_USER_DEFAULT and LOCALE_SYSTEM_DEFAULT - both returned
-     English messages.  */
-  if (FormatMessageW (FORMAT_MESSAGE_FROM_SYSTEM, NULL, err,
-                      MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT),
-                      tmpbuf, STRBUFFER_SIZE -1,
-                      NULL))
-    {
-      n = WideCharToMultiByte (CP_UTF8, 0, tmpbuf, -1,
-                               tls->strerror_buffer,
-                               sizeof tls->strerror_buffer -1,
-                               NULL, NULL);
-    }
-  else
-    n = -1;
-
-  if (n < 0)
-    snprintf (tls->strerror_buffer, sizeof tls->strerror_buffer -1,
-              "[w32err=%d]", err);
-  return tls->strerror_buffer;
-}
-#endif /*HAVE_W32CE_SYSTEM*/
 
 
 /* Entry point called by the DLL loader.  */

@@ -1,3 +1,76 @@
+libgpg-error (1.46-1) unstable; urgency=medium
+
+  * New upstream release
+  * add debian/upstream/metadata
+  * d/u/signing-key.asc: drop expired signing key
+  * drop gpg-error-config; upstream prefers "pkg-config gpg-error"
+  * Standards-Version: bump to 4.6.1 (no changes needed)
+  * lintian-overrides: clean up for structured lintian output format
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 18 Oct 2022 16:22:48 -0400
+
+libgpg-error (1.45-2) unstable; urgency=medium
+
+  * Only enable wine32 and wine64 tests on i386 and amd64,
+    respectively
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Fri, 29 Apr 2022 16:23:54 -0400
+
+libgpg-error (1.45-1) unstable; urgency=medium
+
+  * New upstream release
+  * d/gbp.conf: move to DEP-14 branch naming
+  * drop patches already upstream
+  * Avoid invoking autopoint
+  * d/copyright: upstream no longer ships potomo
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Wed, 27 Apr 2022 21:40:48 -0400
+
+libgpg-error (1.43-3) unstable; urgency=medium
+
+  * be more flexible when detecting musl variants (Closes: #1003313)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 18 Jan 2022 18:37:05 -0500
+
+libgpg-error (1.43-2) unstable; urgency=medium
+
+  * cherry-pick fix for musl from upstream (Closes: #1003313)
+  * debian/u/signing-key.asc: update key for gniibe
+  * update lintian-overrides for new more verbose messages
+  * mingw: add new lintian-overrides for no-code-sections
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Tue, 11 Jan 2022 02:57:34 -0500
+
+libgpg-error (1.43-1) unstable; urgency=medium
+
+  * New upstream release 1.43
+
+ -- Christoph Biedl <debian.axhn@manchmal.in-ulm.de>  Sun, 19 Dec 2021 17:19:12 +0100
+
+libgpg-error (1.42-3) unstable; urgency=medium
+
+  * Revert "libgpg-error-dev: fix breakout-link warning (thanks,
+    lintian!)". Closes: #992573
+    Thanks Simon McVittie for spotting the issue and suggesting a fix
+
+ -- Christoph Biedl <debian.axhn@manchmal.in-ulm.de>  Sun, 22 Aug 2021 23:06:56 +0200
+
+libgpg-error (1.42-2) unstable; urgency=medium
+
+  * move to unstable
+  * Standards-Version: bump to 4.6.0 (no changes needed)
+  * libgpg-error-dev: fix breakout-link warning (thanks, lintian!)
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Thu, 19 Aug 2021 20:47:50 -0400
+
+libgpg-error (1.42-1) experimental; urgency=medium
+
+  * Upload to experimental
+  * New upstream version 1.42
+  * Add another uploader
+
+ -- Christoph Biedl <debian.axhn@manchmal.in-ulm.de>  Tue, 04 May 2021 18:19:39 +0200
+
 libgpg-error (1.38-2pexip3) pexip-bullseye; urgency=medium
 
   * Bullseye rebuild for ARM64 inclusion

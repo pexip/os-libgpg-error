@@ -7,7 +7,7 @@ Depends:
  libgpg-error-mingw-w64-dev,
  pkg-config,
  wine32,
-Restrictions: skip-not-installable
+Architecture: i386
 
 Test-Command: debian/tests/windows x86_64
 Features: test-name=win64
@@ -18,7 +18,7 @@ Depends:
  libgpg-error-mingw-w64-dev,
  pkg-config,
  wine64,
-Restrictions: skip-not-installable
+Architecture: amd64
 
 Tests: build
 Depends:

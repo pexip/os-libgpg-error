@@ -244,6 +244,7 @@ parse_config_h (const char *fname)
     {
       fprintf (stderr, "%s:%d: error reading file: %s\n",
                fname, lnr, strerror (errno));
+      fclose (fp);
       return 1;
     }
 
@@ -562,6 +563,13 @@ write_special (const char *fname, int lnr, const char *tag)
       else
         fputs ("ssize_t", stdout);
     }
+  else if (!strcmp (tag, "SOCKET_t"))
+    {
+      if (have_w32_system)
+        fputs ("uintptr_t", stdout);
+      else
+        fputs ("int", stdout);
+    }
   else if (!strcmp (tag, "define:pid_t"))
     {
       if (have_sys_types_h)
@@ -605,11 +613,6 @@ write_special (const char *fname, int lnr, const char *tag)
       if (!strcmp (host_os, "mingw32"))
         {
           include_file (fname, lnr, "w32-add.h", write_line);
-        }
-      else if (!strcmp (host_os, "mingw32ce"))
-        {
-          include_file (fname, lnr, "w32-add.h", write_line);
-          include_file (fname, lnr, "w32ce-add.h", write_line);
         }
     }
   else if (!strcmp (tag, "include:lock-obj"))

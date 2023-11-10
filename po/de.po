@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgpg-error-1.19\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2020-05-29 15:01+0200\n"
-"PO-Revision-Date: 2020-02-07 13:09+0100\n"
+"POT-Creation-Date: 2022-10-07 11:24+0200\n"
+"PO-Revision-Date: 2021-03-22 10:25+0100\n"
 "Last-Translator: Werner Koch <wk@gnupg.org>\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -81,30 +81,34 @@ msgid "Assuan"
 msgstr "Assuan"
 
 #: src/err-sources.h:44
+msgid "TPM2d"
+msgstr "TPM2d"
+
+#: src/err-sources.h:45
 msgid "TLS"
 msgstr "TLS"
 
-#: src/err-sources.h:45
+#: src/err-sources.h:46
 msgid "Any source"
 msgstr "Unspezifische Quelle"
 
-#: src/err-sources.h:46
+#: src/err-sources.h:47
 msgid "User defined source 1"
 msgstr "Benutzerdefinierte Quelle 1"
 
-#: src/err-sources.h:47
+#: src/err-sources.h:48
 msgid "User defined source 2"
 msgstr "Benutzerdefinierte Quelle 2"
 
-#: src/err-sources.h:48
+#: src/err-sources.h:49
 msgid "User defined source 3"
 msgstr "Benutzerdefinierte Quelle 3"
 
-#: src/err-sources.h:49
+#: src/err-sources.h:50
 msgid "User defined source 4"
 msgstr "Benutzerdefinierte Quelle 4"
 
-#: src/err-sources.h:50
+#: src/err-sources.h:51
 msgid "Unknown source"
 msgstr "Unbekannte Quelle"
 
@@ -390,7 +394,7 @@ msgstr "Nich implementiert"
 
 #: src/err-codes.h:98
 msgid "Conflicting use"
-msgstr "Zwiespältige Benutzung"
+msgstr "Widersprüchliche Benutzung"
 
 #: src/err-codes.h:99
 msgid "Invalid cipher mode"
@@ -889,7 +893,7 @@ msgstr "Fehlerhafter Crypto Context"
 
 #: src/err-codes.h:222
 msgid "Conflict in the crypto context"
-msgstr "Zwiespältige Benutzung des Crypto Context"
+msgstr "Widersprüchliche Benutzung des Crypto Context"
 
 #: src/err-codes.h:223
 msgid "Broken public key"
@@ -1873,127 +1877,120 @@ msgstr "Dateiende"
 msgid "Unknown error code"
 msgstr "Unbekannter Fehlercode"
 
-#: src/argparse.c:468
+#: src/argparse.c:494
 msgid "argument not expected"
 msgstr "Argument nicht erwartet"
 
-#: src/argparse.c:470
+#: src/argparse.c:496
 msgid "read error"
 msgstr "Lesefehler"
 
-#: src/argparse.c:472
+#: src/argparse.c:498
 msgid "keyword too long"
 msgstr "Schlüsselwort ist zu lang"
 
-#: src/argparse.c:474
+#: src/argparse.c:500
 msgid "missing argument"
 msgstr "Fehlendes Argument"
 
-#: src/argparse.c:476
+#: src/argparse.c:502
 msgid "invalid argument"
 msgstr "Ungültiges Argument"
 
-#: src/argparse.c:478
+#: src/argparse.c:504
 msgid "invalid command"
 msgstr "Ungültiger Befehl"
 
-#: src/argparse.c:480
+#: src/argparse.c:506
 msgid "invalid alias definition"
 msgstr "Ungültige Alias-Definition"
 
-#: src/argparse.c:482 src/argparse.c:519
-#, fuzzy
-#| msgid "LDAP operations error"
+#: src/argparse.c:508 src/argparse.c:545
 msgid "permission error"
-msgstr "LDAP Konfigurationsfehler"
+msgstr "Zugriffsrechte nicht ausreichend"
 
-#: src/argparse.c:484 src/argparse.c:517
+#: src/argparse.c:510 src/argparse.c:543
 msgid "out of core"
 msgstr "Nicht genügend Speicher"
 
-#: src/argparse.c:488 src/argparse.c:523
-#, fuzzy
-#| msgid "invalid command"
+#: src/argparse.c:514 src/argparse.c:549
 msgid "invalid meta command"
-msgstr "Ungültiger Befehl"
+msgstr "Ungültige Meta-Anweisung"
 
-#: src/argparse.c:490 src/argparse.c:525
-#, fuzzy
-#| msgid "Unknown command"
+#: src/argparse.c:516 src/argparse.c:551
 msgid "unknown meta command"
-msgstr "Unbekanntes Kommando"
+msgstr "Unbekannte Meta-Anweisung"
 
-#: src/argparse.c:492 src/argparse.c:527
-#, fuzzy
-#| msgid "Unexpected IPC command"
+#: src/argparse.c:518 src/argparse.c:553
 msgid "unexpected meta command"
-msgstr "Unerwartetes IPC Kommando"
+msgstr "Unerwartete Meta-Anweisung"
 
-#: src/argparse.c:494
+#: src/argparse.c:520
 msgid "invalid option"
 msgstr "Ungültige Option"
 
-#: src/argparse.c:504
+#: src/argparse.c:530
 #, c-format
 msgid "missing argument for option \"%.50s\"\n"
 msgstr "Fehlendes Argument für Option \"%.50s\"\n"
 
-#: src/argparse.c:506
+#: src/argparse.c:532
 #, c-format
 msgid "invalid argument for option \"%.50s\"\n"
 msgstr "Ungültiges Argument für Option \"%.50s\"\n"
 
-#: src/argparse.c:508
+#: src/argparse.c:534
 #, c-format
 msgid "option \"%.50s\" does not expect an argument\n"
 msgstr "Option \"%.50s\" erwartet kein Argument\n"
 
-#: src/argparse.c:511
+#: src/argparse.c:537
 #, c-format
 msgid "invalid command \"%.50s\"\n"
 msgstr "Ungültiger Befehl \"%.50s\"\n"
 
-#: src/argparse.c:513
+#: src/argparse.c:539
 #, c-format
 msgid "option \"%.50s\" is ambiguous\n"
 msgstr "Option \"%.50s\" ist mehrdeutig\n"
 
-#: src/argparse.c:515
+#: src/argparse.c:541
 #, c-format
 msgid "command \"%.50s\" is ambiguous\n"
 msgstr "Befehl \"%.50s\" ist mehrdeutig\n"
 
-#: src/argparse.c:529
+#: src/argparse.c:555
 #, c-format
 msgid "invalid option \"%.50s\"\n"
 msgstr "Ungültige Option \"%.50s\"\n"
 
-#: src/argparse.c:1658 src/argparse.c:1753
+#: src/argparse.c:2297 src/argparse.c:2393
 #, c-format
 msgid "Note: no default option file '%s'\n"
-msgstr ""
+msgstr "Hinweis: Keine voreingestellte Optionendatei '%s' vorhanden\n"
 
-#: src/argparse.c:1668 src/argparse.c:1760
+#: src/argparse.c:2307 src/argparse.c:2400
 #, c-format
 msgid "reading options from '%s'\n"
-msgstr ""
+msgstr "Optionen werden aus '%s' gelesen\n"
 
-#: src/argparse.c:1745
+#: src/argparse.c:2385
 #, c-format
 msgid "option file '%s': %s\n"
-msgstr ""
+msgstr "Optionendatei '%s': %s\n"
 
-#: src/argparse.c:2183
+#: src/argparse.c:2823
 #, c-format
 msgid "Note: ignoring option \"--%s\" due to global config\n"
 msgstr ""
+"Hinweis: Option \"--%s\" aufgrund der globalen Konfiguration ignoriert\n"
 
 #: src/gpg-error.c:522
 msgid "Please report bugs to <https://bugs.gnupg.org>.\n"
 msgstr ""
 "Berichte über Programmfehler bitte in englisch an <https://bugs.gnupg.org>.\n"
 
-#: src/gpg-error.c:729
+#: src/gpg-error.c:762
 #, c-format
 msgid "warning: could not recognize %s\n"
 msgstr "Warnung: %s konnte nicht erkannt werden\n"

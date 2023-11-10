@@ -1,5 +1,6 @@
 #!/usr/bin/make -f
 include /usr/share/dpkg/architecture.mk
+export AUTOPOINT = true
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export CFLAGS_FOR_BUILD = $(shell dpkg-architecture -f -a$(DEB_BUILD_ARCH) -c dpkg-buildflags --get CFLAGS)
 export LDFLAGS_FOR_BUILD = $(shell dpkg-architecture -f -a$(DEB_BUILD_ARCH) -c dpkg-buildflags --get LDFLAGS)

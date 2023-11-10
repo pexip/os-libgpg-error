@@ -18,5 +18,15 @@ libgpg-error-mingw-w64-dev: executable-not-elf-or-script
 # building static Windows executables (like gpgv.exe), so i don't
 # think it's an actual error to leave it in the distributed .la
 # objects.
-libgpg-error-mingw-w64-dev: non-empty-dependency_libs-in-la-file usr/i686-w64-mingw32/lib/libgpg-error.la
-libgpg-error-mingw-w64-dev: non-empty-dependency_libs-in-la-file usr/x86_64-w64-mingw32/lib/libgpg-error.la
+libgpg-error-mingw-w64-dev: non-empty-dependency_libs-in-la-file -lws2_32 [usr/i686-w64-mingw32/lib/libgpg-error.la:*]
+libgpg-error-mingw-w64-dev: non-empty-dependency_libs-in-la-file -lws2_32 [usr/x86_64-w64-mingw32/lib/libgpg-error.la:*]
+# and we repeat this override, since the FTP-team is using lintian from stable:
+libgpg-error-mingw-w64-dev: non-empty-dependency_libs-in-la-file usr/i686-w64-mingw32/lib/libgpg-error.la \(line .*
+libgpg-error-mingw-w64-dev: non-empty-dependency_libs-in-la-file usr/x86_64-w64-mingw32/lib/libgpg-error.la \(line .*
+
+# These four archives are built for running on windows systems that
+# the no-code-sections lintian check does not understand:
+libgpg-error-mingw-w64-dev: no-code-sections [usr/i686-w64-mingw32/lib/libgpg-error.a]
+libgpg-error-mingw-w64-dev: no-code-sections [usr/i686-w64-mingw32/lib/libgpg-error.dll.a]
+libgpg-error-mingw-w64-dev: no-code-sections [usr/x86_64-w64-mingw32/lib/libgpg-error.a]
+libgpg-error-mingw-w64-dev: no-code-sections [usr/x86_64-w64-mingw32/lib/libgpg-error.dll.a]
