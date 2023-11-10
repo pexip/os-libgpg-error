@@ -79,6 +79,7 @@ MARK_VISIBLE (gpgrt_fpopen_nc)
 MARK_VISIBLE (gpgrt_freopen)
 MARK_VISIBLE (gpgrt_fopencookie)
 MARK_VISIBLE (gpgrt_fclose)
+MARK_VISIBLE (gpgrt_fcancel)
 MARK_VISIBLE (gpgrt_fclose_snatch)
 MARK_VISIBLE (gpgrt_onclose)
 MARK_VISIBLE (gpgrt_fileno)
@@ -163,6 +164,7 @@ MARK_VISIBLE (gpgrt_setenv)
 MARK_VISIBLE (gpgrt_mkdir)
 MARK_VISIBLE (gpgrt_chdir)
 MARK_VISIBLE (gpgrt_getcwd)
+MARK_VISIBLE (gpgrt_access)
 
 MARK_VISIBLE (gpgrt_b64dec_start)
 MARK_VISIBLE (gpgrt_b64dec_proc)
@@ -213,14 +215,15 @@ MARK_VISIBLE (gpgrt_argparser)
 MARK_VISIBLE (gpgrt_usage)
 MARK_VISIBLE (gpgrt_strusage)
 MARK_VISIBLE (gpgrt_set_strusage)
-MARK_VISIBLE (gpgrt_set_fixed_string_mapper);
-MARK_VISIBLE (gpgrt_set_usage_outfnc);
-MARK_VISIBLE (gpgrt_set_confdir);
+MARK_VISIBLE (gpgrt_set_fixed_string_mapper)
+MARK_VISIBLE (gpgrt_set_usage_outfnc)
+MARK_VISIBLE (gpgrt_set_confdir)
 
-MARK_VISIBLE (gpgrt_cmp_version);
+MARK_VISIBLE (gpgrt_cmp_version)
 
-MARK_VISIBLE (gpgrt_fnameconcat);
-MARK_VISIBLE (gpgrt_absfnameconcat);
+MARK_VISIBLE (gpgrt_fnameconcat)
+MARK_VISIBLE (gpgrt_absfnameconcat)
+
 
 
 #undef MARK_VISIBLE
@@ -265,6 +268,7 @@ MARK_VISIBLE (gpgrt_absfnameconcat);
 #define gpgrt_freopen               _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_fopencookie           _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_fclose                _gpgrt_USE_UNDERSCORED_FUNCTION
+#define gpgrt_fcancel               _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_fclose_snatch         _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_onclose               _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_fileno                _gpgrt_USE_UNDERSCORED_FUNCTION
@@ -345,6 +349,7 @@ MARK_VISIBLE (gpgrt_absfnameconcat);
 #define gpgrt_mkdir                 _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_chdir                 _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_getcwd                _gpgrt_USE_UNDERSCORED_FUNCTION
+#define gpgrt_access                _gpgrt_USE_UNDERSCORED_FUNCTION
 
 #define gpgrt_set_syscall_clamp     _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_get_syscall_clamp     _gpgrt_USE_UNDERSCORED_FUNCTION
@@ -402,8 +407,14 @@ MARK_VISIBLE (gpgrt_absfnameconcat);
 #define gpgrt_set_confdir             _gpgrt_USE_UNDERSCORED_FUNCTION
 
 #define gpgrt_cmp_version           _gpgrt_USE_UNDERSCORED_FUNCTION
+#define gpgrt_fnameconcat           _gpgrt_USE_UNDERSCORED_FUNCTION
+#define gpgrt_absfnameconcat        _gpgrt_USE_UNDERSCORED_FUNCTION
 
 /* Windows specific functions.  */
+#define gpgrt_free_wchar            _gpgrt_USE_UNDERSCORED_FUNCTION
+#define gpgrt_utf8_to_wchar         _gpgrt_USE_UNDERSCORED_FUNCTION
+#define gpgrt_wchar_to_utf8         _gpgrt_USE_UNDERSCORED_FUNCTION
+#define gpgrt_fname_to_wchar        _gpgrt_USE_UNDERSCORED_FUNCTION
 #define gpgrt_w32_reg_query_string  _gpgrt_USE_UNDERSCORED_FUNCTION
 
 

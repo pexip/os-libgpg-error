@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR g10 Code GmbH
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the libgpg-error package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libgpg-error 1.38\n"
+"Project-Id-Version: libgpg-error 1.46\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2020-05-29 15:01+0200\n"
+"POT-Creation-Date: 2022-10-07 11:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,30 +82,34 @@ msgid "Assuan"
 msgstr ""
 
 #: src/err-sources.h:44
-msgid "TLS"
+msgid "TPM2d"
 msgstr ""
 
 #: src/err-sources.h:45
-msgid "Any source"
+msgid "TLS"
 msgstr ""
 
 #: src/err-sources.h:46
-msgid "User defined source 1"
+msgid "Any source"
 msgstr ""
 
 #: src/err-sources.h:47
-msgid "User defined source 2"
+msgid "User defined source 1"
 msgstr ""
 
 #: src/err-sources.h:48
-msgid "User defined source 3"
+msgid "User defined source 2"
 msgstr ""
 
 #: src/err-sources.h:49
-msgid "User defined source 4"
+msgid "User defined source 3"
 msgstr ""
 
 #: src/err-sources.h:50
+msgid "User defined source 4"
+msgstr ""
+
+#: src/err-sources.h:51
 msgid "Unknown source"
 msgstr ""
 
@@ -1865,109 +1869,109 @@ msgstr ""
 msgid "Unknown error code"
 msgstr ""
 
-#: src/argparse.c:468
+#: src/argparse.c:494
 msgid "argument not expected"
 msgstr ""
 
-#: src/argparse.c:470
+#: src/argparse.c:496
 msgid "read error"
 msgstr ""
 
-#: src/argparse.c:472
+#: src/argparse.c:498
 msgid "keyword too long"
 msgstr ""
 
-#: src/argparse.c:474
+#: src/argparse.c:500
 msgid "missing argument"
 msgstr ""
 
-#: src/argparse.c:476
+#: src/argparse.c:502
 msgid "invalid argument"
 msgstr ""
 
-#: src/argparse.c:478
+#: src/argparse.c:504
 msgid "invalid command"
 msgstr ""
 
-#: src/argparse.c:480
+#: src/argparse.c:506
 msgid "invalid alias definition"
 msgstr ""
 
-#: src/argparse.c:482 src/argparse.c:519
+#: src/argparse.c:508 src/argparse.c:545
 msgid "permission error"
 msgstr ""
 
-#: src/argparse.c:484 src/argparse.c:517
+#: src/argparse.c:510 src/argparse.c:543
 msgid "out of core"
 msgstr ""
 
-#: src/argparse.c:488 src/argparse.c:523
+#: src/argparse.c:514 src/argparse.c:549
 msgid "invalid meta command"
 msgstr ""
 
-#: src/argparse.c:490 src/argparse.c:525
+#: src/argparse.c:516 src/argparse.c:551
 msgid "unknown meta command"
 msgstr ""
 
-#: src/argparse.c:492 src/argparse.c:527
+#: src/argparse.c:518 src/argparse.c:553
 msgid "unexpected meta command"
 msgstr ""
 
-#: src/argparse.c:494
+#: src/argparse.c:520
 msgid "invalid option"
 msgstr ""
 
-#: src/argparse.c:504
+#: src/argparse.c:530
 #, c-format
 msgid "missing argument for option \"%.50s\"\n"
 msgstr ""
 
-#: src/argparse.c:506
+#: src/argparse.c:532
 #, c-format
 msgid "invalid argument for option \"%.50s\"\n"
 msgstr ""
 
-#: src/argparse.c:508
+#: src/argparse.c:534
 #, c-format
 msgid "option \"%.50s\" does not expect an argument\n"
 msgstr ""
 
-#: src/argparse.c:511
+#: src/argparse.c:537
 #, c-format
 msgid "invalid command \"%.50s\"\n"
 msgstr ""
 
-#: src/argparse.c:513
+#: src/argparse.c:539
 #, c-format
 msgid "option \"%.50s\" is ambiguous\n"
 msgstr ""
 
-#: src/argparse.c:515
+#: src/argparse.c:541
 #, c-format
 msgid "command \"%.50s\" is ambiguous\n"
 msgstr ""
 
-#: src/argparse.c:529
+#: src/argparse.c:555
 #, c-format
 msgid "invalid option \"%.50s\"\n"
 msgstr ""
 
-#: src/argparse.c:1658 src/argparse.c:1753
+#: src/argparse.c:2297 src/argparse.c:2393
 #, c-format
 msgid "Note: no default option file '%s'\n"
 msgstr ""
 
-#: src/argparse.c:1668 src/argparse.c:1760
+#: src/argparse.c:2307 src/argparse.c:2400
 #, c-format
 msgid "reading options from '%s'\n"
 msgstr ""
 
-#: src/argparse.c:1745
+#: src/argparse.c:2385
 #, c-format
 msgid "option file '%s': %s\n"
 msgstr ""
 
-#: src/argparse.c:2183
+#: src/argparse.c:2823
 #, c-format
 msgid "Note: ignoring option \"--%s\" due to global config\n"
 msgstr ""
@@ -1976,7 +1980,7 @@ msgstr ""
 msgid "Please report bugs to <https://bugs.gnupg.org>.\n"
 msgstr ""
 
-#: src/gpg-error.c:729
+#: src/gpg-error.c:762
 #, c-format
 msgid "warning: could not recognize %s\n"
 msgstr ""

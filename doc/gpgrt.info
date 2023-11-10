@@ -1,9 +1,9 @@
 This is gpgrt.info, produced by makeinfo version 6.5 from gpgrt.texi.
 
-This manual is for Libgpg-error (version 1.38, 7 December 2018), which
-is a library for code used by all GnuPG related packages.
+This manual is for Libgpg-error (version 1.46, 2 August 2022), which is
+a library for code used by all GnuPG related packages.
 
-Copyright (C) 2014 g10 Code GmbH
+Copyright (C) 2014, 2022 g10 Code GmbH
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU General Public License as
@@ -13,7 +13,7 @@ Copyright (C) 2014 g10 Code GmbH
      License".
 INFO-DIR-SECTION Libraries
 START-INFO-DIR-ENTRY
-* libgpg-error: (gnupg).   Error codes and common code for GnuPG.
+* libgpg-error: (gpgrt).   Error codes and common code for GnuPG.
 END-INFO-DIR-ENTRY
 
 
@@ -22,10 +22,10 @@ File: gpgrt.info,  Node: Top,  Next: Introduction,  Up: (dir)
 The Libgpg-error Library
 ************************
 
-This manual is for Libgpg-error (version 1.38, 7 December 2018), which
-is a library for code used by all GnuPG related packages.
+This manual is for Libgpg-error (version 1.46, 2 August 2022), which is
+a library for code used by all GnuPG related packages.
 
-Copyright (C) 2014 g10 Code GmbH
+Copyright (C) 2014, 2022 g10 Code GmbH
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU General Public License as
@@ -126,11 +126,11 @@ File: gpgrt.info,  Node: Header,  Next: Building sources,  Up: Preparation
 ==========
 
 All interfaces (data types and functions) of the library are defined in
-the header file 'libgpg-error.h'.  You must include this in all source
+the header file 'gpg-error.h'.  You must include this in all source
 files using the library, either directly or through some other header
 file, like this:
 
-     #include <libgpg-error.h>
+     #include <gpg-error.h>
 
    Note well that the header file is platform specific and may only be
 used on the platform for which it has been build.
@@ -162,32 +162,41 @@ which the header file is located to the compilers include file search
 path (via the '-I' option).
 
    However, the path to the include file is determined at the time the
-source is configured.  To solve this problem, Libgpg-error ships with
-the small helper program 'gpgrt-config' which know the path to the
-include file and other configuration options.  The options that need to
-be added to the compiler invocation at compile time are output by the
-'--cflags' option to 'gpgrt-config' The following example shows how it
-can be used at the command line:
+source is configured.  To solve this problem, Libgpg-error ships with a
+pkg-config file: gpg-error.pc.
 
-     gcc -c foo.c $(gpgrt-config --cflags)
+   The options that need to be added to the compiler invocation at
+compile time are output by the '--cflags' option to 'pkg-config'.  The
+following example shows how it can be used at the command line:
 
-   Adding the output of 'gpgrt-config --cflags' to the compiler’s
-command line will ensure that the compiler can find the Libgpg-error
-header file.
+     gcc -c foo.c $(pkg-config --cflags gpg-error)
+
+   Adding the output of 'pkg-config --cflags gpg-error' to the
+compiler’s command line will ensure that the compiler can find the
+Libgpg-error header file.
 
    A similar problem occurs when linking the program with the library.
 Again, the compiler has to find the library files.  For this to work,
 the path to the library files has to be added to the library search path
-(via the '-L' option).  For this, the option '--libs' to 'gpgrt-config'
+(via the '-L' option).  For this, the option '--libs' to 'pkg-config'
 can be used.  The example shows how to link 'foo.o' with the
 Libgpg-error library to a program 'foo'.
 
-     gcc -o foo foo.o $(gpgrt-config --libs)
+     gcc -o foo foo.o $(pkg-config --libs gpg-error)
 
    Of course you can also combine both examples to a single command by
-specifying both options to 'gpgrt-config':
+specifying both options to 'pkg-config':
 
-     gcc -o foo foo.c $(gpgrt-config --cflags --libs)
+     gcc -o foo foo.c $(pkg-config --cflags --libs gpg-error)
+
+   For GnuPG and its friends, which are usually needed to be built
+earlier in a stage of OS bootstrap, Libgpg-error ships the small helper
+program 'gpgrt-config'.  This helper program is a sort of 'pkg-config'
+replacement for limited environment, supporting cross compilation, as
+well as multilib and multi-arch installation.  Note that 'gpgrt-config'
+is not for general use for other programs.  'gpgrt-config' requires
+invocation with the option '--lib=' so that it locates the appropriate
+path to 'gpg-error.pc'.
 
 
 File: gpgrt.info,  Node: Building sources using Automake,  Next: Initializing the library,  Prev: Building sources,  Up: Preparation
@@ -197,8 +206,9 @@ File: gpgrt.info,  Node: Building sources using Automake,  Next: Initializing th
 
 It is much easier if you use GNU Automake instead of writing your own
 Makefiles.  If you do that, you do not have to worry about finding and
-invoking the 'gpgrt-config' script at all.  Libgpg-error provides an
-extension to Automake that does all the work for you.
+invoking the 'pkg-config' or 'gpgrt-config' script at all.  Libgpg-error
+provides an extension to Automake that does all the work for you.  That
+is offered by 'gpg-error.m4'.
 
  -- Macro: AM_PATH_GPG_ERROR ([MINIMUM-VERSION], [ACTION-IF-FOUND],
           [ACTION-IF-NOT-FOUND])
@@ -209,19 +219,9 @@ extension to Automake that does all the work for you.
      Additionally, the function defines 'GPG_ERROR_CFLAGS' to the flags
      needed for compilation of the program to find the 'gpg-error.h'
      header file, and 'GPG_ERROR_LIBS' to the linker flags needed to
-     link the program to the Libgpg-error library.  If the used helper
-     script does not match the target type you are building for a
-     warning is printed and the string 'libgpg-error' is appended to the
-     variable 'gpg_config_script_warn'.
+     link the program to the Libgpg-error library.
 
-     This macro searches for 'gpgrt-config' along the PATH. If you are
-     cross-compiling, it is useful to set the environment variable
-     'SYSROOT' to the top directory of your target.  The macro will then
-     first look for the helper program in the 'bin' directory below that
-     top directory.  An absolute directory name must be used for
-     'SYSROOT'.  Finally, if the configure command line option
-     '--with-libgpg-error-prefix' is used, only its value is used for
-     the top directory below which the helper script is expected.
+     This macro searches for 'gpgrt-config' along the PATH.
 
    You can use the defined Autoconf variables like this in your
 'Makefile.am':
@@ -279,20 +279,23 @@ File: gpgrt.info,  Node: Tools,  Next: Library Copying,  Prev: Generalities,  Up
 
 * Menu:
 
-* gpgrt-config::    Print required compiler flags
+* gpg-error-config::    Print required compiler flags
 
 
-File: gpgrt.info,  Node: gpgrt-config,  Up: Tools
+File: gpgrt.info,  Node: gpg-error-config,  Up: Tools
 
 4.1 Print required compiler flags
 =================================
 
-'gpgrt-config' is a tool that is used to configure to determine the
+'gpg-error-config' is a tool that is used to configure to determine the
 compiler and linker flags that should be used to compile and link
-programs that use Libgpg-error.  It is also used internally to the '.m4'
-macros for GNU autoconf that are included with Libgpg-error.
+programs that use Libgpg-error.
 
-'gpgrt-config' accepts the following options:
+   This tool is now obsolete.  Instead, please use pkg-config with
+gpg-error.pc for your new program, or use gpg-error.m4 which uses
+gpgrt-config and gpg-error.pc internally.
+
+'gpg-error-config' accepts the following options:
 
 '--mt'
      Provide output appropriate for multithreaded programs.  '--mt' is
@@ -1233,30 +1236,30 @@ Function and Data Index
 * Menu:
 
 * AM_PATH_GPG_ERROR:                     Building sources using Automake.
-                                                               (line 11)
+                                                               (line 12)
 * gpgrt_check_version:                   Initializing the library.
                                                                (line 15)
 
 
 
 Tag Table:
-Node: Top729
-Node: Introduction2103
-Node: Getting Started2625
-Node: Features2982
-Node: Overview3111
-Node: Preparation3307
-Node: Header4108
-Node: Building sources5193
-Node: Building sources using Automake6924
-Node: Initializing the library8861
-Node: Multi-Threading10049
-Node: Generalities10191
-Node: Tools10378
-Node: gpgrt-config10544
-Node: Library Copying12111
-Node: Copying40212
-Node: Concept Index59382
-Node: Function and Data Index59679
+Node: Top733
+Node: Introduction2111
+Node: Getting Started2633
+Node: Features2990
+Node: Overview3119
+Node: Preparation3315
+Node: Header4116
+Node: Building sources5195
+Node: Building sources using Automake7393
+Node: Initializing the library8695
+Node: Multi-Threading9883
+Node: Generalities10025
+Node: Tools10212
+Node: gpg-error-config10382
+Node: Library Copying12035
+Node: Copying40136
+Node: Concept Index59306
+Node: Function and Data Index59603
 
 End Tag Table

@@ -29,9 +29,6 @@
 # include <sys/stat.h>
 #endif
 #include <sys/types.h>
-#ifdef HAVE_PWD_H
-# include <pwd.h>
-#endif
 
 #include "gpgrt-int.h"
 
@@ -48,7 +45,7 @@ _gpgrt_vfnameconcat (int want_abs, const char *first_part, va_list arg_ptr)
   char *home_buffer = NULL;
   char *name, *home, *p;
 
-  /* Put all args into an array becuase we need to scan them twice.  */
+  /* Put all args into an array because we need to scan them twice.  */
   n = strlen (first_part) + 1;
   argc = 0;
   while ((argv[argc] = va_arg (arg_ptr, const char *)))

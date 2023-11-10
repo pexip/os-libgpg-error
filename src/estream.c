@@ -62,14 +62,8 @@
 
 #if defined(_WIN32) && !defined(HAVE_W32_SYSTEM)
 # define HAVE_W32_SYSTEM 1
-# if defined(__MINGW32CE__) && !defined (HAVE_W32CE_SYSTEM)
-#  define HAVE_W32CE_SYSTEM
-# endif
 #endif
 
-#ifdef HAVE_SYS_SELECT_H
-# include <sys/select.h>
-#endif
 #ifdef HAVE_SYS_TIME_H
 # include <sys/time.h>
 #endif
@@ -92,6 +86,10 @@
 #else
 # ifdef HAVE_POLL_H
 #  include <poll.h>
+# else
+#  ifdef HAVE_SYS_SELECT_H
+#   include <sys/select.h>
+#  endif
 # endif
 #endif
 
@@ -145,14 +143,7 @@
 #endif
 
 
-#ifdef HAVE_W32CE_SYSTEM
-# define _set_errno(a)  gpg_err_set_errno ((a))
-/* Setmode is missing in cegcc but available since CE 5.0.  */
-int _setmode (int handle, int mode);
-# define setmode(a,b)   _setmode ((a),(b))
-#else
-# define _set_errno(a)  do { errno = (a); } while (0)
-#endif
+#define _set_errno(a)  do { errno = (a); } while (0)
 
 #define IS_INVALID_FD(a)    ((a) == -1)
 
@@ -238,7 +229,8 @@ mem_free (void *p)
 
 /*
  * A Windows helper function to map a W32 API error code to a standard
- * system error code.
+ * system error code.  That actually belong into sysutils but to allow
+ * standalone use of estream we keep it here.
  */
 #ifdef HAVE_W32_SYSTEM
 static int
@@ -256,11 +248,19 @@ map_w32_to_errno (DWORD w32_err)
       return ENOENT;
 
     case ERROR_ACCESS_DENIED:
-      return EPERM;
+      return EPERM;  /* ReactOS uses EACCES ("Permission denied") and
+                      * is likely right because they used an
+                      * undocumented function to associate the error
+                      * codes.  However we have always used EPERM
+                      * ("Operation not permitted", e.g. function is
+                      * required to be called by root) and we better
+                      * stick to that to avoid surprising bugs. */
 
     case ERROR_INVALID_HANDLE:
+      return EBADF;
+
     case ERROR_INVALID_BLOCK:
-      return EINVAL;
+      return ENOMEM;
 
     case ERROR_NOT_ENOUGH_MEMORY:
       return ENOMEM;
@@ -268,10 +268,99 @@ map_w32_to_errno (DWORD w32_err)
     case ERROR_NO_DATA:
       return EPIPE;
 
+    case ERROR_ALREADY_EXISTS:
+      return EEXIST;
+
+      /* This mapping has been taken from reactOS.  */
+    case ERROR_TOO_MANY_OPEN_FILES: return EMFILE;
+    case ERROR_ARENA_TRASHED: return ENOMEM;
+    case ERROR_BAD_ENVIRONMENT: return E2BIG;
+    case ERROR_BAD_FORMAT: return ENOEXEC;
+    case ERROR_INVALID_DRIVE: return ENOENT;
+    case ERROR_CURRENT_DIRECTORY: return EACCES;
+    case ERROR_NOT_SAME_DEVICE: return EXDEV;
+    case ERROR_NO_MORE_FILES: return ENOENT;
+    case ERROR_WRITE_PROTECT: return EACCES;
+    case ERROR_BAD_UNIT: return EACCES;
+    case ERROR_NOT_READY: return EACCES;
+    case ERROR_BAD_COMMAND: return EACCES;
+    case ERROR_CRC: return EACCES;
+    case ERROR_BAD_LENGTH: return EACCES;
+    case ERROR_SEEK: return EACCES;
+    case ERROR_NOT_DOS_DISK: return EACCES;
+    case ERROR_SECTOR_NOT_FOUND: return EACCES;
+    case ERROR_OUT_OF_PAPER: return EACCES;
+    case ERROR_WRITE_FAULT: return EACCES;
+    case ERROR_READ_FAULT: return EACCES;
+    case ERROR_GEN_FAILURE: return EACCES;
+    case ERROR_SHARING_VIOLATION: return EACCES;
+    case ERROR_LOCK_VIOLATION: return EACCES;
+    case ERROR_WRONG_DISK: return EACCES;
+    case ERROR_SHARING_BUFFER_EXCEEDED: return EACCES;
+    case ERROR_BAD_NETPATH: return ENOENT;
+    case ERROR_NETWORK_ACCESS_DENIED: return EACCES;
+    case ERROR_BAD_NET_NAME: return ENOENT;
+    case ERROR_FILE_EXISTS: return EEXIST;
+    case ERROR_CANNOT_MAKE: return EACCES;
+    case ERROR_FAIL_I24: return EACCES;
+    case ERROR_NO_PROC_SLOTS: return EAGAIN;
+    case ERROR_DRIVE_LOCKED: return EACCES;
+    case ERROR_BROKEN_PIPE: return EPIPE;
+    case ERROR_DISK_FULL: return ENOSPC;
+    case ERROR_INVALID_TARGET_HANDLE: return EBADF;
+    case ERROR_WAIT_NO_CHILDREN: return ECHILD;
+    case ERROR_CHILD_NOT_COMPLETE: return ECHILD;
+    case ERROR_DIRECT_ACCESS_HANDLE: return EBADF;
+    case ERROR_SEEK_ON_DEVICE: return EACCES;
+    case ERROR_DIR_NOT_EMPTY: return ENOTEMPTY;
+    case ERROR_NOT_LOCKED: return EACCES;
+    case ERROR_BAD_PATHNAME: return ENOENT;
+    case ERROR_MAX_THRDS_REACHED: return EAGAIN;
+    case ERROR_LOCK_FAILED: return EACCES;
+    case ERROR_INVALID_STARTING_CODESEG: return ENOEXEC;
+    case ERROR_INVALID_STACKSEG: return ENOEXEC;
+    case ERROR_INVALID_MODULETYPE: return ENOEXEC;
+    case ERROR_INVALID_EXE_SIGNATURE: return ENOEXEC;
+    case ERROR_EXE_MARKED_INVALID: return ENOEXEC;
+    case ERROR_BAD_EXE_FORMAT: return ENOEXEC;
+    case ERROR_ITERATED_DATA_EXCEEDS_64k: return ENOEXEC;
+    case ERROR_INVALID_MINALLOCSIZE: return ENOEXEC;
+    case ERROR_DYNLINK_FROM_INVALID_RING: return ENOEXEC;
+    case ERROR_IOPL_NOT_ENABLED: return ENOEXEC;
+    case ERROR_INVALID_SEGDPL: return ENOEXEC;
+    case ERROR_AUTODATASEG_EXCEEDS_64k: return ENOEXEC;
+    case ERROR_RING2SEG_MUST_BE_MOVABLE: return ENOEXEC;
+    case ERROR_RELOC_CHAIN_XEEDS_SEGLIM: return ENOEXEC;
+    case ERROR_INFLOOP_IN_RELOC_CHAIN: return ENOEXEC;
+    case ERROR_FILENAME_EXCED_RANGE: return ENOENT;
+    case ERROR_NESTING_NOT_ALLOWED: return EAGAIN;
+    case ERROR_NOT_ENOUGH_QUOTA: return ENOMEM;
+
     default:
       return EIO;
     }
 }
+
+/* Wrapper to be used by other modules to set ERRNO from the Windows
+ * error.  EC may be -1 to get the last error.  */
+void
+_gpgrt_w32_set_errno (int ec)
+{
+  if (ec == -1)
+    ec = GetLastError ();
+  _set_errno (map_w32_to_errno (ec));
+}
+
+
+gpg_err_code_t
+_gpgrt_w32_get_last_err_code (void)
+{
+  int ec = GetLastError ();
+  errno = map_w32_to_errno (ec);
+  return _gpg_err_code_from_errno (errno);
+}
+
+
 #endif /*HAVE_W32_SYSTEM*/
 
 /*
@@ -1098,12 +1187,214 @@ static struct cookie_io_functions_s estream_functions_fd =
   };
 
 
+
+#ifdef HAVE_W32_SYSTEM
+/*
+ * Implementation of SOCKET based I/O.
+ */
 
+/* Cookie for SOCKET objects.  */
+typedef struct estream_cookie_sock
+{
+  SOCKET sock;   /* The SOCKET we are using for actual output.  */
+  int no_close;  /* If set we won't close the file descriptor.  */
+  int nonblock;  /* Non-blocking mode is enabled.  */
+} *estream_cookie_sock_t;
+
+
+/*
+ * Create function for objects indentified by a libc file descriptor.
+ */
+static int
+func_sock_create (void **cookie, SOCKET sock,
+                  unsigned int modeflags, int no_close)
+{
+  estream_cookie_sock_t sock_cookie;
+  int err;
+
+  trace (("enter: sock=%d mf=%x nc=%d", (int)sock, modeflags, no_close));
+
+  sock_cookie = mem_alloc (sizeof (*sock_cookie));
+  if (! sock_cookie)
+    err = -1;
+  else
+    {
+      sock_cookie->sock = sock;
+      sock_cookie->no_close = no_close;
+      sock_cookie->nonblock = !!(modeflags & O_NONBLOCK);
+      *cookie = sock_cookie;
+      err = 0;
+    }
+
+  trace_errno (err, ("leave: cookie=%p err=%d", *cookie, err));
+  return err;
+}
+
+
+/*
+ * Read function for SOCKET objects.
+ */
+static gpgrt_ssize_t
+func_sock_read (void *cookie, void *buffer, size_t size)
+
+{
+  estream_cookie_sock_t file_cookie = cookie;
+  gpgrt_ssize_t bytes_read;
+
+  trace (("enter: cookie=%p buffer=%p size=%d", cookie, buffer, (int)size));
+
+  if (!size)
+    bytes_read = -1; /* We don't know whether anything is pending.  */
+  else if (IS_INVALID_FD (file_cookie->sock))
+    {
+      _gpgrt_yield ();
+      bytes_read = 0;
+    }
+  else
+    {
+      _gpgrt_pre_syscall ();
+      do
+        {
+          bytes_read = recv (file_cookie->sock, buffer, size, 0);
+        }
+      while (bytes_read == -1 && errno == EINTR);
+      _gpgrt_post_syscall ();
+    }
+
+  trace_errno (bytes_read == -1, ("leave: bytes_read=%d", (int)bytes_read));
+  return bytes_read;
+}
+
+
+/*
+ * Write function for SOCKET objects.
+ */
+static gpgrt_ssize_t
+func_sock_write (void *cookie, const void *buffer, size_t size)
+{
+  estream_cookie_sock_t file_cookie = cookie;
+  gpgrt_ssize_t bytes_written;
+
+  trace (("enter: cookie=%p buffer=%p size=%d", cookie, buffer, (int)size));
+
+  if (IS_INVALID_FD (file_cookie->sock))
+    {
+      _gpgrt_yield ();
+      bytes_written = size; /* Yeah:  Success writing to the bit bucket.  */
+    }
+  else if (buffer)
+    {
+      _gpgrt_pre_syscall ();
+      do
+        {
+          bytes_written = send (file_cookie->sock, buffer, size, 0);
+        }
+      while (bytes_written == -1 && errno == EINTR);
+      _gpgrt_post_syscall ();
+    }
+  else
+    bytes_written = size; /* Note that for a flush SIZE should be 0.  */
+
+  trace_errno (bytes_written == -1,
+               ("leave: bytes_written=%d", (int)bytes_written));
+  return bytes_written;
+}
+
+
+/*
+ * Seek function for SOCKET objects.
+ */
+static int
+func_sock_seek (void *cookie, gpgrt_off_t *offset, int whence)
+{
+  (void)cookie;
+  (void)offset;
+  (void)whence;
+  _set_errno (ESPIPE);
+  return -1;
+}
+
+
+/*
+ * The IOCTL function for SOCKET objects.
+ */
+static int
+func_sock_ioctl (void *cookie, int cmd, void *ptr, size_t *len)
+{
+  estream_cookie_sock_t sock_cookie = cookie;
+  int ret;
+
+  if (cmd == COOKIE_IOCTL_NONBLOCK && !len)
+    {
+      sock_cookie->nonblock = !!ptr;
+      if (IS_INVALID_FD (sock_cookie->sock))
+        {
+          _set_errno (EINVAL);
+          ret = -1;
+        }
+      else
+        {
+          u_long mode = 0;
+
+          if (sock_cookie->nonblock)
+            mode = 1;
+
+          ret = ioctlsocket (sock_cookie->sock, FIONBIO, &mode);
+        }
+    }
+  else
+    {
+      _set_errno (EINVAL);
+      ret = -1;
+    }
+
+  return ret;
+}
+
+/*
+ * The destroy function for SOCKET objects.
+ */
+static int
+func_sock_destroy (void *cookie)
+{
+  estream_cookie_sock_t sock_cookie = cookie;
+  int err;
+
+  trace (("enter: cookie=%p", cookie));
+
+  if (sock_cookie)
+    {
+      if (IS_INVALID_FD (sock_cookie->sock))
+        err = 0;
+      else
+        err = sock_cookie->no_close? 0 : closesocket (sock_cookie->sock);
+      mem_free (sock_cookie);
+    }
+  else
+    err = 0;
+
+  trace_errno (err,("leave: err=%d", err));
+  return err;
+}
+
+
+/*
+ * Access object for the fd functions.
+ */
+static struct cookie_io_functions_s estream_functions_sock =
+  {
+    {
+      func_sock_read,
+      func_sock_write,
+      func_sock_seek,
+      func_sock_destroy,
+    },
+    func_sock_ioctl,
+  };
 
 /*
  * Implementation of W32 handle based I/O.
  */
-#ifdef HAVE_W32_SYSTEM
 
 /* Cookie for fd objects.  */
 typedef struct estream_cookie_w32
@@ -1269,6 +1560,12 @@ func_w32_seek (void *cookie, gpgrt_off_t *offset, int whence)
       return -1;
     }
 
+  if (GetFileType (w32_cookie->hd) == FILE_TYPE_PIPE)
+    {
+      _set_errno (ESPIPE);
+      return -1;
+    }
+
   if (whence == SEEK_SET)
     {
       method = FILE_BEGIN;
@@ -1289,9 +1586,6 @@ func_w32_seek (void *cookie, gpgrt_off_t *offset, int whence)
       _set_errno (EINVAL);
       return -1;
     }
-#ifdef HAVE_W32CE_SYSTEM
-# warning need to use SetFilePointer
-#else
   if (!w32_cookie->no_syscall_clamp)
     _gpgrt_pre_syscall ();
   if (!SetFilePointerEx (w32_cookie->hd, distance, &newoff, method))
@@ -1302,7 +1596,6 @@ func_w32_seek (void *cookie, gpgrt_off_t *offset, int whence)
     }
   if (!w32_cookie->no_syscall_clamp)
     _gpgrt_post_syscall ();
-#endif
   /* Note that gpgrt_off_t is always 64 bit.  */
   *offset = (gpgrt_off_t)newoff.QuadPart;
   return 0;
@@ -1578,6 +1871,18 @@ static struct cookie_io_functions_s estream_functions_fp =
  * operations ares handled by file descriptor based I/O.
  */
 
+#ifdef HAVE_W32_SYSTEM
+static int
+any8bitchar (const char *string)
+{
+  if (string)
+    for ( ; *string; string++)
+      if ((*string & 0x80))
+        return 1;
+  return 0;
+}
+#endif /*HAVE_W32_SYSTEM*/
+
 /* Create function for objects identified by a file name.  */
 static int
 func_file_create (void **cookie, int *filedes,
@@ -1596,7 +1901,25 @@ func_file_create (void **cookie, int *filedes,
       goto out;
     }
 
+#ifdef HAVE_W32_SYSTEM
+  if (any8bitchar (path))
+    {
+      wchar_t *wpath;
+
+      wpath = _gpgrt_utf8_to_wchar (path);
+      if (!wpath)
+        fd = -1;
+      else
+        {
+          fd = _wopen (wpath, modeflags, cmode);
+          _gpgrt_free_wchar (wpath);
+        }
+    }
+  else  /* Avoid unnecessary conversion.  */
+    fd = open (path, modeflags, cmode);
+#else
   fd = open (path, modeflags, cmode);
+#endif
   if (fd == -1)
     {
       err = -1;
@@ -1620,6 +1943,100 @@ func_file_create (void **cookie, int *filedes,
 
   return err;
 }
+
+
+/* Create function for objects identified by a file name.  Windows
+ * version to use CreateFile.  */
+#ifdef HAVE_W32_SYSTEM
+static int
+func_file_create_w32 (void **cookie, HANDLE *rethd, const char *path,
+                      unsigned int modeflags, unsigned int cmode)
+{
+  estream_cookie_w32_t hd_cookie;
+  wchar_t *wpath = NULL;
+  int err = 0;
+  HANDLE hd;
+  DWORD desired_access;
+  DWORD share_mode;
+  DWORD creation_distribution;
+
+  (void)cmode;
+
+  hd_cookie = mem_alloc (sizeof *hd_cookie);
+  if (!hd_cookie)
+    {
+      err = -1;
+      goto leave;
+    }
+
+  wpath = _gpgrt_fname_to_wchar (path);
+  if (!wpath)
+    {
+      err = -1;
+      goto leave;
+    }
+
+  if ((modeflags & O_WRONLY))
+    {
+      desired_access = GENERIC_WRITE;
+      share_mode = FILE_SHARE_WRITE;
+    }
+  else if ((modeflags & O_RDWR))
+    {
+      desired_access = GENERIC_READ | GENERIC_WRITE;
+      share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE;
+    }
+  else
+    {
+      desired_access = GENERIC_READ;
+      share_mode = FILE_SHARE_READ;
+    }
+
+
+  creation_distribution = 0;
+  if ((modeflags & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL))
+     creation_distribution |= CREATE_NEW;
+  else if ((modeflags & O_TRUNC) == O_TRUNC)
+    {
+      if ((modeflags & O_CREAT) == O_CREAT)
+        creation_distribution |= CREATE_ALWAYS;
+      else if ((modeflags & O_RDONLY) != O_RDONLY)
+        creation_distribution |= TRUNCATE_EXISTING;
+    }
+  else if ((modeflags & O_APPEND) == O_APPEND)
+    creation_distribution |= OPEN_EXISTING;
+  else if ((modeflags & O_CREAT) == O_CREAT)
+    creation_distribution |= OPEN_ALWAYS;
+  else
+    creation_distribution |= OPEN_EXISTING;
+
+  hd = CreateFileW (wpath,
+                    desired_access,
+                    share_mode,
+                    NULL,  /* security attributes */
+                    creation_distribution,
+                    0,     /* flags and attributes  */
+                    NULL); /* template file  */
+  if (hd == INVALID_HANDLE_VALUE)
+    {
+      _set_errno (map_w32_to_errno (GetLastError ()));
+      err = -1;
+      goto leave;
+    }
+
+  hd_cookie->hd = hd;
+  hd_cookie->no_close = 0;
+  hd_cookie->no_syscall_clamp = 0;
+  *cookie = hd_cookie;
+  *rethd = hd;
+
+ leave:
+  _gpgrt_free_wchar (wpath);
+  if (err)
+    mem_free (hd_cookie);
+  return err;
+}
+#endif /*HAVE_W32_SYSTEM*/
 
 
 
@@ -1660,10 +2077,11 @@ func_file_create (void **cookie, int *filedes,
  *
  * sysopen
  *
- *    The object is opened in sysmode.  On POSIX this is a NOP but
- *    under Windows the direct W32 API functions (HANDLE) are used
- *    instead of their libc counterparts (fd).
- *    FIXME: The functionality is not yet implemented.
+ *    The object is opened in GPGRT_SYSHD_HANDLE mode.  On POSIX this
+ *    is a NOP but under Windows the direct W32 API functions (HANDLE)
+ *    are used instead of their libc counterparts (fd).  This flag
+ *    also allows to use file names longer than MAXPATH.  Note that
+ *    gpgrt_fileno does not not work for such a stream under Windows.
  *
  * pollable
  *
@@ -2061,7 +2479,7 @@ deinit_stream_obj (estream_t stream)
 
 /*
  * Create a new stream and initialize it.  On success the new stream
- * handle is tsored at R_STREAM.  On failure NULL is stored at
+ * handle is stored at R_STREAM.  On failure NULL is stored at
  * R_STREAM.
  */
 static int
@@ -2167,10 +2585,11 @@ create_stream (estream_t *r_stream, void *cookie, es_syshd_t *syshd,
 
 
 /*
- * Deinitialize a stream object and destroy it.
+ * Deinitialize a stream object and destroy it.  With CANCEL_MODE set
+ * try to cancel as much as possible (see _gpgrt_fcancel).
  */
 static int
-do_close (estream_t stream, int with_locked_list)
+do_close (estream_t stream, int cancel_mode, int with_locked_list)
 {
   int err;
 
@@ -2179,6 +2598,11 @@ do_close (estream_t stream, int with_locked_list)
   if (stream)
     {
       do_list_remove (stream, with_locked_list);
+      if (cancel_mode)
+        {
+          stream->flags.writing = 0;
+          es_empty (stream);
+        }
       while (stream->intern->onclose)
         {
           notify_list_t tmp = stream->intern->onclose->next;
@@ -2943,7 +3367,7 @@ doreadline (estream_t _GPGRT__RESTRICT stream, size_t max_length,
  out:
 
   if (line_stream)
-    do_close (line_stream, 0);
+    do_close (line_stream, 0, 0);
   else if (line_stream_cookie)
     func_mem_destroy (line_stream_cookie);
 
@@ -3084,40 +3508,57 @@ _gpgrt_fopen (const char *_GPGRT__RESTRICT path,
               const char *_GPGRT__RESTRICT mode)
 {
   unsigned int modeflags, cmode, xmode;
-  int create_called;
-  estream_t stream;
-  void *cookie;
+  int create_called = 0;
+  estream_t stream = NULL;
+  void *cookie = NULL;
   int err;
-  int fd;
+  struct cookie_io_functions_s *functions;
   es_syshd_t syshd;
-
-  stream = NULL;
-  cookie = NULL;
-  create_called = 0;
+  int kind;
 
   err = parse_mode (mode, &modeflags, &xmode, &cmode);
   if (err)
-    goto out;
+    goto leave;
 
-  err = func_file_create (&cookie, &fd, path, modeflags, cmode);
+  /* Convenience hack so that we can use /dev/null on Windows.  */
+#ifdef HAVE_W32_SYSTEM
+  if (path && !strcmp (path, "/dev/null"))
+    path = "nul";
+#endif
+
+#ifdef HAVE_W32_SYSTEM
+  if ((xmode & X_SYSOPEN))
+    {
+      kind = BACKEND_W32;
+      functions = &estream_functions_w32;
+      syshd.type = ES_SYSHD_HANDLE;
+      err = func_file_create_w32 (&cookie, &syshd.u.handle,
+                                  path, modeflags, cmode);
+    }
+  else
+#endif /* W32 */
+    {
+      kind = BACKEND_FD;
+      functions = &estream_functions_fd;
+      syshd.type = ES_SYSHD_FD;
+      err = func_file_create (&cookie, &syshd.u.fd,
+                              path, modeflags, cmode);
+    }
   if (err)
-    goto out;
+    goto leave;
 
-  syshd.type = ES_SYSHD_FD;
-  syshd.u.fd = fd;
   create_called = 1;
-  err = create_stream (&stream, cookie, &syshd, BACKEND_FD,
-                       estream_functions_fd, modeflags, xmode, 0);
+  err = create_stream (&stream, cookie, &syshd, kind,
+                       *functions, modeflags, xmode, 0);
   if (err)
-    goto out;
+    goto leave;
 
   if (stream && path)
     fname_set_internal (stream, path, 1);
 
- out:
-
+ leave:
   if (err && create_called)
-    (*estream_functions_fd.public.func_close) (cookie);
+    functions->public.func_close (cookie);
 
   return stream;
 }
@@ -3249,7 +3690,7 @@ _gpgrt_fopencookie (void *_GPGRT__RESTRICT cookie,
   estream_t stream;
   int err;
   es_syshd_t syshd;
-  struct cookie_io_functions_s io_functions = { functions, NULL, };
+  struct cookie_io_functions_s io_functions = { functions, NULL };
 
   stream = NULL;
   modeflags = 0;
@@ -3398,6 +3839,53 @@ _gpgrt_fpopen_nc (FILE *fp, const char *mode)
 
 
 #ifdef HAVE_W32_SYSTEM
+static estream_t
+do_sockopen (SOCKET sock, const char *mode, int no_close, int with_locked_list)
+{
+  int create_called = 0;
+  estream_t stream = NULL;
+  void *cookie = NULL;
+  unsigned int modeflags, xmode;
+  int err;
+  es_syshd_t syshd;
+
+  err = parse_mode (mode, &modeflags, &xmode, NULL);
+  if (err)
+    goto out;
+  if ((xmode & X_SYSOPEN))
+    {
+      /* Not allowed for sockopen.  */
+      _set_errno (EINVAL);
+      err = -1;
+      goto out;
+    }
+
+  err = func_sock_create (&cookie, sock, modeflags, no_close);
+  if (err)
+    goto out;
+
+  syshd.type = ES_SYSHD_SOCK;
+  syshd.u.sock = sock;
+  create_called = 1;
+  err = create_stream (&stream, cookie, &syshd,
+                       BACKEND_SOCK, estream_functions_sock,
+                       modeflags, xmode, with_locked_list);
+
+  if (!err && stream)
+    {
+      if ((modeflags & O_NONBLOCK))
+        err = stream->intern->func_ioctl (cookie, COOKIE_IOCTL_NONBLOCK,
+                                          "", NULL);
+    }
+
+ out:
+  if (err && create_called)
+    (*estream_functions_sock.public.func_close) (cookie);
+
+  return stream;
+}
+
+
 estream_t
 do_w32open (HANDLE hd, const char *mode,
             int no_close, int with_locked_list)
@@ -3416,7 +3904,7 @@ do_w32open (HANDLE hd, const char *mode,
 
   /* If we are pollable we create the function cookie with syscall
    * clamp disabled.  This is because functions are called from
-   * separatre reader and writer threads in w32-stream.  */
+   * separate reader and writer threads in w32-stream.  */
   err = func_w32_create (&cookie, hd, modeflags,
                          no_close, !!(xmode & X_POLLABLE));
   if (err)
@@ -3445,11 +3933,16 @@ do_sysopen (es_syshd_t *syshd, const char *mode, int no_close)
   switch (syshd->type)
     {
     case ES_SYSHD_FD:
+#ifndef HAVE_W32_SYSTEM
     case ES_SYSHD_SOCK:
+#endif
       stream = do_fdopen (syshd->u.fd, mode, no_close, 0);
       break;
 
 #ifdef HAVE_W32_SYSTEM
+    case ES_SYSHD_SOCK:
+      stream = do_sockopen (syshd->u.sock, mode, no_close, 0);
+      break;
     case ES_SYSHD_HANDLE:
       stream = do_w32open (syshd->u.handle, mode, no_close, 0);
       break;
@@ -3589,6 +4082,12 @@ _gpgrt_freopen (const char *_GPGRT__RESTRICT path,
       cookie = NULL;
       create_called = 0;
 
+  /* Convenience hack so that we can use /dev/null on Windows.  */
+#ifdef HAVE_W32_SYSTEM
+      if (!strcmp (path, "/dev/null"))
+        path = "nul";
+#endif
+
       xmode = stream->intern->samethread ? X_SAMETHREAD : 0;
 
       lock_stream (stream);
@@ -3617,7 +4116,7 @@ _gpgrt_freopen (const char *_GPGRT__RESTRICT path,
 	  if (create_called)
 	    func_fd_destroy (cookie);
 
-	  do_close (stream, 0);
+	  do_close (stream, 0, 0);
 	  stream = NULL;
 	}
       else
@@ -3632,7 +4131,7 @@ _gpgrt_freopen (const char *_GPGRT__RESTRICT path,
       /* FIXME?  We don't support re-opening at the moment.  */
       _set_errno (EINVAL);
       deinit_stream_obj (stream);
-      do_close (stream, 0);
+      do_close (stream, 0, 0);
       stream = NULL;
     }
 
@@ -3645,7 +4144,22 @@ _gpgrt_fclose (estream_t stream)
 {
   int err;
 
-  err = do_close (stream, 0);
+  err = do_close (stream, 0, 0);
+
+  return err;
+}
+
+
+/* gpgrt_fcancel does the same as gpgrt_fclose but tries to avoid
+ * flushing out any data still held in internal buffers.  It may or
+ * may not remove a new file created for that stream by the open
+ * function.  */
+int
+_gpgrt_fcancel (estream_t stream)
+{
+  int err;
+
+  err = do_close (stream, 1, 0);
 
   return err;
 }
@@ -3698,7 +4212,7 @@ _gpgrt_fclose_snatch (estream_t stream, void **r_buffer, size_t *r_buflen)
         *r_buflen = buflen;
     }
 
-  err = do_close (stream, 0);
+  err = do_close (stream, 0, 0);
 
  leave:
   if (err && r_buffer)
@@ -3726,8 +4240,10 @@ _gpgrt_fclose_snatch (estream_t stream, void **r_buffer, size_t *r_buflen)
 
    FIXME: Unregister is not thread safe.
 
-   The notification will be called right before the stream is closed.
-   It may not call any estream function for STREAM, neither direct nor
+   The notification will be called right before the stream is
+   closed. If gpgrt_fcancel is used, the cancellation of internal
+   buffers is done before the notifications.  The notification handler
+   may not call any estream function for STREAM, neither direct nor
    indirectly. */
 int
 _gpgrt_onclose (estream_t stream, int mode,
@@ -4500,15 +5016,9 @@ tmpfd (void)
 {
 #ifdef HAVE_W32_SYSTEM
   int attempts, n;
-#ifdef HAVE_W32CE_SYSTEM
-  wchar_t buffer[MAX_PATH+9+12+1];
-# define mystrlen(a) wcslen (a)
-  wchar_t *name, *p;
-#else
   char buffer[MAX_PATH+9+12+1];
 # define mystrlen(a) strlen (a)
   char *name, *p;
-#endif
   HANDLE file;
   int pid = GetCurrentProcessId ();
   unsigned int value;
@@ -4521,11 +5031,7 @@ tmpfd (void)
       return -1;
     }
   p = buffer + mystrlen (buffer);
-#ifdef HAVE_W32CE_SYSTEM
-  wcscpy (p, L"_estream");
-#else
   strcpy (p, "_estream");
-#endif
   p += 8;
   /* We try to create the directory but don't care about an error as
      it may already exist and the CreateFile would throw an error
@@ -4542,11 +5048,7 @@ tmpfd (void)
           *p++ = tohex (((value >> 28) & 0x0f));
           value <<= 4;
         }
-#ifdef HAVE_W32CE_SYSTEM
-      wcscpy (p, L".tmp");
-#else
       strcpy (p, ".tmp");
-#endif
       file = CreateFile (buffer,
                          GENERIC_READ | GENERIC_WRITE,
                          0,
@@ -4556,16 +5058,12 @@ tmpfd (void)
                          NULL);
       if (file != INVALID_HANDLE_VALUE)
         {
-#ifdef HAVE_W32CE_SYSTEM
-          int fd = (int)file;
-#else
           int fd = _open_osfhandle ((intptr_t)file, 0);
           if (fd == -1)
             {
               CloseHandle (file);
               return -1;
             }
-#endif
           return fd;
         }
       Sleep (1); /* One ms as this is the granularity of GetTickCount.  */

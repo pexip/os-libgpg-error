@@ -1,5 +1,6 @@
 #!@INSTALLSHELLPATH@
-# Copyright (C) 2018 g10 Code GmbH
+#                          -*- mode: shell-script; sh-shell: "/bin/sh" -*-
+# Copyright (C) 2018, 2021, 2022 g10 Code GmbH
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -37,6 +38,11 @@ get_attr () {
     ___name=$1
 
     eval echo \$ATTR_$___name
+}
+
+# variant of get_attr for list (separated by ',')
+get_attr_l () {
+    (IFS=', '; echo "$(get_attr $1)")
 }
 
 # Remove ${varname} part in the beginning of a string.
@@ -187,9 +193,14 @@ list_only_once () {
     __arg=""
 
     for __arg; do
-	if not_listed_yet $__arg $__result; then
-	    __result="$__result${__result:+ }$__arg"
-	fi
+	case "$__arg" in
+	    -I/usr/include|-I/include) ;;
+	    *)
+                if not_listed_yet $__arg $__result; then
+	            __result="$__result${__result:+ }$__arg"
+	        fi
+                ;;
+	esac
     done
 
     echo $__result
@@ -204,6 +215,7 @@ list_only_once_for_libs () {
     # the resulted list is in reverse order
     for __arg; do
 	case "$__arg" in
+	    -L/usr/lib|-L/usr/lib64|-L/lib|-L/lib64) ;;
 	    -l*)
 		# As-is
 		__rev_list="$__arg${__rev_list:+ }$__rev_list"
@@ -359,9 +371,9 @@ all_required_config_files () {
 		    *)
 			read_config_file $pkg $PKG_CONFIG_PATH
 			all_list="$all_list${all_list:+ }$pkg"
-			new_list="$new_list${new_list:+ }$(get_attr Requires)"
+			new_list="$new_list${new_list:+ }$(get_attr_l Requires)"
 			if [ -n "$enable_static" ]; then
-			    new_list="$new_list${new_list:+ }$(get_attr Requires_private)"
+			    new_list="$new_list${new_list:+ }$(get_attr_l Requires_private)"
 			fi
 			cleanup_vars_attrs
 			pkg=$p
@@ -374,9 +386,9 @@ all_required_config_files () {
 		    exit 1
 		fi
 		all_list="$all_list${all_list:+ }$pkg"
-		new_list="$new_list${new_list:+ }$(get_attr Requires)"
+		new_list="$new_list${new_list:+ }$(get_attr_l Requires)"
 		if [ -n "$enable_static" ]; then
-		    new_list="$new_list${new_list:+ }$(get_attr Requires_private)"
+		    new_list="$new_list${new_list:+ }$(get_attr_l Requires_private)"
 		fi
 		cleanup_vars_attrs
 		pkg=""
@@ -389,9 +401,9 @@ all_required_config_files () {
 	elif [ -n "$pkg" ]; then
 	    read_config_file $pkg $PKG_CONFIG_PATH
 	    all_list="$all_list${all_list:+ }$pkg"
-	    new_list="$new_list${new_list:+ }$(get_attr Requires)"
+	    new_list="$new_list${new_list:+ }$(get_attr_l Requires)"
 	    if [ -n "$enable_static" ]; then
-		new_list="$new_list${new_list:+ }$(get_attr Requires_private)"
+		new_list="$new_list${new_list:+ }$(get_attr_l Requires_private)"
 	    fi
 	    cleanup_vars_attrs
 	fi
@@ -464,7 +476,7 @@ while test $# -gt 0; do
     esac
 done
 
-if [ x"${PKG_CONFIG_LIBDIR:+set}" = xset -a -z "$PKG_CONFIG_LIBDIR" ]; then
+if env | grep '^PKG_CONFIG_LIBDIR=$' >/dev/null 2>&1; then
   # The variable set as empty, we use PKG_CONFIG_PATH in this case,
   # ignoring --libdir option
   if [ -z "$PKG_CONFIG_PATH"  ]; then
@@ -512,7 +524,6 @@ libs=""
 mtcflags=""
 mtlibs=""
 
-delimiter=" "
 output=""
 
 mt="no"
@@ -538,8 +549,6 @@ while test $# -gt 0; do
 	--version)
 	    # In future, use --modversion instead.
 	    want_attr=Version
-	    delimiter="
-"
 	    ;;
 	--api-version)
 	    # In future, use --variable=api_version instead.
@@ -556,8 +565,6 @@ while test $# -gt 0; do
 	#### pkg-config incompatible options: end
 	--modversion)
 	    want_attr=Version
-	    delimiter="
-"
 	    ;;
 	--exists)
 	    want_exists=yes

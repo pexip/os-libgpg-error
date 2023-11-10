@@ -34,10 +34,6 @@ EXPORTS
  /* @6 - Not anymore used.  */
  gpg_err_code_from_syserror   @7
  gpg_err_set_errno            @8
-#ifdef HAVE_W32CE_SYSTEM
-   _gpg_w32ce_get_errno       @9
-   _gpg_w32ce_strerror        @10
-#endif
 #ifdef HAVE_W32_SYSTEM
    _gpg_w32_bindtextdomain     @11
    _gpg_w32_textdomain         @12
@@ -236,5 +232,15 @@ EXPORTS
  gpgrt_absfnameconcat         @179
 
  gpgrt_reallocarray           @180
+ gpgrt_fclose                 @181
+
+ gpgrt_fcancel                @182
+
+ gpgrt_access                 @183
+
+ gpgrt_free_wchar             @184
+ gpgrt_fname_to_wchar         @185
+ gpgrt_utf8_to_wchar          @186
+ gpgrt_wchar_to_utf8          @187
 
 ;; end of file with public symbols for Windows.

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgpg-error 1.7\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2020-05-29 15:01+0200\n"
-"PO-Revision-Date: 2020-02-17 18:28+0200\n"
+"POT-Creation-Date: 2022-10-07 11:24+0200\n"
+"PO-Revision-Date: 2021-03-22 10:44+0100\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "Language: uk\n"
@@ -83,30 +83,34 @@ msgid "Assuan"
 msgstr "Assuan"
 
 #: src/err-sources.h:44
+msgid "TPM2d"
+msgstr "TPM2d"
+
+#: src/err-sources.h:45
 msgid "TLS"
 msgstr "TLS"
 
-#: src/err-sources.h:45
+#: src/err-sources.h:46
 msgid "Any source"
 msgstr "Будь-яке джерело"
 
-#: src/err-sources.h:46
+#: src/err-sources.h:47
 msgid "User defined source 1"
 msgstr "Визначене користувачем джерело 1"
 
-#: src/err-sources.h:47
+#: src/err-sources.h:48
 msgid "User defined source 2"
 msgstr "Визначене користувачем джерело 2"
 
-#: src/err-sources.h:48
+#: src/err-sources.h:49
 msgid "User defined source 3"
 msgstr "Визначене користувачем джерело 3"
 
-#: src/err-sources.h:49
+#: src/err-sources.h:50
 msgid "User defined source 4"
 msgstr "Визначене користувачем джерело 4"
 
-#: src/err-sources.h:50
+#: src/err-sources.h:51
 msgid "Unknown source"
 msgstr "Невідоме джерело"
 
@@ -1875,117 +1879,117 @@ msgstr "Кінець файла"
 msgid "Unknown error code"
 msgstr "Помилка з невідомим кодом"
 
-#: src/argparse.c:468
+#: src/argparse.c:494
 msgid "argument not expected"
 msgstr "неочікуваний аргумент"
 
-#: src/argparse.c:470
+#: src/argparse.c:496
 msgid "read error"
 msgstr "помилка читання"
 
-#: src/argparse.c:472
+#: src/argparse.c:498
 msgid "keyword too long"
 msgstr "занадто довге ключове слово"
 
-#: src/argparse.c:474
+#: src/argparse.c:500
 msgid "missing argument"
 msgstr "не вистачає аргументу"
 
-#: src/argparse.c:476
+#: src/argparse.c:502
 msgid "invalid argument"
 msgstr "некоректний аргумент"
 
-#: src/argparse.c:478
+#: src/argparse.c:504
 msgid "invalid command"
 msgstr "некоректна команда"
 
-#: src/argparse.c:480
+#: src/argparse.c:506
 msgid "invalid alias definition"
 msgstr "некоректне визначення замінника"
 
-#: src/argparse.c:482 src/argparse.c:519
+#: src/argparse.c:508 src/argparse.c:545
 #, fuzzy
 #| msgid "LDAP operations error"
 msgid "permission error"
 msgstr "Помилка дій LDAP"
 
-#: src/argparse.c:484 src/argparse.c:517
+#: src/argparse.c:510 src/argparse.c:543
 msgid "out of core"
 msgstr "вихід за межі області пам’яті"
 
-#: src/argparse.c:488 src/argparse.c:523
+#: src/argparse.c:514 src/argparse.c:549
 #, fuzzy
 #| msgid "invalid command"
 msgid "invalid meta command"
 msgstr "некоректна команда"
 
-#: src/argparse.c:490 src/argparse.c:525
+#: src/argparse.c:516 src/argparse.c:551
 #, fuzzy
 #| msgid "Unknown command"
 msgid "unknown meta command"
 msgstr "Невідома команда"
 
-#: src/argparse.c:492 src/argparse.c:527
+#: src/argparse.c:518 src/argparse.c:553
 #, fuzzy
 #| msgid "Unexpected IPC command"
 msgid "unexpected meta command"
 msgstr "Неочікувана команда IPC"
 
-#: src/argparse.c:494
+#: src/argparse.c:520
 msgid "invalid option"
 msgstr "некоректний параметр"
 
-#: src/argparse.c:504
+#: src/argparse.c:530
 #, c-format
 msgid "missing argument for option \"%.50s\"\n"
 msgstr "не вказано аргументу до параметра «%.50s»\n"
 
-#: src/argparse.c:506
+#: src/argparse.c:532
 #, c-format
 msgid "invalid argument for option \"%.50s\"\n"
 msgstr "некоректний аргумент параметра «%.50s»\n"
 
-#: src/argparse.c:508
+#: src/argparse.c:534
 #, c-format
 msgid "option \"%.50s\" does not expect an argument\n"
 msgstr "для параметра «%.50s» аргументи не потрібно вказувати\n"
 
-#: src/argparse.c:511
+#: src/argparse.c:537
 #, c-format
 msgid "invalid command \"%.50s\"\n"
 msgstr "некоректна команда «%.50s»\n"
 
-#: src/argparse.c:513
+#: src/argparse.c:539
 #, c-format
 msgid "option \"%.50s\" is ambiguous\n"
 msgstr "параметр «%.50s» є неоднозначним\n"
 
-#: src/argparse.c:515
+#: src/argparse.c:541
 #, c-format
 msgid "command \"%.50s\" is ambiguous\n"
 msgstr "команда «%.50s» є неоднозначною\n"
 
-#: src/argparse.c:529
+#: src/argparse.c:555
 #, c-format
 msgid "invalid option \"%.50s\"\n"
 msgstr "некоректний параметр «%.50s»\n"
 
-#: src/argparse.c:1658 src/argparse.c:1753
+#: src/argparse.c:2297 src/argparse.c:2393
 #, c-format
 msgid "Note: no default option file '%s'\n"
 msgstr ""
 
-#: src/argparse.c:1668 src/argparse.c:1760
+#: src/argparse.c:2307 src/argparse.c:2400
 #, c-format
 msgid "reading options from '%s'\n"
 msgstr ""
 
-#: src/argparse.c:1745
+#: src/argparse.c:2385
 #, c-format
 msgid "option file '%s': %s\n"
 msgstr ""
 
-#: src/argparse.c:2183
+#: src/argparse.c:2823
 #, c-format
 msgid "Note: ignoring option \"--%s\" due to global config\n"
 msgstr ""
@@ -1994,7 +1998,7 @@ msgstr ""
 msgid "Please report bugs to <https://bugs.gnupg.org>.\n"
 msgstr "Будь ласка, повідомляйте про помилки тут: <https://bugs.gnupg.org>.\n"
 
-#: src/gpg-error.c:729
+#: src/gpg-error.c:762
 #, c-format
 msgid "warning: could not recognize %s\n"
 msgstr "попередження: не вдалося розпізнати %s\n"
