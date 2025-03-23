@@ -1,3 +1,160 @@
+Noteworthy changes in version 1.51 (2024-11-11) [C38/A38/R0]
+-----------------------------------------------
+
+ * Allow initialization of new Windows threads to utf8 mode.  [T7185]
+
+ * Add GPGRT_PROCESS_ALLOW_SET_FG for gpgrt_process_spawn.
+   [rEb79d4206f4]
+
+ * Add new spawn function to modify the environment.  [T7307]
+
+ * Fix missing environ var for macOS and others.  [T7169,T7307]
+
+ * Fix forgotten _gpgrt_post_syscall on create pipe failure.  [rEbcab96484d]
+
+ * Let gpgrt_poll return an error for a closed fd.  [rE4a3dc85f69]
+
+ * Fix build error introduced by C-committee stupidity.  [T7344]
+
+ * Interface changes relative to the 1.50 release:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ _gpg_w32_gettext_use_utf8           EXTN (new value 2).
+ gpgrt_spawn_actions_set_env_rev     NEW.
+ GPGRT_PROCESS_ALLOW_SET_FG          NEW.
+
+ Release-info: https://dev.gnupg.org/T7164
+
+
+Noteworthy changes in version 1.50 (2024-06-19) [C37/A37/R0]
+-----------------------------------------------
+
+ * New set of process spawn functions.  [T6249]
+
+ * Fixed return type for gpgrt_b64dec_proc and gpgrt_b64dec_finish to
+   gpg_err_code_t.  This enum return type is in almost all cases
+   compatible to the formerly used gpg_error_t (i.e. unsigned int).
+
+ * Interface changes relative to the 1.49 release:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ gpgrt_process_t                     CHANGED (never used).
+ gpgrt_spawn_actions_t               NEW type.
+ gpgrt_process_requests              NEW enum.
+ gpgrt_process_spawn                 NEW.
+ gpgrt_process_terminate             NEW.
+ gpgrt_process_get_streams           NEW.
+ gpgrt_process_ctl                   NEW.
+ gpgrt_process_wait                  NEW.
+ gpgrt_process_release               NEW.
+ gpgrt_spawn_actions_new             NEW.
+ gpgrt_spawn_actions_release         NEW.
+ gpgrt_spawn_actions_set_redirect    NEW.
+ gpgrt_spawn_actions_set_environ     NEW (posix only).
+ gpgrt_spawn_actions_set_inherit_fds NEW (posix only).
+ gpgrt_spawn_actions_set_atfork      NEW (posix only).
+ gpgrt_spawn_actions_set_envvars     NEW (w32 only).
+ gpgrt_spawn_actions_set_inherit_handles NEW (w32 only).
+ GPGRT_PROCESS_DETACHED              NEW.
+ GPGRT_PROCESS_NO_CONSOLE            NEW.
+ GPGRT_PROCESS_NO_EUID_CHECK         NEW.
+ GPGRT_PROCESS_STDIN_PIPE            NEW.
+ GPGRT_PROCESS_STDOUT_PIPE           NEW.
+ GPGRT_PROCESS_STDERR_PIPE           NEW.
+ GPGRT_PROCESS_STDINOUT_SOCKETPAIR   NEW.
+ GPGRT_PROCESS_STDIN_KEEP            NEW.
+ GPGRT_PROCESS_STDOUT_KEEP           NEW.
+ GPGRT_PROCESS_STDERR_KEEP           NEW.
+ GPGRT_PROCESS_STDFDS_SETTING        NEW.
+ GPGRT_SPAWN_INHERIT_FILE            REMOVED (never used).
+ GPGRT_SPAWN_NONBLOCK                REMOVED (never used).
+ GPGRT_SPAWN_RUN_ASFW                REMOVED (never used).
+ GPGRT_SPAWN_DETACHED                REMOVED (never used).
+ GPGRT_SPAWN_KEEP_STDIN              REMOVED (never used).
+ GPGRT_SPAWN_KEEP_STDOUT             REMOVED (never used).
+ GPGRT_SPAWN_KEEP_STDERR             REMOVED (never used).
+
+ Release-info: https://dev.gnupg.org/T7102
+
+
+Noteworthy changes in version 1.49 (2024-04-25) [C36/A36/R0]
+-----------------------------------------------
+
+ * Two new functions to improve the logging interface.  The
+   gpgrt_logv_domain is currently the same as gpgrt_logv_prefix but
+   allows to pass a domain string so that in future we will be able to
+   select log output by domain.  It also provide a non yet functional
+   feature to include a hex dump.
+
+ * Add a "trunc" keyword to gpgrt_log_printhex.  [rE0a39fbefcb]
+
+ * Avoid an endless loop in the argparser due to a conf file read
+   error.  [rE2dc93cfecc]
+
+ * Interface changes relative to the 1.48 release:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ gpgrt_add_post_log_func        NEW.
+ gpgrt_logv_domain              NEW.
+
+ Release-info: https://dev.gnupg.org/T7012
+
+
+Noteworthy changes in version 1.48 (2024-02-23) [C35/A35/R0]
+-----------------------------------------------
+
+ * New configure option --with-libtool-modification.  [T6619]
+
+ * New option parser flag to detect commands given without a double
+   dash.  There is also the new meta command "command-mode" to set
+   this flag via a config file.  [T6978]
+
+ * Added an es_fopen mode flag "sequential" with support on Windows.
+   [rE7a42ff0ec9]
+
+ * Added an es_fopen mode flag "wipe" to cleanup internal buffers at
+   close time.  [T6954]
+
+ * New function gpgrt_wipememory.  [T6964]
+
+ * Improvements to setenv on Windows.  [rE89e53ad90f]
+
+ * Fixed call to estream-printf string filters.  [T6737]
+
+ * Many improvements to the yat2m tool.
+
+ * Updates to the build system.
+
+ * Interface changes relative to the 1.47 release:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ARGPARSE_FLAG_COMMAND          NEW.
+ gpgrt_wipememory               NEW.
+
+ Release-info: https://dev.gnupg.org/T6441
+
+
+Noteworthy changes in version 1.47 (2023-04-06) [C34/A34/R0]
+-----------------------------------------------
+
+ * New error codes for PUKs and reset codes.  [T6421]
+
+ * Avoid segv in logging with improper use of the "socket://".
+   [rE68333be630]
+
+ * Fixed translation of argparse's internal option --help.
+   [rE885a287a57]
+
+ * Interface changes relative to the 1.46 release:
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ GPG_ERR_SOURCE_TKD             NEW.
+ GPG_ERR_BAD_PUK                NEW.
+ GPG_ERR_NO_RESET_CODE	        NEW.
+ GPG_ERR_BAD_RESET_CODE	        NEW.
+ GPGRT_SPAWN_KEEP_STDIN         NEW.
+ GPGRT_SPAWN_KEEP_STDOUT        NEW.
+ GPGRT_SPAWN_KEEP_STDERR        NEW.
+ GPGRT_SPAWN_INHERIT_FILE       NEW.
+
+ Release-info: https://dev.gnupg.org/T6231
+
+
 Noteworthy changes in version 1.46 (2022-10-07) [C33/A33/R1]
 -----------------------------------------------
 

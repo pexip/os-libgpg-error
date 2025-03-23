@@ -42,6 +42,7 @@
 #define WIN32_LEAN_AND_MEAN  /* We only need the OS core stuff.  */
 #include <windows.h>
 
+#define NEED_STRUCT_SPAWN_CB_ARG
 #include "gpgrt-int.h"
 
 /* Define to 1 do enable debugging.  */
@@ -65,107 +66,29 @@
 #define fd_to_handle(a)  ((HANDLE)(a))
 #define handle_to_fd(a)  ((intptr_t)(a))
 
-/* For pid_t and HANDLE:
 
- * We assume that a HANDLE can be represented by an int which should
- * be true for all i386 systems.
- *
- * On 64-bit machine, it is no longer true, as a type, however, as
- * long as the range of the value in the type HANDLE can be
- * represented by an int, it works.
- *
- * FIXME with original MinGW: Breaking ABI for pid_t will be needed
- * when the value won't fit within 32-bit range on 64-bit machine.
- *
- * Note that pid_t is 64-bit integer in sys/types.h with MinGW-w64.
- * So, no problem with MinGW-w64.
- */
-#define pid_to_handle(a) ((HANDLE)(a))
-#define handle_to_pid(a) ((pid_t)(a))
+/* Definition for the gpgrt_spawn_actions_t.  Note that there is a
+ * different one for Unices.  */
+struct gpgrt_spawn_actions {
+  void *hd[3];
+  void **inherit_hds;
+  char *env;
+  const char *const *envchange;
+};
 
 
-/* Return the maximum number of currently allowed open file
- * descriptors.  Only useful on POSIX systems but returns a value on
- * other systems too.  */
-int
-get_max_fds (void)
-{
-  int max_fds = -1;
-
-#ifdef OPEN_MAX
-  if (max_fds == -1)
-    max_fds = OPEN_MAX;
-#endif
-
-  if (max_fds == -1)
-    max_fds = 256;  /* Arbitrary limit.  */
-
-  return max_fds;
-}
-
-
-/* Under Windows this is a dummy function.  */
-/* static void */
-/* close_all_fds (int first, int *except) */
-/* { */
-/*   (void)first; */
-/*   (void)except; */
-/* } */
-
-
-/* Returns an array with all currently open file descriptors.  The end
- * of the array is marked by -1.  The caller needs to release this
- * array using the *standard free* and not with xfree.  This allow the
- * use of this function right at startup even before libgcrypt has
- * been initialized.  Returns NULL on error and sets ERRNO
- * accordingly.  Note that fstat prints a warning to DebugView for all
- * invalid fds which is a bit annoying.  We actually do not need this
- * function in real code (close_all_fds is a dummy anyway) but we keep
- * it for use by t-exechelp.c.  */
-#if 0
-int *
-get_all_open_fds (void)
-{
-  int *array;
-  size_t narray;
-  int fd, max_fd, idx;
-#ifndef HAVE_STAT
-  array = calloc (1, sizeof *array);
-  if (array)
-    array[0] = -1;
-#else /*HAVE_STAT*/
-  struct stat statbuf;
-
-  max_fd = get_max_fds ();
-  narray = 32;  /* If you change this change also t-exechelp.c.  */
-  array = calloc (narray, sizeof *array);
-  if (!array)
-    return NULL;
-
-  /* Note:  The list we return is ordered.  */
-  for (idx=0, fd=0; fd < max_fd; fd++)
-    if (!(fstat (fd, &statbuf) == -1 && errno == EBADF))
-      {
-        if (idx+1 >= narray)
-          {
-            int *tmp;
-
-            narray += (narray < 256)? 32:256;
-            tmp = realloc (array, narray * sizeof *array);
-            if (!tmp)
-              {
-                free (array);
-                return NULL;
-              }
-            array = tmp;
-          }
-        array[idx++] = fd;
-      }
-  array[idx] = -1;
-#endif /*HAVE_STAT*/
-  return array;
-}
-#endif
+/* Definition for the gpgrt_process_t.  Note that there is a different
+ * one for Unices.  */
+struct gpgrt_process {
+  const char *pgmname;
+  unsigned int terminated:1;  /* or detached */
+  unsigned int flags;
+  HANDLE hProcess;
+  HANDLE hd_in;
+  HANDLE hd_out;
+  HANDLE hd_err;
+  int exitcode;
+};
 
 
 /* Helper function to build_w32_commandline. */
@@ -239,9 +162,9 @@ build_w32_commandline (const char *pgmname, const char * const *argv,
 }
 
 
-#define INHERIT_READ	1
-#define INHERIT_WRITE	2
-#define INHERIT_BOTH	(INHERIT_READ|INHERIT_WRITE)
+#define INHERIT_READ    1
+#define INHERIT_WRITE   2
+#define INHERIT_BOTH    (INHERIT_READ|INHERIT_WRITE)
 
 /* Create pipe.  FLAGS indicates which ends are inheritable.  */
 static int
@@ -275,7 +198,7 @@ create_inheritable_pipe (HANDLE filedes[2], int flags)
   return 0;
 
  fail:
-  _gpgrt_log_error ("SetHandleInformation failed: ec=%d\n",
+  _gpgrt_log_info ("SetHandleInformation failed: ec=%d\n",
                     (int)GetLastError ());
   CloseHandle (r);
   CloseHandle (w);
@@ -321,7 +244,7 @@ do_create_pipe_and_estream (int filedes[2],
       filedes[0] = _open_osfhandle (handle_to_fd (fds[0]), O_RDONLY);
       if (filedes[0] == -1)
         {
-          _gpgrt_log_error ("failed to translate osfhandle %p\n", fds[0]);
+          _gpgrt_log_info ("failed to translate osfhandle %p\n", fds[0]);
           CloseHandle (fds[1]);
         }
       else
@@ -329,7 +252,7 @@ do_create_pipe_and_estream (int filedes[2],
           filedes[1] = _open_osfhandle (handle_to_fd (fds[1]), O_APPEND);
           if (filedes[1] == -1)
             {
-              _gpgrt_log_error ("failed to translate osfhandle %p\n", fds[1]);
+              _gpgrt_log_info ("failed to translate osfhandle %p\n", fds[1]);
               close (filedes[0]);
               filedes[0] = -1;
               CloseHandle (fds[1]);
@@ -355,7 +278,7 @@ do_create_pipe_and_estream (int filedes[2],
       if (!*r_fp)
         {
           err = _gpg_err_code_from_syserror ();
-          _gpgrt_log_error (_("error creating a stream for a pipe: %s\n"),
+          _gpgrt_log_info (_("error creating a stream for a pipe: %s\n"),
                             _gpg_strerror (err));
           close (filedes[0]);
           close (filedes[1]);
@@ -383,139 +306,246 @@ _gpgrt_make_pipe (int filedes[2], estream_t *r_fp, int direction, int nonblock)
 }
 
 
-/* Fork and exec the PGMNAME, see gpgrt-int.h for details.  */
-gpg_err_code_t
-_gpgrt_spawn_process (const char *pgmname, const char *argv[],
-                      int *except, void (*preexec)(void), unsigned int flags,
-                      estream_t *r_infp, estream_t *r_outfp, estream_t *r_errfp,
-                      pid_t *pid)
+/*
+ * Check if STARTUPINFOEXW supports PROC_THREAD_ATTRIBUTE_HANDLE_LIST.
+ */
+static int
+check_windows_version (void)
 {
-  gpg_err_code_t err;
-  SECURITY_ATTRIBUTES sec_attr;
-  PROCESS_INFORMATION pi =
+  static int is_vista_or_later = -1;
+
+  OSVERSIONINFO osvi;
+
+  if (is_vista_or_later == -1)
     {
-      NULL,      /* Returns process handle.  */
-      0,         /* Returns primary thread handle.  */
-      0,         /* Returns pid.  */
-      0          /* Returns tid.  */
-    };
-  STARTUPINFO si;
-  int cr_flags;
-  char *cmdline;
-  HANDLE inpipe[2]  = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE};
-  HANDLE outpipe[2] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE};
-  HANDLE errpipe[2] = {INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE};
-  estream_t infp = NULL;
-  estream_t outfp = NULL;
-  estream_t errfp = NULL;
-  HANDLE nullhd[3] = {INVALID_HANDLE_VALUE,
-                      INVALID_HANDLE_VALUE,
-                      INVALID_HANDLE_VALUE};
+      memset (&osvi,0,sizeof(osvi));
+      osvi.dwOSVersionInfoSize = sizeof(osvi);
+      GetVersionEx (&osvi);
+
+      /* The feature is available on Vista or later.  */
+      is_vista_or_later = (osvi.dwMajorVersion >= 6);
+    }
+
+  return is_vista_or_later;
+}
+
+static gpg_err_code_t
+prepare_env_block (char **r_env, const char *const *envchange)
+{
+  gpg_err_code_t ec;
+  wchar_t *orig_env_block;
+  wchar_t *wp;
   int i;
-  es_syshd_t syshd;
-  int nonblock = !!(flags & GPGRT_SPAWN_NONBLOCK);
+  size_t envlen[256];
+  wchar_t *env_block;
+  size_t env_block_len;
+
+  const char *const *envp;
+  const char *e;
+  int env_num;
+
+  wp = orig_env_block = GetEnvironmentStringsW ();
+  for (i = 0; *wp != L'\0'; i++)
+    if (i >= DIM (envlen))
+      {
+        FreeEnvironmentStringsW (orig_env_block);
+        return GPG_ERR_TOO_LARGE;
+      }
+    else
+      wp += ((envlen[i] = wcslen (wp)) + 1);
+  wp++;
+  env_num = i;
+
+  env_block_len = (char *)wp - (char *)orig_env_block;
+  env_block = xtrymalloc (env_block_len);
+  if (!env_block)
+    {
+      FreeEnvironmentStringsW (orig_env_block);
+      return _gpg_err_code_from_syserror ();
+    }
+  memcpy (env_block, orig_env_block, env_block_len);
+  FreeEnvironmentStringsW (orig_env_block);
+
+  for (envp = envchange; (e = *envp); envp++)
+    {
+      wchar_t *we;
+      int off = 0;
+
+      we = _gpgrt_utf8_to_wchar (e);
+      if (!we)
+        {
+          ec = _gpg_err_code_from_syserror ();
+          goto leave;
+        }
+
+      wp = wcschr (we, L'=');
+      if (!wp)
+        {
+          /* Remove WE entry in the environment block.  */
+          for (i = 0; i < env_num; i++)
+            if (!wcsncmp (&env_block[off], we, wcslen (we))
+                && env_block[off+wcslen (we)] == L'=')
+              break;
+            else
+              off += envlen[i] + 1;
+
+          if (i == env_num)
+            /* not found */;
+          else
+            {
+              env_block_len -= (envlen[i] + 1) * sizeof (wchar_t);
+              env_num--;
+              for (; i < env_num; i++)
+                {
+                  int off0 = off;
+
+                  off += envlen[i] + 1;
+                  memmove (&env_block[off0], &env_block[off],
+                           ((envlen[i] = envlen[i+1]) + 1) * sizeof (wchar_t));
+                }
+              env_block[(env_block_len / sizeof (wchar_t)) - 1] = L'\0';
+            }
+        }
+      else
+        {
+          size_t old_env_block_len;
+
+          for (i = 0; i < env_num; i++)
+            if (!wcsncmp (&env_block[off], we, wp - we + 1))
+              break;
+            else
+              off += envlen[i] + 1;
+
+          if (i < env_num)
+            {
+              int off0 = off;
+
+              off += envlen[i] + 1;
+              /* If an existing entry, remove it.  */
+              env_block_len -= (envlen[i] + 1) * sizeof (wchar_t);
+              env_num--;
+              for (; i < env_num; i++)
+                {
+                  size_t len = (envlen[i] = envlen[i+1]) + 1;
+
+                  memmove (&env_block[off0], &env_block[off],
+                           len * sizeof (wchar_t));
+                  off0 += len;
+                  off += len;
+                }
+              env_block[(env_block_len / sizeof (wchar_t)) - 1] = L'\0';
+            }
+
+          if (i >= DIM (envlen) - 1)
+            {
+              ec = GPG_ERR_TOO_LARGE;
+              _gpgrt_free_wchar (we);
+              goto leave;
+            }
+
+          old_env_block_len = env_block_len;
+          env_block_len += ((envlen[i++] = wcslen (we)) + 1) * sizeof (wchar_t);
+          env_num = i;
+          env_block = xtryrealloc (env_block, env_block_len);
+          if (!env_block)
+            {
+              ec = _gpg_err_code_from_syserror ();
+              _gpgrt_free_wchar (we);
+              goto leave;
+            }
+          memmove ((char *)env_block + old_env_block_len - sizeof (wchar_t),
+                   we, (envlen[env_num - 1] + 1) * sizeof (wchar_t));
+          env_block[(env_block_len / sizeof (wchar_t)) - 1] = L'\0';
+        }
+
+      _gpgrt_free_wchar (we);
+    }
+  ec = 0;
+
+ leave:
+  if (ec)
+    xfree (env_block);
+  else
+    *r_env = (char *)env_block;
+
+  return ec;
+}
+
+static gpg_err_code_t
+spawn_detached (const char *pgmname, char *cmdline, gpgrt_spawn_actions_t act)
+{
+  SECURITY_ATTRIBUTES sec_attr;
+  PROCESS_INFORMATION pi = { NULL, 0, 0, 0 };
+  STARTUPINFOEXW si;
+  int cr_flags;
+  wchar_t *wcmdline = NULL;
+  wchar_t *wpgmname = NULL;
+  gpg_err_code_t ec;
   int ret;
+  BOOL ask_inherit = FALSE;
+  int i;
+  char *env = NULL;
 
-  (void)except; /* Not yet used.  */
-
-  if (r_infp)
-    *r_infp = NULL;
-  if (r_outfp)
-    *r_outfp = NULL;
-  if (r_errfp)
-    *r_errfp = NULL;
-  *pid = (pid_t)INVALID_HANDLE_VALUE; /* Always required.  */
-
-  if (r_infp)
+  ec = _gpgrt_access (pgmname, X_OK);
+  if (ec)
     {
-      if (create_inheritable_pipe (inpipe, INHERIT_READ))
-        {
-          err = GPG_ERR_GENERAL;
-          _gpgrt_log_error (_("error creating a pipe: %s\n"),
-                            _gpg_strerror (err));
-          return err;
-        }
-
-      syshd.type = ES_SYSHD_HANDLE;
-      syshd.u.handle = inpipe[1];
-      infp = _gpgrt_sysopen (&syshd, nonblock? "w,nonblock" : "w");
-      if (!infp)
-        {
-          err = _gpg_err_code_from_syserror ();
-          _gpgrt_log_error (_("error creating a stream for a pipe: %s\n"),
-                            _gpg_strerror (err));
-          CloseHandle (inpipe[0]);
-          CloseHandle (inpipe[1]);
-          inpipe[0] = inpipe[1] = INVALID_HANDLE_VALUE;
-          return err;
-        }
+      xfree (cmdline);
+      return ec;
     }
 
-  if (r_outfp)
+  memset (&si, 0, sizeof si);
+
+  i = 0;
+  if (act->hd[0] != INVALID_HANDLE_VALUE)
+    i++;
+  if (act->hd[1] != INVALID_HANDLE_VALUE)
+    i++;
+  if (act->hd[2] != INVALID_HANDLE_VALUE)
+    i++;
+
+  if (i != 0 || act->inherit_hds)
     {
-      if (create_inheritable_pipe (outpipe, INHERIT_WRITE))
+      SIZE_T attr_list_size = 0;
+      HANDLE hd[32];
+      HANDLE *hd_p = act->inherit_hds;
+      int j = 0;
+
+      if (act->hd[0] != INVALID_HANDLE_VALUE)
+        hd[j++] = act->hd[0];
+      if (act->hd[1] != INVALID_HANDLE_VALUE)
+        hd[j++] = act->hd[1];
+      if (act->hd[2] != INVALID_HANDLE_VALUE)
+        hd[j++] = act->hd[2];
+      if (hd_p)
         {
-          err = GPG_ERR_GENERAL;
-          _gpgrt_log_error (_("error creating a pipe: %s\n"),
-                            _gpg_strerror (err));
-          return err;
+          while (*hd_p != INVALID_HANDLE_VALUE)
+            if (j < DIM (hd))
+              hd[j++] = *hd_p++;
+            else
+              {
+                _gpgrt_log_info ("gpgrt_spawn_detached: too many handles\n");
+                break;
+              }
         }
 
-      syshd.type = ES_SYSHD_HANDLE;
-      syshd.u.handle = outpipe[0];
-      outfp = _gpgrt_sysopen (&syshd, nonblock? "r,nonblock" : "r");
-      if (!outfp)
+      if (j)
         {
-          err = _gpg_err_code_from_syserror ();
-          _gpgrt_log_error (_("error creating a stream for a pipe: %s\n"),
-                            _gpg_strerror (err));
-          CloseHandle (outpipe[0]);
-          CloseHandle (outpipe[1]);
-          outpipe[0] = outpipe[1] = INVALID_HANDLE_VALUE;
-          if (infp)
-            _gpgrt_fclose (infp);
-          else if (inpipe[1] != INVALID_HANDLE_VALUE)
-            CloseHandle (inpipe[1]);
-          if (inpipe[0] != INVALID_HANDLE_VALUE)
-            CloseHandle (inpipe[0]);
-          return err;
-        }
-    }
-
-  if (r_errfp)
-    {
-      if (create_inheritable_pipe (errpipe, INHERIT_WRITE))
-        {
-          err = GPG_ERR_GENERAL;
-          _gpgrt_log_error (_("error creating a pipe: %s\n"),
-                            _gpg_strerror (err));
-          return err;
-        }
-
-      syshd.type = ES_SYSHD_HANDLE;
-      syshd.u.handle = errpipe[0];
-      errfp = _gpgrt_sysopen (&syshd, nonblock? "r,nonblock" : "r");
-      if (!errfp)
-        {
-          err = _gpg_err_code_from_syserror ();
-          _gpgrt_log_error (_("error creating a stream for a pipe: %s\n"),
-                            _gpg_strerror (err));
-          CloseHandle (errpipe[0]);
-          CloseHandle (errpipe[1]);
-          errpipe[0] = errpipe[1] = INVALID_HANDLE_VALUE;
-          if (outfp)
-            _gpgrt_fclose (outfp);
-          else if (outpipe[0] != INVALID_HANDLE_VALUE)
-            CloseHandle (outpipe[0]);
-          if (outpipe[1] != INVALID_HANDLE_VALUE)
-            CloseHandle (outpipe[1]);
-          if (infp)
-            _gpgrt_fclose (infp);
-          else if (inpipe[1] != INVALID_HANDLE_VALUE)
-            CloseHandle (inpipe[1]);
-          if (inpipe[0] != INVALID_HANDLE_VALUE)
-            CloseHandle (inpipe[0]);
-          return err;
+          if (check_windows_version ())
+            {
+              InitializeProcThreadAttributeList (NULL, 1, 0, &attr_list_size);
+              si.lpAttributeList = xtrymalloc (attr_list_size);
+              if (si.lpAttributeList == NULL)
+                {
+                  xfree (cmdline);
+                  return _gpg_err_code_from_syserror ();
+                }
+              InitializeProcThreadAttributeList (si.lpAttributeList, 1, 0,
+                                                 &attr_list_size);
+              UpdateProcThreadAttribute (si.lpAttributeList, 0,
+                                         PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
+                                         hd, sizeof (HANDLE) * j, NULL, NULL);
+            }
+          ask_inherit = TRUE;
         }
     }
 
@@ -524,94 +554,509 @@ _gpgrt_spawn_process (const char *pgmname, const char *argv[],
   sec_attr.nLength = sizeof sec_attr;
   sec_attr.bInheritHandle = FALSE;
 
-  /* Build the command line.  */
-  err = build_w32_commandline (pgmname, argv, &cmdline);
-  if (err)
-    return err;
-
-  if (inpipe[0] == INVALID_HANDLE_VALUE)
-    nullhd[0] = w32_open_null (0);
-  if (outpipe[1] == INVALID_HANDLE_VALUE)
-    nullhd[1] = w32_open_null (1);
-  if (errpipe[1] == INVALID_HANDLE_VALUE)
-    nullhd[2] = w32_open_null (1);
-
-  /* Start the process.  Note that we can't run the PREEXEC function
-     because this might change our own environment. */
-  (void)preexec;
-
-  memset (&si, 0, sizeof si);
-  si.cb = sizeof (si);
-  si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
-  si.wShowWindow = DEBUG_W32_SPAWN? SW_SHOW : SW_MINIMIZE;
-  si.hStdInput  = inpipe[0]  == INVALID_HANDLE_VALUE? nullhd[0] : inpipe[0];
-  si.hStdOutput = outpipe[1] == INVALID_HANDLE_VALUE? nullhd[1] : outpipe[1];
-  si.hStdError  = errpipe[1] == INVALID_HANDLE_VALUE? nullhd[2] : errpipe[1];
+  /* Start the process.  */
+  si.StartupInfo.cb = sizeof (si);
+  si.StartupInfo.dwFlags = ((i > 0 ? STARTF_USESTDHANDLES : 0)
+                            | STARTF_USESHOWWINDOW);
+  si.StartupInfo.wShowWindow = DEBUG_W32_SPAWN? SW_SHOW : SW_MINIMIZE;
+  si.StartupInfo.hStdInput  = act->hd[0];
+  si.StartupInfo.hStdOutput = act->hd[1];
+  si.StartupInfo.hStdError  = act->hd[2];
 
   cr_flags = (CREATE_DEFAULT_ERROR_MODE
-              | ((flags & GPGRT_SPAWN_DETACHED)? DETACHED_PROCESS : 0)
               | GetPriorityClass (GetCurrentProcess ())
-              | CREATE_SUSPENDED);
-  _gpgrt_log_debug ("CreateProcess, path='%s' cmdline='%s'\n",
-                    pgmname, cmdline);
-  ret = CreateProcess (pgmname,     /* Program to start.  */
-                      cmdline,       /* Command line arguments.  */
-                      &sec_attr,     /* Process security attributes.  */
-                      &sec_attr,     /* Thread security attributes.  */
-                      TRUE,          /* Inherit handles.  */
-                      cr_flags,      /* Creation flags.  */
-                      NULL,          /* Environment.  */
-                      NULL,          /* Use current drive/directory.  */
-                      &si,           /* Startup information. */
-                      &pi            /* Returns process information.  */
-                        );
+              | CREATE_NEW_PROCESS_GROUP
+              | DETACHED_PROCESS);
+
+  if (act->env)
+    {
+      /* Either ENV or ENVCHANGE can be specified, not both.  */
+      if (act->envchange)
+        {
+          xfree (cmdline);
+          return GPG_ERR_INV_ARG;
+        }
+
+      env = act->env;
+    }
+  else if (act->envchange)
+    {
+      ec = prepare_env_block (&env, act->envchange);
+      if (ec)
+        {
+          xfree (cmdline);
+          return ec;
+        }
+
+      cr_flags |= CREATE_UNICODE_ENVIRONMENT;
+    }
+
+  /* Take care: CreateProcessW may modify wpgmname */
+  if (!(wpgmname = _gpgrt_utf8_to_wchar (pgmname)))
+    ret = 0;
+  else if (!(wcmdline = _gpgrt_utf8_to_wchar (cmdline)))
+    ret = 0;
+  else
+    ret = CreateProcessW (wpgmname,      /* Program to start.  */
+                          wcmdline,      /* Command line arguments.  */
+                          &sec_attr,     /* Process security attributes.  */
+                          &sec_attr,     /* Thread security attributes.  */
+                          ask_inherit,   /* Inherit handles.  */
+                          cr_flags,      /* Creation flags.  */
+                          env,           /* Environment.  */
+                          NULL,          /* Use current drive/directory.  */
+                          (STARTUPINFOW *)&si,    /* Startup information. */
+                          &pi            /* Returns process information.  */
+                          );
+  if (act->envchange)
+    xfree (env);
+  env = NULL;
   if (!ret)
     {
-      _gpgrt_log_error ("CreateProcess failed: ec=%d\n", (int)GetLastError ());
+      if (!wpgmname || !wcmdline)
+        _gpgrt_log_info ("gpgrt_spawn_detached: "
+                         "CreateProcess failed (utf8_to_wchar): %s\n",
+                          strerror (errno));
+      else
+        _gpgrt_log_info ("gpgrt_spawn_detached: "
+                         "CreateProcess(detached) failed: %d\n",
+                          (int)GetLastError ());
+      _gpgrt_free_wchar (wpgmname);
+      _gpgrt_free_wchar (wcmdline);
       xfree (cmdline);
-      if (infp)
-        _gpgrt_fclose (infp);
-      else if (inpipe[1] != INVALID_HANDLE_VALUE)
-        CloseHandle (outpipe[1]);
-      if (inpipe[0] != INVALID_HANDLE_VALUE)
-        CloseHandle (inpipe[0]);
-      if (outfp)
-        _gpgrt_fclose (outfp);
-      else if (outpipe[0] != INVALID_HANDLE_VALUE)
-        CloseHandle (outpipe[0]);
-      if (outpipe[1] != INVALID_HANDLE_VALUE)
-        CloseHandle (outpipe[1]);
-      if (errfp)
-        _gpgrt_fclose (errfp);
-      else if (errpipe[0] != INVALID_HANDLE_VALUE)
-        CloseHandle (errpipe[0]);
-      if (errpipe[1] != INVALID_HANDLE_VALUE)
-        CloseHandle (errpipe[1]);
       return GPG_ERR_GENERAL;
     }
+  if (si.lpAttributeList)
+    DeleteProcThreadAttributeList (si.lpAttributeList);
+  _gpgrt_free_wchar (wpgmname);
+  _gpgrt_free_wchar (wcmdline);
   xfree (cmdline);
-  cmdline = NULL;
 
-  /* Close the inherited handles to /dev/null.  */
-  for (i=0; i < DIM (nullhd); i++)
-    if (nullhd[i] != INVALID_HANDLE_VALUE)
-      CloseHandle (nullhd[i]);
+  /* log_debug ("CreateProcess(detached) ready: hProcess=%p hThread=%p" */
+  /*           " dwProcessID=%d dwThreadId=%d\n", */
+  /*           pi.hProcess, pi.hThread, */
+  /*          (int) pi.dwProcessId, (int) pi.dwThreadId); */
 
-  /* Close the inherited ends of the pipes.  */
-  if (inpipe[0] != INVALID_HANDLE_VALUE)
-    CloseHandle (inpipe[0]);
-  if (outpipe[1] != INVALID_HANDLE_VALUE)
-    CloseHandle (outpipe[1]);
-  if (errpipe[1] != INVALID_HANDLE_VALUE)
-    CloseHandle (errpipe[1]);
+  /* Note: AllowSetForegroundWindow doesn't make sense for background
+     process.  */
 
-  _gpgrt_log_debug ("CreateProcess ready: hProcess=%p hThread=%p"
-                    " dwProcessID=%d dwThreadId=%d\n",
-                    pi.hProcess, pi.hThread,
-                    (int) pi.dwProcessId, (int) pi.dwThreadId);
-  _gpgrt_log_debug ("                     outfp=%p errfp=%p\n", outfp, errfp);
+  CloseHandle (pi.hThread);
+  CloseHandle (pi.hProcess);
+  return 0;
+}
 
-  if ((flags & GPGRT_SPAWN_RUN_ASFW))
+
+gpg_err_code_t
+_gpgrt_spawn_actions_new (gpgrt_spawn_actions_t *r_act)
+{
+  gpgrt_spawn_actions_t act;
+  int i;
+
+  *r_act = NULL;
+
+  act = xtrycalloc (1, sizeof (struct gpgrt_spawn_actions));
+  if (act == NULL)
+    return _gpg_err_code_from_syserror ();
+
+  for (i = 0; i <= 2; i++)
+    act->hd[i] = INVALID_HANDLE_VALUE;
+
+  *r_act = act;
+  return 0;
+}
+
+void
+_gpgrt_spawn_actions_release (gpgrt_spawn_actions_t act)
+{
+  if (!act)
+    return;
+
+  xfree (act);
+}
+
+void
+_gpgrt_spawn_actions_set_env_rev (gpgrt_spawn_actions_t act,
+                                  const char *const *envchange)
+{
+  act->envchange = envchange;
+}
+
+/* Set the environment block for child process.
+ * ENV is an ASCII encoded string, terminated by two zero bytes.
+ */
+void
+_gpgrt_spawn_actions_set_envvars (gpgrt_spawn_actions_t act, char *env)
+{
+  act->env = env;
+}
+
+void
+_gpgrt_spawn_actions_set_redirect (gpgrt_spawn_actions_t act,
+                                   void *in, void *out, void *err)
+{
+  act->hd[0] = in;
+  act->hd[1] = out;
+  act->hd[2] = err;
+}
+
+void
+_gpgrt_spawn_actions_set_inherit_handles (gpgrt_spawn_actions_t act,
+                                          void **handles)
+{
+  act->inherit_hds = handles;
+}
+
+
+gpg_err_code_t
+_gpgrt_process_spawn (const char *pgmname, const char *argv[],
+                      unsigned int flags, gpgrt_spawn_actions_t act,
+                      gpgrt_process_t *r_process)
+{
+  gpg_err_code_t ec;
+  gpgrt_process_t process;
+  SECURITY_ATTRIBUTES sec_attr;
+  PROCESS_INFORMATION pi = { NULL, 0, 0, 0 };
+  STARTUPINFOEXW si;
+  int cr_flags;
+  char *cmdline;
+  wchar_t *wcmdline = NULL;
+  wchar_t *wpgmname = NULL;
+  int ret;
+  HANDLE hd_in[2];
+  HANDLE hd_out[2];
+  HANDLE hd_err[2];
+  int i;
+  BOOL ask_inherit = FALSE;
+  struct gpgrt_spawn_actions act_default;
+  char *env = NULL;
+
+  if (!act)
+    {
+      memset (&act_default, 0, sizeof (act_default));
+      for (i = 0; i <= 2; i++)
+        act_default.hd[i] = INVALID_HANDLE_VALUE;
+      act = &act_default;
+    }
+
+  /* Build the command line.  */
+  ec = build_w32_commandline (pgmname, argv, &cmdline);
+  if (ec)
+    return ec;
+
+  if ((flags & GPGRT_PROCESS_DETACHED))
+    {
+      if ((flags & GPGRT_PROCESS_STDFDS_SETTING))
+        {
+          xfree (cmdline);
+          return GPG_ERR_INV_FLAG;
+        }
+
+      /* In detached case, it must be no R_PROCESS.  */
+      if (r_process || pgmname == NULL)
+        {
+          xfree (cmdline);
+          return GPG_ERR_INV_ARG;
+        }
+
+      return spawn_detached (pgmname, cmdline, act);
+    }
+
+  if (r_process)
+    *r_process = NULL;
+
+  if (pgmname == NULL)
+    {
+      xfree (cmdline);
+      return GPG_ERR_INV_ARG;
+    }
+
+  process = xtrymalloc (sizeof (struct gpgrt_process));
+  if (process == NULL)
+    {
+      xfree (cmdline);
+      return _gpg_err_code_from_syserror ();
+    }
+
+  process->pgmname = pgmname;
+  process->flags = flags;
+
+  if ((flags & GPGRT_PROCESS_STDINOUT_SOCKETPAIR))
+    {
+      xfree (process);
+      xfree (cmdline);
+      return GPG_ERR_NOT_SUPPORTED;
+    }
+
+  if ((flags & GPGRT_PROCESS_STDIN_PIPE))
+    {
+      ec = create_inheritable_pipe (hd_in, INHERIT_READ);
+      if (ec)
+        {
+          xfree (process);
+          xfree (cmdline);
+          return ec;
+        }
+    }
+  else if ((flags & GPGRT_PROCESS_STDIN_KEEP))
+    {
+      hd_in[0] = GetStdHandle (STD_INPUT_HANDLE);
+      hd_in[1] = INVALID_HANDLE_VALUE;
+    }
+  else
+    {
+      hd_in[0] = w32_open_null (0);
+      hd_in[1] = INVALID_HANDLE_VALUE;
+    }
+
+  if ((flags & GPGRT_PROCESS_STDOUT_PIPE))
+    {
+      ec = create_inheritable_pipe (hd_out, INHERIT_WRITE);
+      if (ec)
+        {
+          if (hd_in[0] != INVALID_HANDLE_VALUE)
+            CloseHandle (hd_in[0]);
+          if (hd_in[1] != INVALID_HANDLE_VALUE)
+            CloseHandle (hd_in[1]);
+          xfree (process);
+          xfree (cmdline);
+          return ec;
+        }
+    }
+  else if ((flags & GPGRT_PROCESS_STDOUT_KEEP))
+    {
+      hd_out[0] = INVALID_HANDLE_VALUE;
+      hd_out[1] = GetStdHandle (STD_OUTPUT_HANDLE);
+    }
+  else
+    {
+      hd_out[0] = INVALID_HANDLE_VALUE;
+      hd_out[1] = w32_open_null (1);
+    }
+
+  if ((flags & GPGRT_PROCESS_STDERR_PIPE))
+    {
+      ec = create_inheritable_pipe (hd_err, INHERIT_WRITE);
+      if (ec)
+        {
+          if (hd_in[0] != INVALID_HANDLE_VALUE)
+            CloseHandle (hd_in[0]);
+          if (hd_in[1] != INVALID_HANDLE_VALUE)
+            CloseHandle (hd_in[1]);
+          if (hd_out[0] != INVALID_HANDLE_VALUE)
+            CloseHandle (hd_out[0]);
+          if (hd_out[1] != INVALID_HANDLE_VALUE)
+            CloseHandle (hd_out[1]);
+          xfree (process);
+          xfree (cmdline);
+          return ec;
+        }
+    }
+  else if ((flags & GPGRT_PROCESS_STDERR_KEEP))
+    {
+      hd_err[0] = INVALID_HANDLE_VALUE;
+      hd_err[1] = GetStdHandle (STD_ERROR_HANDLE);
+    }
+  else
+    {
+      hd_err[0] = INVALID_HANDLE_VALUE;
+      hd_err[1] = w32_open_null (1);
+    }
+
+  memset (&si, 0, sizeof si);
+
+  if (act->hd[0] == INVALID_HANDLE_VALUE)
+    act->hd[0] = hd_in[0];
+  if (act->hd[1] == INVALID_HANDLE_VALUE)
+    act->hd[1] = hd_out[1];
+  if (act->hd[2] == INVALID_HANDLE_VALUE)
+    act->hd[2] = hd_err[1];
+
+  i = 0;
+  if (act->hd[0] != INVALID_HANDLE_VALUE)
+    i++;
+  if (act->hd[1] != INVALID_HANDLE_VALUE)
+    i++;
+  if (act->hd[2] != INVALID_HANDLE_VALUE)
+    i++;
+
+  if (i != 0 || act->inherit_hds)
+    {
+      SIZE_T attr_list_size = 0;
+      HANDLE hd[32];
+      HANDLE *hd_p = act->inherit_hds;
+      int j = 0;
+
+      if (act->hd[0] != INVALID_HANDLE_VALUE)
+        hd[j++] = act->hd[0];
+      if (act->hd[1] != INVALID_HANDLE_VALUE)
+        hd[j++] = act->hd[1];
+      if (act->hd[2] != INVALID_HANDLE_VALUE)
+        hd[j++] = act->hd[2];
+      if (hd_p)
+        {
+          while (*hd_p != INVALID_HANDLE_VALUE)
+            if (j < DIM (hd))
+              hd[j++] = *hd_p++;
+            else
+              {
+                _gpgrt_log_info ("gpgrt_process_spawn: too many handles\n");
+                break;
+              }
+        }
+
+      if (j)
+        {
+          if (check_windows_version ())
+            {
+              InitializeProcThreadAttributeList (NULL, 1, 0, &attr_list_size);
+              si.lpAttributeList = xtrymalloc (attr_list_size);
+              if (si.lpAttributeList == NULL)
+                {
+                  if ((flags & GPGRT_PROCESS_STDIN_PIPE)
+                      || !(flags & GPGRT_PROCESS_STDIN_KEEP))
+                    CloseHandle (hd_in[0]);
+                  if ((flags & GPGRT_PROCESS_STDIN_PIPE))
+                    CloseHandle (hd_in[1]);
+                  if ((flags & GPGRT_PROCESS_STDOUT_PIPE))
+                    CloseHandle (hd_out[0]);
+                  if ((flags & GPGRT_PROCESS_STDOUT_PIPE)
+                      || !(flags & GPGRT_PROCESS_STDOUT_KEEP))
+                    CloseHandle (hd_out[1]);
+                  if ((flags & GPGRT_PROCESS_STDERR_PIPE))
+                    CloseHandle (hd_err[0]);
+                  if ((flags & GPGRT_PROCESS_STDERR_PIPE)
+                      || !(flags & GPGRT_PROCESS_STDERR_KEEP))
+                    CloseHandle (hd_err[1]);
+                  xfree (process);
+                  xfree (cmdline);
+                  return _gpg_err_code_from_syserror ();
+                }
+              InitializeProcThreadAttributeList (si.lpAttributeList, 1, 0,
+                                                 &attr_list_size);
+              UpdateProcThreadAttribute (si.lpAttributeList, 0,
+                                         PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
+                                         hd, sizeof (HANDLE) * j, NULL, NULL);
+            }
+          ask_inherit = TRUE;
+        }
+    }
+
+  /* Prepare security attributes.  */
+  memset (&sec_attr, 0, sizeof sec_attr );
+  sec_attr.nLength = sizeof sec_attr;
+  sec_attr.bInheritHandle = FALSE;
+
+  /* Start the process.  */
+  si.StartupInfo.cb = sizeof (si);
+  si.StartupInfo.dwFlags = ((i > 0 ? STARTF_USESTDHANDLES : 0)
+                            | STARTF_USESHOWWINDOW);
+  si.StartupInfo.wShowWindow = DEBUG_W32_SPAWN? SW_SHOW : SW_HIDE;
+  si.StartupInfo.hStdInput  = act->hd[0];
+  si.StartupInfo.hStdOutput = act->hd[1];
+  si.StartupInfo.hStdError  = act->hd[2];
+
+  /* log_debug ("CreateProcess, path='%s' cmdline='%s'\n", pgmname, cmdline); */
+  cr_flags = (CREATE_DEFAULT_ERROR_MODE
+              | ((flags & GPGRT_PROCESS_NO_CONSOLE) ? DETACHED_PROCESS : 0)
+              | GetPriorityClass (GetCurrentProcess ())
+              | CREATE_SUSPENDED);
+
+  if (act->env)
+    {
+      /* Either ENV or ENVCHANGE can be specified, not both.  */
+      if (act->envchange)
+        {
+          xfree (process);
+          xfree (cmdline);
+          return GPG_ERR_INV_ARG;
+        }
+
+      env = act->env;
+    }
+  else if (act->envchange)
+    {
+      ec = prepare_env_block (&env, act->envchange);
+      if (ec)
+        {
+          xfree (process);
+          xfree (cmdline);
+          return ec;
+        }
+
+      cr_flags |= CREATE_UNICODE_ENVIRONMENT;
+    }
+
+  if (!(wpgmname = _gpgrt_utf8_to_wchar (pgmname)))
+    ret = 0;
+  else if (!(wcmdline = _gpgrt_utf8_to_wchar (cmdline)))
+    ret = 0;
+  else
+    ret = CreateProcessW (wpgmname,      /* Program to start.  */
+                          wcmdline,      /* Command line arguments.  */
+                          &sec_attr,     /* Process security attributes.  */
+                          &sec_attr,     /* Thread security attributes.  */
+                          ask_inherit,   /* Inherit handles.  */
+                          cr_flags,      /* Creation flags.  */
+                          env,           /* Environment.  */
+                          NULL,          /* Use current drive/directory.  */
+                          (STARTUPINFOW *)&si, /* Startup information. */
+                          &pi            /* Returns process information.  */
+                          );
+  if (act->envchange)
+    xfree (env);
+  env = NULL;
+  if (!ret)
+    {
+      if (!wpgmname || !wcmdline)
+        _gpgrt_log_info ("CreateProcess failed (utf8_to_wchar): %s\n",
+                          strerror (errno));
+      else
+        _gpgrt_log_info ("CreateProcess failed: ec=%d\n",
+                          (int)GetLastError ());
+      if ((flags & GPGRT_PROCESS_STDIN_PIPE)
+          || !(flags & GPGRT_PROCESS_STDIN_KEEP))
+        CloseHandle (hd_in[0]);
+      if ((flags & GPGRT_PROCESS_STDIN_PIPE))
+        CloseHandle (hd_in[1]);
+      if ((flags & GPGRT_PROCESS_STDOUT_PIPE))
+        CloseHandle (hd_out[0]);
+      if ((flags & GPGRT_PROCESS_STDOUT_PIPE)
+          || !(flags & GPGRT_PROCESS_STDOUT_KEEP))
+        CloseHandle (hd_out[1]);
+      if ((flags & GPGRT_PROCESS_STDERR_PIPE))
+        CloseHandle (hd_err[0]);
+      if ((flags & GPGRT_PROCESS_STDERR_PIPE)
+          || !(flags & GPGRT_PROCESS_STDERR_KEEP))
+        CloseHandle (hd_err[1]);
+      _gpgrt_free_wchar (wpgmname);
+      _gpgrt_free_wchar (wcmdline);
+      xfree (process);
+      xfree (cmdline);
+      return GPG_ERR_GENERAL;
+    }
+
+  if (si.lpAttributeList)
+    DeleteProcThreadAttributeList (si.lpAttributeList);
+  _gpgrt_free_wchar (wpgmname);
+  _gpgrt_free_wchar (wcmdline);
+  xfree (cmdline);
+
+  if ((flags & GPGRT_PROCESS_STDIN_PIPE)
+      || !(flags & GPGRT_PROCESS_STDIN_KEEP))
+    CloseHandle (hd_in[0]);
+  if ((flags & GPGRT_PROCESS_STDOUT_PIPE)
+      || !(flags & GPGRT_PROCESS_STDOUT_KEEP))
+    CloseHandle (hd_out[1]);
+  if ((flags & GPGRT_PROCESS_STDERR_PIPE)
+      || !(flags & GPGRT_PROCESS_STDERR_KEEP))
+    CloseHandle (hd_err[1]);
+
+  /* log_debug ("CreateProcess ready: hProcess=%p hThread=%p" */
+  /*           " dwProcessID=%d dwThreadId=%d\n", */
+  /*           pi.hProcess, pi.hThread, */
+  /*           (int) pi.dwProcessId, (int) pi.dwThreadId); */
+
+  if ((flags & GPGRT_PROCESS_ALLOW_SET_FG))
     {
       /* Fixme: For unknown reasons AllowSetForegroundWindow returns
        * an invalid argument error if we pass it the correct
@@ -627,297 +1072,281 @@ _gpgrt_spawn_process (const char *pgmname, const char *argv[],
   CloseHandle (pi.hThread);
   _gpgrt_post_syscall ();
 
-  if (r_infp)
-    *r_infp = infp;
-  if (r_outfp)
-    *r_outfp = outfp;
-  if (r_errfp)
-    *r_errfp = errfp;
+  process->hProcess = pi.hProcess;
+  process->hd_in = hd_in[1];
+  process->hd_out = hd_out[0];
+  process->hd_err = hd_err[0];
+  process->exitcode = -1;
+  process->terminated = 0;
 
-  *pid = handle_to_pid (pi.hProcess);
-  return 0;
-}
-
-
-/* Fork and exec the PGMNAME using FDs, see gpgrt-int.h for details.  */
-gpg_err_code_t
-_gpgrt_spawn_process_fd (const char *pgmname, const char *argv[],
-                         int infd, int outfd, int errfd, pid_t *pid)
-{
-  gpg_err_code_t err;
-  SECURITY_ATTRIBUTES sec_attr;
-  PROCESS_INFORMATION pi = { NULL, 0, 0, 0 };
-  STARTUPINFO si;
-  char *cmdline;
-  int ret, i;
-  HANDLE stdhd[3];
-
-  /* Setup return values.  */
-  *pid = (pid_t)INVALID_HANDLE_VALUE;
-
-  /* Prepare security attributes.  */
-  memset (&sec_attr, 0, sizeof sec_attr );
-  sec_attr.nLength = sizeof sec_attr;
-  sec_attr.bInheritHandle = FALSE;
-
-  /* Build the command line.  */
-  err = build_w32_commandline (pgmname, argv, &cmdline);
-  if (err)
-    return err;
-
-  memset (&si, 0, sizeof si);
-  si.cb = sizeof (si);
-  si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
-  si.wShowWindow = DEBUG_W32_SPAWN? SW_SHOW : SW_MINIMIZE;
-  stdhd[0] = infd  == -1? w32_open_null (0) : INVALID_HANDLE_VALUE;
-  stdhd[1] = outfd == -1? w32_open_null (1) : INVALID_HANDLE_VALUE;
-  stdhd[2] = errfd == -1? w32_open_null (1) : INVALID_HANDLE_VALUE;
-  si.hStdInput  = infd  == -1? stdhd[0] : (void*)_get_osfhandle (infd);
-  si.hStdOutput = outfd == -1? stdhd[1] : (void*)_get_osfhandle (outfd);
-  si.hStdError  = errfd == -1? stdhd[2] : (void*)_get_osfhandle (errfd);
-
-  _gpgrt_log_debug ("CreateProcess, path='%s' cmdline='%s'\n",
-                    pgmname, cmdline);
-  ret = CreateProcess (pgmname,      /* Program to start.  */
-                      cmdline,       /* Command line arguments.  */
-                      &sec_attr,     /* Process security attributes.  */
-                      &sec_attr,     /* Thread security attributes.  */
-                      TRUE,          /* Inherit handles.  */
-                      (CREATE_DEFAULT_ERROR_MODE
-                       | GetPriorityClass (GetCurrentProcess ())
-                       | CREATE_SUSPENDED | DETACHED_PROCESS),
-                      NULL,          /* Environment.  */
-                      NULL,          /* Use current drive/directory.  */
-                      &si,           /* Startup information. */
-                      &pi            /* Returns process information.  */
-                      );
-  if (!ret)
+  if (r_process == NULL)
     {
-      _gpgrt_log_error ("CreateProcess failed: ec=%d\n", (int)GetLastError ());
-      err = GPG_ERR_GENERAL;
+      ec = _gpgrt_process_wait (process, 1);
+      _gpgrt_process_release (process);
+      return ec;
     }
-  else
-    err = 0;
 
-  xfree (cmdline);
-
-  for (i=0; i < 3; i++)
-    if (stdhd[i] != INVALID_HANDLE_VALUE)
-      CloseHandle (stdhd[i]);
-
-  if (err)
-    return err;
-
-  _gpgrt_log_debug ("CreateProcess ready: hProcess=%p hThread=%p"
-                    " dwProcessID=%d dwThreadId=%d\n",
-                    pi.hProcess, pi.hThread,
-                    (int) pi.dwProcessId, (int) pi.dwThreadId);
-
-  /* Process has been created suspended; resume it now. */
-  ResumeThread (pi.hThread);
-  CloseHandle (pi.hThread);
-
-  *pid = handle_to_pid (pi.hProcess);
+  *r_process = process;
   return 0;
 }
 
-
-/* See gpgrt-int.h for a description.  */
 gpg_err_code_t
-_gpgrt_wait_process (const char *pgmname, pid_t pid, int hang, int *r_exitcode)
+_gpgrt_process_get_fds (gpgrt_process_t process, unsigned int flags,
+                        int *r_fd_in, int *r_fd_out, int *r_fd_err)
 {
-  return _gpgrt_wait_processes (&pgmname, &pid, 1, hang, r_exitcode);
+  (void)flags;
+  if (r_fd_in)
+    {
+      *r_fd_in = _open_osfhandle ((intptr_t)process->hd_in, O_APPEND);
+      process->hd_in = INVALID_HANDLE_VALUE;
+    }
+  if (r_fd_out)
+    {
+      *r_fd_out = _open_osfhandle ((intptr_t)process->hd_out, O_RDONLY);
+      process->hd_out = INVALID_HANDLE_VALUE;
+    }
+  if (r_fd_err)
+    {
+      *r_fd_err = _open_osfhandle ((intptr_t)process->hd_err, O_RDONLY);
+      process->hd_err = INVALID_HANDLE_VALUE;
+    }
+
+  return 0;
 }
 
-
-/* See gpgrt-int.h for a description.  */
 gpg_err_code_t
-_gpgrt_wait_processes (const char **pgmnames, pid_t *pids, size_t count,
-                       int hang, int *r_exitcodes)
+_gpgrt_process_get_streams (gpgrt_process_t process, unsigned int flags,
+                            estream_t *r_fp_in, estream_t *r_fp_out,
+                            estream_t *r_fp_err)
+{
+  int nonblock = (flags & GPGRT_PROCESS_STREAM_NONBLOCK)? 1: 0;
+  es_syshd_t syshd;
+
+  syshd.type = ES_SYSHD_HANDLE;
+  if (r_fp_in)
+    {
+      syshd.u.handle = process->hd_in;
+      *r_fp_in = _gpgrt_sysopen (&syshd, nonblock? "w,nonblock" : "w");
+      process->hd_in = INVALID_HANDLE_VALUE;
+    }
+  if (r_fp_out)
+    {
+      syshd.u.handle = process->hd_out;
+      *r_fp_out = _gpgrt_sysopen (&syshd, nonblock? "r,nonblock" : "r");
+      process->hd_out = INVALID_HANDLE_VALUE;
+    }
+  if (r_fp_err)
+    {
+      syshd.u.handle = process->hd_err;
+      *r_fp_err = _gpgrt_sysopen (&syshd, nonblock? "r,nonblock" : "r");
+      process->hd_err = INVALID_HANDLE_VALUE;
+    }
+  return 0;
+}
+
+static gpg_err_code_t
+process_kill (gpgrt_process_t process, unsigned int exitcode)
 {
   gpg_err_code_t ec = 0;
-  size_t i;
-  HANDLE *procs;
-  int code;
-
-  procs = xtrycalloc (count, sizeof *procs);
-  if (procs == NULL)
-    return _gpg_err_code_from_syserror ();
-
-  for (i = 0; i < count; i++)
-    {
-      if (r_exitcodes)
-        r_exitcodes[i] = -1;
-
-      if (pids[i] == (pid_t)INVALID_HANDLE_VALUE)
-        return GPG_ERR_INV_VALUE;
-
-      procs[i] = pid_to_handle (pids[i]);
-    }
 
   _gpgrt_pre_syscall ();
-  code = WaitForMultipleObjects (count, procs, TRUE, hang? INFINITE : 0);
+  if (TerminateProcess (process->hProcess, exitcode))
+    ec = _gpg_err_code_from_syserror ();
   _gpgrt_post_syscall ();
+  return ec;
+}
+
+gpg_err_code_t
+_gpgrt_process_vctl (gpgrt_process_t process, unsigned int request,
+                     va_list arg_ptr)
+{
+  switch (request)
+    {
+    case GPGRT_PROCESS_NOP:
+      return 0;
+
+    case GPGRT_PROCESS_GET_PROC_ID:
+      {
+        int *r_id = va_arg (arg_ptr, int *);
+
+        if (r_id == NULL)
+          return GPG_ERR_INV_VALUE;
+
+        *r_id = (int)GetProcessId (process->hProcess);
+        return 0;
+      }
+
+    case GPGRT_PROCESS_GET_EXIT_ID:
+      {
+        int *r_exit_status = va_arg (arg_ptr, int *);
+        unsigned long exit_code;
+
+        *r_exit_status = -1;
+
+        if (!process->terminated)
+          return GPG_ERR_UNFINISHED;
+
+        if (process->hProcess == INVALID_HANDLE_VALUE)
+          return 0;
+
+        if (GetExitCodeProcess (process->hProcess, &exit_code) == 0)
+          return _gpg_err_code_from_syserror ();
+
+        *r_exit_status = (int)exit_code;
+        return 0;
+      }
+
+    case GPGRT_PROCESS_GET_P_HANDLE:
+      {
+        HANDLE *r_hProcess = va_arg (arg_ptr, HANDLE *);
+
+        if (r_hProcess == NULL)
+          return GPG_ERR_INV_VALUE;
+
+        *r_hProcess = process->hProcess;
+        process->hProcess = INVALID_HANDLE_VALUE;
+        return 0;
+      }
+
+    case GPGRT_PROCESS_GET_HANDLES:
+      {
+        HANDLE *r_hd_in = va_arg (arg_ptr, HANDLE *);
+        HANDLE *r_hd_out = va_arg (arg_ptr, HANDLE *);
+        HANDLE *r_hd_err = va_arg (arg_ptr, HANDLE *);
+
+        if (r_hd_in)
+          {
+            *r_hd_in = process->hd_in;
+            process->hd_in = INVALID_HANDLE_VALUE;
+          }
+        if (r_hd_out)
+          {
+            *r_hd_out = process->hd_out;
+            process->hd_out = INVALID_HANDLE_VALUE;
+          }
+        if (r_hd_err)
+          {
+            *r_hd_err = process->hd_err;
+            process->hd_err = INVALID_HANDLE_VALUE;
+          }
+        return 0;
+      }
+
+    case GPGRT_PROCESS_GET_EXIT_CODE:
+      {
+        unsigned long *r_exitcode = va_arg (arg_ptr, unsigned long *);
+
+        if (!process->terminated)
+          return GPG_ERR_UNFINISHED;
+
+        if (process->hProcess == INVALID_HANDLE_VALUE)
+          {
+            *r_exitcode = (unsigned long)-1;
+            return 0;
+          }
+
+        if (GetExitCodeProcess (process->hProcess, r_exitcode) == 0)
+          return _gpg_err_code_from_syserror ();
+        return 0;
+      }
+
+    case GPGRT_PROCESS_KILL_WITH_EC:
+      {
+        unsigned int exitcode = va_arg (arg_ptr, unsigned int);
+
+        if (process->terminated)
+          return 0;
+
+        if (process->hProcess == INVALID_HANDLE_VALUE)
+          return 0;
+
+        return process_kill (process, exitcode);
+      }
+
+    default:
+      break;
+    }
+
+  return GPG_ERR_UNKNOWN_COMMAND;
+}
+
+gpg_err_code_t
+_gpgrt_process_wait (gpgrt_process_t process, int hang)
+{
+  gpg_err_code_t ec;
+  int code;
+
+  if (process->hProcess == INVALID_HANDLE_VALUE)
+    return 0;
+
+  _gpgrt_pre_syscall ();
+  code = WaitForSingleObject (process->hProcess, hang? INFINITE : 0);
+  _gpgrt_post_syscall ();
+
   switch (code)
     {
     case WAIT_TIMEOUT:
-      ec = GPG_ERR_TIMEOUT;
-      goto leave;
+      ec = GPG_ERR_TIMEOUT; /* Still running.  */
+      break;
 
     case WAIT_FAILED:
-      _gpgrt_log_error (_("waiting for processes to terminate failed: ec=%d\n"),
-                        (int)GetLastError ());
+      _gpgrt_log_info (_("waiting for process failed: ec=%d\n"),
+                       (int)GetLastError ());
       ec = GPG_ERR_GENERAL;
-      goto leave;
+      break;
 
     case WAIT_OBJECT_0:
-      for (i = 0; i < count; i++)
-        {
-          DWORD exc;
-
-          if (! GetExitCodeProcess (procs[i], &exc))
-            {
-              _gpgrt_log_error (_("error getting exit code of process %d:"
-                                  " ec=%d\n"),
-                                (int) pids[i], (int)GetLastError ());
-              ec = GPG_ERR_GENERAL;
-            }
-          else if (exc)
-            {
-              if (!r_exitcodes)
-                _gpgrt_log_error (_("error running '%s': exit status %d\n"),
-                                  pgmnames[i], (int)exc);
-              else
-                r_exitcodes[i] = (int)exc;
-              ec = GPG_ERR_GENERAL;
-            }
-          else
-            {
-              if (r_exitcodes)
-                r_exitcodes[i] = 0;
-            }
-        }
+      process->terminated = 1;
+      ec = 0;
       break;
 
     default:
-      _gpgrt_log_debug ("WaitForMultipleObjects returned unexpected code %d\n",
+      _gpgrt_log_debug ("WaitForSingleObject returned unexpected code %d\n",
                         code);
       ec = GPG_ERR_GENERAL;
       break;
     }
 
- leave:
   return ec;
 }
 
-
-/* See gpgrt-int.h for a description.  */
 gpg_err_code_t
-_gpgrt_spawn_process_detached (const char *pgmname, const char *argv[],
-                               const char *envp[] )
+_gpgrt_process_terminate (gpgrt_process_t process)
 {
-  gpg_err_code_t err;
-  SECURITY_ATTRIBUTES sec_attr;
-  PROCESS_INFORMATION pi =
-    {
-      NULL,      /* Returns process handle.  */
-      0,         /* Returns primary thread handle.  */
-      0,         /* Returns pid.  */
-      0          /* Returns tid.  */
-    };
-  STARTUPINFO si;
-  int cr_flags;
-  char *cmdline;
-  int ret;
-  gpg_err_code_t ec;
-
-  /* We don't use ENVP.  */
-  (void)envp;
-
-  ec = _gpgrt_access (pgmname, X_OK);
-  if (ec)
-    return ec;
-
-  /* Prepare security attributes.  */
-  memset (&sec_attr, 0, sizeof sec_attr );
-  sec_attr.nLength = sizeof sec_attr;
-  sec_attr.bInheritHandle = FALSE;
-
-  /* Build the command line.  */
-  err = build_w32_commandline (pgmname, argv, &cmdline);
-  if (err)
-    return err;
-
-  /* Start the process.  */
-  memset (&si, 0, sizeof si);
-  si.cb = sizeof (si);
-  si.dwFlags = STARTF_USESHOWWINDOW;
-  si.wShowWindow = DEBUG_W32_SPAWN? SW_SHOW : SW_MINIMIZE;
-
-  cr_flags = (CREATE_DEFAULT_ERROR_MODE
-              | GetPriorityClass (GetCurrentProcess ())
-              | CREATE_NEW_PROCESS_GROUP
-              | DETACHED_PROCESS);
-  _gpgrt_log_debug ("CreateProcess(detached), path='%s' cmdline='%s'\n",
-                    pgmname, cmdline);
-  ret = CreateProcess (pgmname,       /* Program to start.  */
-                      cmdline,       /* Command line arguments.  */
-                      &sec_attr,     /* Process security attributes.  */
-                      &sec_attr,     /* Thread security attributes.  */
-                      FALSE,         /* Inherit handles.  */
-                      cr_flags,      /* Creation flags.  */
-                      NULL,          /* Environment.  */
-                      NULL,          /* Use current drive/directory.  */
-                      &si,           /* Startup information. */
-                      &pi            /* Returns process information.  */
-                       );
-  if (!ret)
-    {
-      _gpgrt_log_error ("CreateProcess(detached) failed: ec=%d\n",
-                        (int)GetLastError ());
-      xfree (cmdline);
-      return GPG_ERR_GENERAL;
-    }
-  xfree (cmdline);
-  cmdline = NULL;
-
-  _gpgrt_log_debug ("CreateProcess(detached) ready: hProcess=%p hThread=%p"
-                    " dwProcessID=%d dwThreadId=%d\n",
-                    pi.hProcess, pi.hThread,
-                    (int) pi.dwProcessId, (int) pi.dwThreadId);
-
-  CloseHandle (pi.hThread);
-  CloseHandle (pi.hProcess);
-
-  return 0;
+  return process_kill (process, 1);
 }
 
-
-/* Kill a process; that is send an appropriate signal to the process.
-   gnupg_wait_process must be called to actually remove the process
-   from the system.  An invalid PID is ignored.  */
 void
-_gpgrt_kill_process (pid_t pid)
+_gpgrt_process_release (gpgrt_process_t process)
 {
-  if (pid != (pid_t)INVALID_HANDLE_VALUE)
-    {
-      HANDLE process = (HANDLE) pid;
+  if (!process)
+    return;
 
-      /* Arbitrary error code.  */
-      _gpgrt_pre_syscall ();
-      TerminateProcess (process, 1);
-      _gpgrt_post_syscall ();
+  if (!process->terminated)
+    {
+      _gpgrt_process_terminate (process);
+      _gpgrt_process_wait (process, 1);
     }
+
+  CloseHandle (process->hProcess);
+  xfree (process);
 }
 
-
-void
-_gpgrt_release_process (pid_t pid)
+gpg_err_code_t
+_gpgrt_process_wait_list (gpgrt_process_t *process_list, int count, int hang)
 {
-  if (pid != (pid_t)INVALID_HANDLE_VALUE)
-    {
-      HANDLE process = (HANDLE)pid;
+  gpg_err_code_t ec = 0;
+  int i;
 
-      CloseHandle (process);
+  for (i = 0; i < count; i++)
+    {
+      if (process_list[i]->terminated)
+        continue;
+
+      ec = _gpgrt_process_wait (process_list[i], hang);
+      if (ec)
+        break;
     }
+
+  return ec;
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgpg-error 1.7\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2022-10-07 11:24+0200\n"
+"POT-Creation-Date: 2024-11-11 11:35+0100\n"
 "PO-Revision-Date: 2021-03-22 10:43+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -89,26 +89,30 @@ msgid "TLS"
 msgstr "TLS"
 
 #: src/err-sources.h:46
+msgid "TKD"
+msgstr ""
+
+#: src/err-sources.h:47
 msgid "Any source"
 msgstr "Alla källor"
 
-#: src/err-sources.h:47
+#: src/err-sources.h:48
 msgid "User defined source 1"
 msgstr "Användardefinierad källa 1"
 
-#: src/err-sources.h:48
+#: src/err-sources.h:49
 msgid "User defined source 2"
 msgstr "Användardefinierad källa 2"
 
-#: src/err-sources.h:49
+#: src/err-sources.h:50
 msgid "User defined source 3"
 msgstr "Användardefinierad källa 3"
 
-#: src/err-sources.h:50
+#: src/err-sources.h:51
 msgid "User defined source 4"
 msgstr "Användardefinierad källa 4"
 
-#: src/err-sources.h:51
+#: src/err-sources.h:52
 msgid "Unknown source"
 msgstr "Okänd källa"
 
@@ -1388,810 +1392,826 @@ msgid "Service error"
 msgstr "Fel i nyckelserver"
 
 #: src/err-codes.h:326
+#, fuzzy
+#| msgid "Bad PIN"
+msgid "Bad PUK"
+msgstr "Felaktig PIN-kod"
+
+#: src/err-codes.h:327
+msgid "No reset code"
+msgstr ""
+
+#: src/err-codes.h:328
+#, fuzzy
+#| msgid "Bad secret key"
+msgid "Bad reset code"
+msgstr "Felaktig hemlig nyckel"
+
+#: src/err-codes.h:329
 msgid "System bug detected"
 msgstr ""
 
-#: src/err-codes.h:327
+#: src/err-codes.h:330
 #, fuzzy
 #| msgid "Unknown system error"
 msgid "Unknown DNS error"
 msgstr "Okänt systemfel"
 
-#: src/err-codes.h:328
+#: src/err-codes.h:331
 #, fuzzy
 #| msgid "Invalid OID string"
 msgid "Invalid DNS section"
 msgstr "Ogiltig OID-sträng"
 
-#: src/err-codes.h:329
+#: src/err-codes.h:332
 #, fuzzy
 #| msgid "Invalid S-expression"
 msgid "Invalid textual address form"
 msgstr "Ogiltigt S-uttryck"
 
-#: src/err-codes.h:330
+#: src/err-codes.h:333
 #, fuzzy
 msgid "Missing DNS query packet"
 msgstr "Saknar certifikat"
 
-#: src/err-codes.h:331
+#: src/err-codes.h:334
 msgid "Missing DNS answer packet"
 msgstr ""
 
-#: src/err-codes.h:332
+#: src/err-codes.h:335
 msgid "Connection closed in DNS"
 msgstr ""
 
-#: src/err-codes.h:333
+#: src/err-codes.h:336
 #, fuzzy
 #| msgid "Decryption failed"
 msgid "Verification failed in DNS"
 msgstr "Dekryptering misslyckades"
 
-#: src/err-codes.h:334
+#: src/err-codes.h:337
 #, fuzzy
 #| msgid "Timeout"
 msgid "DNS Timeout"
 msgstr "Tidsgräns"
 
-#: src/err-codes.h:335
+#: src/err-codes.h:338
 #, fuzzy
 #| msgid "General IPC error"
 msgid "General LDAP error"
 msgstr "Allmänt IPC-fel"
 
-#: src/err-codes.h:336
+#: src/err-codes.h:339
 #, fuzzy
 #| msgid "General error"
 msgid "General LDAP attribute error"
 msgstr "Allmänt fel"
 
-#: src/err-codes.h:337
+#: src/err-codes.h:340
 #, fuzzy
 #| msgid "General error"
 msgid "General LDAP name error"
 msgstr "Allmänt fel"
 
-#: src/err-codes.h:338
+#: src/err-codes.h:341
 #, fuzzy
 #| msgid "General Assuan error"
 msgid "General LDAP security error"
 msgstr "Allmänt Assuan-fel"
 
-#: src/err-codes.h:339
+#: src/err-codes.h:342
 #, fuzzy
 #| msgid "General error"
 msgid "General LDAP service error"
 msgstr "Allmänt fel"
 
-#: src/err-codes.h:340
+#: src/err-codes.h:343
 #, fuzzy
 #| msgid "General Assuan error"
 msgid "General LDAP update error"
 msgstr "Allmänt Assuan-fel"
 
-#: src/err-codes.h:341
+#: src/err-codes.h:344
 msgid "Experimental LDAP error code"
 msgstr ""
 
-#: src/err-codes.h:342
+#: src/err-codes.h:345
 #, fuzzy
 #| msgid "IPC write error"
 msgid "Private LDAP error code"
 msgstr "IPC-skrivfel"
 
-#: src/err-codes.h:343
+#: src/err-codes.h:346
 #, fuzzy
 #| msgid "General IPC error"
 msgid "Other general LDAP error"
 msgstr "Allmänt IPC-fel"
 
-#: src/err-codes.h:344
+#: src/err-codes.h:347
 #, fuzzy
 #| msgid "IPC connect call failed"
 msgid "LDAP connecting failed (X)"
 msgstr "IPC-anslutningsanrop misslyckades"
 
-#: src/err-codes.h:345
+#: src/err-codes.h:348
 #, fuzzy
 #| msgid "General error"
 msgid "LDAP referral limit exceeded"
 msgstr "Allmänt fel"
 
-#: src/err-codes.h:346
+#: src/err-codes.h:349
 msgid "LDAP client loop"
 msgstr ""
 
-#: src/err-codes.h:347
+#: src/err-codes.h:350
 #, fuzzy
 #| msgid "Card reset required"
 msgid "No LDAP results returned"
 msgstr "Nollställning av kort krävs"
 
-#: src/err-codes.h:348
+#: src/err-codes.h:351
 #, fuzzy
 #| msgid "Element not found"
 msgid "LDAP control not found"
 msgstr "Elementet hittades inte"
 
-#: src/err-codes.h:349
+#: src/err-codes.h:352
 #, fuzzy
 #| msgid "Not supported"
 msgid "Not supported by LDAP"
 msgstr "Stöds inte"
 
-#: src/err-codes.h:350
+#: src/err-codes.h:353
 #, fuzzy
 #| msgid "Unexpected error"
 msgid "LDAP connect error"
 msgstr "Oväntat fel"
 
-#: src/err-codes.h:351
+#: src/err-codes.h:354
 msgid "Out of memory in LDAP"
 msgstr ""
 
-#: src/err-codes.h:352
+#: src/err-codes.h:355
 msgid "Bad parameter to an LDAP routine"
 msgstr ""
 
-#: src/err-codes.h:353
+#: src/err-codes.h:356
 #, fuzzy
 #| msgid "Unsupported operation"
 msgid "User cancelled LDAP operation"
 msgstr "Åtgärden stöds inte"
 
-#: src/err-codes.h:354
+#: src/err-codes.h:357
 #, fuzzy
 #| msgid "Bad certificate"
 msgid "Bad LDAP search filter"
 msgstr "Felaktigt certifikat"
 
-#: src/err-codes.h:355
+#: src/err-codes.h:358
 #, fuzzy
 #| msgid "Unknown extension"
 msgid "Unknown LDAP authentication method"
 msgstr "Okänd utökning"
 
-#: src/err-codes.h:356
+#: src/err-codes.h:359
 #, fuzzy
 #| msgid "Timeout"
 msgid "Timeout in LDAP"
 msgstr "Tidsgräns"
 
-#: src/err-codes.h:357
+#: src/err-codes.h:360
 #, fuzzy
 #| msgid "dirmngr error"
 msgid "LDAP decoding error"
 msgstr "dirmngr-fel"
 
-#: src/err-codes.h:358
+#: src/err-codes.h:361
 #, fuzzy
 #| msgid "dirmngr error"
 msgid "LDAP encoding error"
 msgstr "dirmngr-fel"
 
-#: src/err-codes.h:359
+#: src/err-codes.h:362
 #, fuzzy
 #| msgid "IPC read error"
 msgid "LDAP local error"
 msgstr "IPC-läsfel"
 
-#: src/err-codes.h:360
+#: src/err-codes.h:363
 #, fuzzy
 #| msgid "Not an IPC server"
 msgid "Cannot contact LDAP server"
 msgstr "Inte en IPC-server"
 
-#: src/err-codes.h:361
+#: src/err-codes.h:364
 #, fuzzy
 #| msgid "Success"
 msgid "LDAP success"
 msgstr "Lyckades"
 
-#: src/err-codes.h:362
+#: src/err-codes.h:365
 #, fuzzy
 #| msgid "Configuration error"
 msgid "LDAP operations error"
 msgstr "Konfigurationsfel"
 
-#: src/err-codes.h:363
+#: src/err-codes.h:366
 #, fuzzy
 #| msgid "Protocol violation"
 msgid "LDAP protocol error"
 msgstr "Protokollöverträdelse"
 
-#: src/err-codes.h:364
+#: src/err-codes.h:367
 msgid "Time limit exceeded in LDAP"
 msgstr ""
 
-#: src/err-codes.h:365
+#: src/err-codes.h:368
 msgid "Size limit exceeded in LDAP"
 msgstr ""
 
-#: src/err-codes.h:366
+#: src/err-codes.h:369
 msgid "LDAP compare false"
 msgstr ""
 
-#: src/err-codes.h:367
+#: src/err-codes.h:370
 msgid "LDAP compare true"
 msgstr ""
 
-#: src/err-codes.h:368
+#: src/err-codes.h:371
 #, fuzzy
 #| msgid "Unknown extension"
 msgid "LDAP authentication method not supported"
 msgstr "Okänd utökning"
 
-#: src/err-codes.h:369
+#: src/err-codes.h:372
 msgid "Strong(er) LDAP authentication required"
 msgstr ""
 
-#: src/err-codes.h:370
+#: src/err-codes.h:373
 msgid "Partial LDAP results+referral received"
 msgstr ""
 
-#: src/err-codes.h:371
+#: src/err-codes.h:374
 #, fuzzy
 #| msgid "General error"
 msgid "LDAP referral"
 msgstr "Allmänt fel"
 
-#: src/err-codes.h:372
+#: src/err-codes.h:375
 msgid "Administrative LDAP limit exceeded"
 msgstr ""
 
-#: src/err-codes.h:373
+#: src/err-codes.h:376
 msgid "Critical LDAP extension is unavailable"
 msgstr ""
 
-#: src/err-codes.h:374
+#: src/err-codes.h:377
 #, fuzzy
 #| msgid "Card reset required"
 msgid "Confidentiality required by LDAP"
 msgstr "Nollställning av kort krävs"
 
-#: src/err-codes.h:375
+#: src/err-codes.h:378
 msgid "LDAP SASL bind in progress"
 msgstr ""
 
-#: src/err-codes.h:376
+#: src/err-codes.h:379
 msgid "No such LDAP attribute"
 msgstr ""
 
-#: src/err-codes.h:377
+#: src/err-codes.h:380
 #, fuzzy
 #| msgid "Invalid attribute"
 msgid "Undefined LDAP attribute type"
 msgstr "Ogiltigt attribut"
 
-#: src/err-codes.h:378
+#: src/err-codes.h:381
 #, fuzzy
 #| msgid "Unsupported protection"
 msgid "Inappropriate matching in LDAP"
 msgstr "Skyddet stöds inte"
 
-#: src/err-codes.h:379
+#: src/err-codes.h:382
 #, fuzzy
 #| msgid "Protocol violation"
 msgid "Constraint violation in LDAP"
 msgstr "Protokollöverträdelse"
 
-#: src/err-codes.h:380
+#: src/err-codes.h:383
 msgid "LDAP type or value exists"
 msgstr ""
 
-#: src/err-codes.h:381
+#: src/err-codes.h:384
 #, fuzzy
 #| msgid "Invalid state"
 msgid "Invalid syntax in LDAP"
 msgstr "Ogiltigt tillstånd"
 
-#: src/err-codes.h:382
+#: src/err-codes.h:385
 #, fuzzy
 #| msgid "No CMS object"
 msgid "No such LDAP object"
 msgstr "Inget CMS-objekt"
 
-#: src/err-codes.h:383
+#: src/err-codes.h:386
 #, fuzzy
 #| msgid "Hardware problem"
 msgid "LDAP alias problem"
 msgstr "Hårdvaruproblem"
 
-#: src/err-codes.h:384
+#: src/err-codes.h:387
 #, fuzzy
 #| msgid "Invalid state"
 msgid "Invalid DN syntax in LDAP"
 msgstr "Ogiltigt tillstånd"
 
-#: src/err-codes.h:385
+#: src/err-codes.h:388
 msgid "LDAP entry is a leaf"
 msgstr ""
 
-#: src/err-codes.h:386
+#: src/err-codes.h:389
 #, fuzzy
 #| msgid "Encoding problem"
 msgid "LDAP alias dereferencing problem"
 msgstr "Kodningsproblem"
 
-#: src/err-codes.h:387
+#: src/err-codes.h:390
 msgid "LDAP proxy authorization failure (X)"
 msgstr ""
 
-#: src/err-codes.h:388
+#: src/err-codes.h:391
 #, fuzzy
 #| msgid "Unsupported protection"
 msgid "Inappropriate LDAP authentication"
 msgstr "Skyddet stöds inte"
 
-#: src/err-codes.h:389
+#: src/err-codes.h:392
 #, fuzzy
 #| msgid "Invalid card"
 msgid "Invalid LDAP credentials"
 msgstr "Ogiltigt kort"
 
-#: src/err-codes.h:390
+#: src/err-codes.h:393
 msgid "Insufficient access for LDAP"
 msgstr ""
 
-#: src/err-codes.h:391
+#: src/err-codes.h:394
 msgid "LDAP server is busy"
 msgstr ""
 
-#: src/err-codes.h:392
+#: src/err-codes.h:395
 msgid "LDAP server is unavailable"
 msgstr ""
 
-#: src/err-codes.h:393
+#: src/err-codes.h:396
 msgid "LDAP server is unwilling to perform"
 msgstr ""
 
-#: src/err-codes.h:394
+#: src/err-codes.h:397
 msgid "Loop detected by LDAP"
 msgstr ""
 
-#: src/err-codes.h:395
+#: src/err-codes.h:398
 #, fuzzy
 #| msgid "Missing action"
 msgid "LDAP naming violation"
 msgstr "Saknar åtgärd"
 
-#: src/err-codes.h:396
+#: src/err-codes.h:399
 #, fuzzy
 #| msgid "Protocol violation"
 msgid "LDAP object class violation"
 msgstr "Protokollöverträdelse"
 
-#: src/err-codes.h:397
+#: src/err-codes.h:400
 #, fuzzy
 #| msgid "Operation not yet finished"
 msgid "LDAP operation not allowed on non-leaf"
 msgstr "Åtgärden är ännu inte färdig"
 
-#: src/err-codes.h:398
+#: src/err-codes.h:401
 #, fuzzy
 #| msgid "Operation cancelled"
 msgid "LDAP operation not allowed on RDN"
 msgstr "Åtgärden avbröts"
 
-#: src/err-codes.h:399
+#: src/err-codes.h:402
 msgid "Already exists (LDAP)"
 msgstr ""
 
-#: src/err-codes.h:400
+#: src/err-codes.h:403
 msgid "Cannot modify LDAP object class"
 msgstr ""
 
-#: src/err-codes.h:401
+#: src/err-codes.h:404
 #, fuzzy
 #| msgid "Line too long"
 msgid "LDAP results too large"
 msgstr "Raden är för lång"
 
-#: src/err-codes.h:402
+#: src/err-codes.h:405
 #, fuzzy
 #| msgid "Operation cancelled"
 msgid "LDAP operation affects multiple DSAs"
 msgstr "Åtgärden avbröts"
 
-#: src/err-codes.h:403
+#: src/err-codes.h:406
 msgid "Virtual LDAP list view error"
 msgstr ""
 
-#: src/err-codes.h:404
+#: src/err-codes.h:407
 #, fuzzy
 #| msgid "General IPC error"
 msgid "Other LDAP error"
 msgstr "Allmänt IPC-fel"
 
-#: src/err-codes.h:405
+#: src/err-codes.h:408
 #, fuzzy
 #| msgid "Resources exhausted"
 msgid "Resources exhausted in LCUP"
 msgstr "Resurser överansträngda"
 
-#: src/err-codes.h:406
+#: src/err-codes.h:409
 #, fuzzy
 #| msgid "Protocol violation"
 msgid "Security violation in LCUP"
 msgstr "Protokollöverträdelse"
 
-#: src/err-codes.h:407
+#: src/err-codes.h:410
 #, fuzzy
 #| msgid "Invalid state"
 msgid "Invalid data in LCUP"
 msgstr "Ogiltigt tillstånd"
 
-#: src/err-codes.h:408
+#: src/err-codes.h:411
 #, fuzzy
 #| msgid "Unsupported certificate"
 msgid "Unsupported scheme in LCUP"
 msgstr "Certifikatet stöds inte"
 
-#: src/err-codes.h:409
+#: src/err-codes.h:412
 #, fuzzy
 #| msgid "Card reset required"
 msgid "Reload required in LCUP"
 msgstr "Nollställning av kort krävs"
 
-#: src/err-codes.h:410
+#: src/err-codes.h:413
 #, fuzzy
 #| msgid "Success"
 msgid "LDAP cancelled"
 msgstr "Lyckades"
 
-#: src/err-codes.h:411
+#: src/err-codes.h:414
 #, fuzzy
 #| msgid "Not operational"
 msgid "No LDAP operation to cancel"
 msgstr "Fungerar inte"
 
-#: src/err-codes.h:412
+#: src/err-codes.h:415
 #, fuzzy
 #| msgid "Not operational"
 msgid "Too late to cancel LDAP"
 msgstr "Fungerar inte"
 
-#: src/err-codes.h:413
+#: src/err-codes.h:416
 #, fuzzy
 #| msgid "Not an IPC server"
 msgid "Cannot cancel LDAP"
 msgstr "Inte en IPC-server"
 
-#: src/err-codes.h:414
+#: src/err-codes.h:417
 #, fuzzy
 #| msgid "Decryption failed"
 msgid "LDAP assertion failed"
 msgstr "Dekryptering misslyckades"
 
-#: src/err-codes.h:415
+#: src/err-codes.h:418
 msgid "Proxied authorization denied by LDAP"
 msgstr ""
 
-#: src/err-codes.h:416
+#: src/err-codes.h:419
 msgid "User defined error code 1"
 msgstr "Användardefinierad felkod 1"
 
-#: src/err-codes.h:417
+#: src/err-codes.h:420
 msgid "User defined error code 2"
 msgstr "Användardefinierad felkod 2"
 
-#: src/err-codes.h:418
+#: src/err-codes.h:421
 msgid "User defined error code 3"
 msgstr "Användardefinierad felkod 3"
 
-#: src/err-codes.h:419
+#: src/err-codes.h:422
 msgid "User defined error code 4"
 msgstr "Användardefinierad felkod 4"
 
-#: src/err-codes.h:420
+#: src/err-codes.h:423
 msgid "User defined error code 5"
 msgstr "Användardefinierad felkod 5"
 
-#: src/err-codes.h:421
+#: src/err-codes.h:424
 msgid "User defined error code 6"
 msgstr "Användardefinierad felkod 6"
 
-#: src/err-codes.h:422
+#: src/err-codes.h:425
 msgid "User defined error code 7"
 msgstr "Användardefinierad felkod 7"
 
-#: src/err-codes.h:423
+#: src/err-codes.h:426
 msgid "User defined error code 8"
 msgstr "Användardefinierad felkod 8"
 
-#: src/err-codes.h:424
+#: src/err-codes.h:427
 msgid "User defined error code 9"
 msgstr "Användardefinierad felkod 9"
 
-#: src/err-codes.h:425
+#: src/err-codes.h:428
 msgid "User defined error code 10"
 msgstr "Användardefinierad felkod 10"
 
-#: src/err-codes.h:426
+#: src/err-codes.h:429
 msgid "User defined error code 11"
 msgstr "Användardefinierad felkod 11"
 
-#: src/err-codes.h:427
+#: src/err-codes.h:430
 msgid "User defined error code 12"
 msgstr "Användardefinierad felkod 12"
 
-#: src/err-codes.h:428
+#: src/err-codes.h:431
 msgid "User defined error code 13"
 msgstr "Användardefinierad felkod 13"
 
-#: src/err-codes.h:429
+#: src/err-codes.h:432
 msgid "User defined error code 14"
 msgstr "Användardefinierad felkod 14"
 
-#: src/err-codes.h:430
+#: src/err-codes.h:433
 msgid "User defined error code 15"
 msgstr "Användardefinierad felkod 15"
 
-#: src/err-codes.h:431
+#: src/err-codes.h:434
 msgid "User defined error code 16"
 msgstr "Användardefinierad felkod 16"
 
-#: src/err-codes.h:432
+#: src/err-codes.h:435
 #, fuzzy
 #| msgid "Success"
 msgid "SQL success"
 msgstr "Lyckades"
 
-#: src/err-codes.h:433
+#: src/err-codes.h:436
 #, fuzzy
 #| msgid "Syntax error"
 msgid "SQL error"
 msgstr "Syntaxfel"
 
-#: src/err-codes.h:434
+#: src/err-codes.h:437
 msgid "Internal logic error in SQL library"
 msgstr ""
 
-#: src/err-codes.h:435
+#: src/err-codes.h:438
 msgid "Access permission denied (SQL)"
 msgstr ""
 
-#: src/err-codes.h:436
+#: src/err-codes.h:439
 msgid "SQL abort was requested"
 msgstr ""
 
-#: src/err-codes.h:437
+#: src/err-codes.h:440
 msgid "SQL database file is locked"
 msgstr ""
 
-#: src/err-codes.h:438
+#: src/err-codes.h:441
 msgid "An SQL table in the database is locked"
 msgstr ""
 
-#: src/err-codes.h:439
+#: src/err-codes.h:442
 msgid "SQL library ran out of core"
 msgstr ""
 
-#: src/err-codes.h:440
+#: src/err-codes.h:443
 msgid "Attempt to write a readonly SQL database"
 msgstr ""
 
-#: src/err-codes.h:441
+#: src/err-codes.h:444
 msgid "SQL operation terminated by interrupt"
 msgstr ""
 
-#: src/err-codes.h:442
+#: src/err-codes.h:445
 msgid "I/O error during SQL operation"
 msgstr ""
 
-#: src/err-codes.h:443
+#: src/err-codes.h:446
 msgid "SQL database disk image is malformed"
 msgstr ""
 
-#: src/err-codes.h:444
+#: src/err-codes.h:447
 msgid "Unknown opcode in SQL file control"
 msgstr ""
 
-#: src/err-codes.h:445
+#: src/err-codes.h:448
 msgid "Insertion failed because SQL database is full"
 msgstr ""
 
-#: src/err-codes.h:446
+#: src/err-codes.h:449
 msgid "Unable to open the SQL database file"
 msgstr ""
 
-#: src/err-codes.h:447
+#: src/err-codes.h:450
 #, fuzzy
 #| msgid "Protocol violation"
 msgid "SQL database lock protocol error"
 msgstr "Protokollöverträdelse"
 
-#: src/err-codes.h:448
+#: src/err-codes.h:451
 msgid "(internal SQL code: empty)"
 msgstr ""
 
-#: src/err-codes.h:449
+#: src/err-codes.h:452
 msgid "SQL database schema changed"
 msgstr ""
 
-#: src/err-codes.h:450
+#: src/err-codes.h:453
 msgid "String or blob exceeds size limit (SQL)"
 msgstr ""
 
-#: src/err-codes.h:451
+#: src/err-codes.h:454
 msgid "SQL abort due to constraint violation"
 msgstr ""
 
-#: src/err-codes.h:452
+#: src/err-codes.h:455
 msgid "Data type mismatch (SQL)"
 msgstr ""
 
-#: src/err-codes.h:453
+#: src/err-codes.h:456
 msgid "SQL library used incorrectly"
 msgstr ""
 
-#: src/err-codes.h:454
+#: src/err-codes.h:457
 msgid "SQL library uses unsupported OS features"
 msgstr ""
 
-#: src/err-codes.h:455
+#: src/err-codes.h:458
 msgid "Authorization denied (SQL)"
 msgstr ""
 
-#: src/err-codes.h:456
+#: src/err-codes.h:459
 msgid "(unused SQL code: format)"
 msgstr ""
 
-#: src/err-codes.h:457
+#: src/err-codes.h:460
 msgid "SQL bind parameter out of range"
 msgstr ""
 
-#: src/err-codes.h:458
+#: src/err-codes.h:461
 msgid "File opened that is not an SQL database file"
 msgstr ""
 
-#: src/err-codes.h:459
+#: src/err-codes.h:462
 msgid "Notifications from SQL logger"
 msgstr ""
 
-#: src/err-codes.h:460
+#: src/err-codes.h:463
 msgid "Warnings from SQL logger"
 msgstr ""
 
-#: src/err-codes.h:461
+#: src/err-codes.h:464
 msgid "SQL has another row ready"
 msgstr ""
 
-#: src/err-codes.h:462
+#: src/err-codes.h:465
 msgid "SQL has finished executing"
 msgstr ""
 
-#: src/err-codes.h:463
+#: src/err-codes.h:466
 msgid "System error w/o errno"
 msgstr "Systemfel utan felnummer"
 
-#: src/err-codes.h:464
+#: src/err-codes.h:467
 msgid "Unknown system error"
 msgstr "Okänt systemfel"
 
-#: src/err-codes.h:465
+#: src/err-codes.h:468
 msgid "End of file"
 msgstr "Slut på fil"
 
-#: src/err-codes.h:466
+#: src/err-codes.h:469
 msgid "Unknown error code"
 msgstr "Okänd felkod"
 
-#: src/argparse.c:494
+#: src/argparse.c:502
 msgid "argument not expected"
 msgstr "argument förväntades inte"
 
-#: src/argparse.c:496
+#: src/argparse.c:504
 msgid "read error"
 msgstr "läsfel"
 
-#: src/argparse.c:498
+#: src/argparse.c:506
 msgid "keyword too long"
 msgstr "nyckelordet är för långt"
 
-#: src/argparse.c:500
+#: src/argparse.c:508
 msgid "missing argument"
 msgstr "argument saknas"
 
-#: src/argparse.c:502
+#: src/argparse.c:510
 #, fuzzy
 #| msgid "invalid value\n"
 msgid "invalid argument"
 msgstr "ogiltigt värde\n"
 
-#: src/argparse.c:504
+#: src/argparse.c:512
 msgid "invalid command"
 msgstr "ogiltigt kommando"
 
-#: src/argparse.c:506
+#: src/argparse.c:514
 msgid "invalid alias definition"
 msgstr "ogiltig aliasdefinition"
 
-#: src/argparse.c:508 src/argparse.c:545
+#: src/argparse.c:516 src/argparse.c:553
 #, fuzzy
 #| msgid "Configuration error"
 msgid "permission error"
 msgstr "Konfigurationsfel"
 
-#: src/argparse.c:510 src/argparse.c:543
+#: src/argparse.c:518 src/argparse.c:551
 msgid "out of core"
 msgstr "slut på minne"
 
-#: src/argparse.c:514 src/argparse.c:549
+#: src/argparse.c:522 src/argparse.c:557
 #, fuzzy
 #| msgid "invalid command"
 msgid "invalid meta command"
 msgstr "ogiltigt kommando"
 
-#: src/argparse.c:516 src/argparse.c:551
+#: src/argparse.c:524 src/argparse.c:559
 #, fuzzy
 #| msgid "Unknown command"
 msgid "unknown meta command"
 msgstr "Okänt kommando"
 
-#: src/argparse.c:518 src/argparse.c:553
+#: src/argparse.c:526 src/argparse.c:561
 #, fuzzy
 #| msgid "Unexpected IPC command"
 msgid "unexpected meta command"
 msgstr "Oväntat IPC-kommando"
 
-#: src/argparse.c:520
+#: src/argparse.c:528
 msgid "invalid option"
 msgstr "ogiltig flagga"
 
-#: src/argparse.c:530
+#: src/argparse.c:538
 #, c-format
 msgid "missing argument for option \"%.50s\"\n"
 msgstr "argument för flaggan \"%.50s\" saknas\n"
 
-#: src/argparse.c:532
+#: src/argparse.c:540
 #, fuzzy, c-format
 #| msgid "missing argument for option \"%.50s\"\n"
 msgid "invalid argument for option \"%.50s\"\n"
 msgstr "argument för flaggan \"%.50s\" saknas\n"
 
-#: src/argparse.c:534
+#: src/argparse.c:542
 #, c-format
 msgid "option \"%.50s\" does not expect an argument\n"
 msgstr "flaggan \"%.50s\" förväntar sig inte ett argument\n"
 
-#: src/argparse.c:537
+#: src/argparse.c:545
 #, c-format
 msgid "invalid command \"%.50s\"\n"
 msgstr "ogiltigt kommando \"%.50s\"\n"
 
-#: src/argparse.c:539
+#: src/argparse.c:547
 #, c-format
 msgid "option \"%.50s\" is ambiguous\n"
 msgstr "flagga \"%.50s\" är tvetydig\n"
 
-#: src/argparse.c:541
+#: src/argparse.c:549
 #, c-format
 msgid "command \"%.50s\" is ambiguous\n"
 msgstr "kommandot \"%.50s\" är tvetydigt\n"
 
-#: src/argparse.c:555
+#: src/argparse.c:563
 #, c-format
 msgid "invalid option \"%.50s\"\n"
 msgstr "ogiltig flagga \"%.50s\"\n"
 
-#: src/argparse.c:2297 src/argparse.c:2393
+#: src/argparse.c:2335 src/argparse.c:2432
 #, c-format
 msgid "Note: no default option file '%s'\n"
 msgstr ""
 
-#: src/argparse.c:2307 src/argparse.c:2400
+#: src/argparse.c:2345 src/argparse.c:2439
 #, c-format
 msgid "reading options from '%s'\n"
 msgstr ""
 
-#: src/argparse.c:2385
+#: src/argparse.c:2424
 #, c-format
 msgid "option file '%s': %s\n"
 msgstr ""
 
-#: src/argparse.c:2823
+#: src/argparse.c:2910
 #, c-format
 msgid "Note: ignoring option \"--%s\" due to global config\n"
 msgstr ""

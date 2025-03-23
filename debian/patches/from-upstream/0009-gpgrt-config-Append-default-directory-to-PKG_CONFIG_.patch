@@ -1,0 +1,57 @@
+From dbf1e0dc47229384d59cb19084de39a855e5c871 Mon Sep 17 00:00:00 2001
+From: NIIBE Yutaka <gniibe@fsij.org>
+Date: Thu, 6 Feb 2025 09:52:30 +0900
+Subject: [PATCH] gpgrt-config: Append default directory to PKG_CONFIG_PATH.
+
+* src/gpgrt-config.in: Fix initializing PKG_CONFIG_PATH.
+
+--
+
+Signed-off-by: NIIBE Yutaka <gniibe@fsij.org>
+---
+ src/gpgrt-config.in | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
+
+diff --git a/src/gpgrt-config.in b/src/gpgrt-config.in
+index 55e0a73..b5d0253 100644
+--- a/src/gpgrt-config.in
++++ b/src/gpgrt-config.in
+@@ -1,8 +1,8 @@
+ #!@INSTALLSHELLPATH@
+ #                          -*- mode: shell-script; sh-shell: "/bin/sh" -*-
+-# Copyright (C) 2018, 2021, 2022 g10 Code GmbH
++# Copyright (C) 2018, 2021, 2022, 2025  g10 Code GmbH
+ #
+ # This file is free software; as a special exception the author gives
+ # unlimited permission to copy and/or distribute it, with or without
+ # modifications, as long as this notice is preserved.
+ #
+@@ -549,20 +549,15 @@ else
+   if [ -n "$libdir" ]; then
+     # --libdir option is available, it overrides existing PKG_CONFIG_LIBDIR
+     PKG_CONFIG_LIBDIR=$libdir/pkgconfig
+   fi
+   if [ -z "$PKG_CONFIG_LIBDIR" ]; then
+-    if [ -z "$PKG_CONFIG_PATH" ]; then
+-      # It used to fail as:
+-      #
+-      # echo "Please use --libdir=LIBDIR option or set PKG_CONFIG_LIBDIR" 1>&2
+-      # echo "Or set PKG_CONFIG_PATH" 1>&2
+-      #
+-      # Now, we try a fallback.
+-      determine_gpgrt_libdir
+-      PKG_CONFIG_PATH="${gpgrt_libdir}/pkgconfig"
+-    fi
++    # We try a fallback for PKG_CONFIG_LIBDIR.
++    determine_gpgrt_libdir
++    PKG_CONFIG_LIBDIR=${gpgrt_libdir}/pkgconfig
++    # And append PKG_CONFIG_LIBDIR to PKG_CONFIG_PATH
++    PKG_CONFIG_PATH="$PKG_CONFIG_PATH${PKG_CONFIG_PATH:+:}$PKG_CONFIG_LIBDIR"
+   else
+     # PKG_CONFIG_LIBDIR is available here
+     # Modify PKG_CONFIG_PATH, prepending PKG_CONFIG_LIBDIR
+     PKG_CONFIG_PATH="$PKG_CONFIG_LIBDIR${PKG_CONFIG_PATH:+:}$PKG_CONFIG_PATH"
+   fi
+-- 
+2.47.2
+
