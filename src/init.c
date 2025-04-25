@@ -39,6 +39,8 @@
 
 static int tls_index = TLS_OUT_OF_INDEXES;  /* Index for the TLS functions.  */
 
+static volatile int utf8_for_new_threads;
+
 static char *get_locale_dir (void);
 static void drop_locale_dir (char *locale_dir);
 
@@ -413,6 +415,25 @@ _gpgrt_free (void *a)
 
 
 void
+_gpgrt_wipememory (void *ptr, size_t len)
+{
+  if (ptr && len)
+    {
+#if defined(HAVE_W32_SYSTEM) && defined(SecureZeroMemory)
+      SecureZeroMemory (ptr, len);
+#elif defined(HAVE_EXPLICIT_BZERO)
+      explicit_bzero (ptr, len);
+#else
+      /* Prevent compiler from optimizing away the call to memset by
+       * accessing memset through volatile pointer. */
+      static void *(*volatile memset_ptr)(void *, int, size_t) = (void *)memset;
+      memset_ptr (ptr, 0, len);
+#endif
+    }
+}
+
+
+void
 _gpg_err_set_errno (int err)
 {
   errno = err;
@@ -530,6 +551,14 @@ _gpgrt_internal_trace_end (void)
  ******** Below is only Windows code. ****
  *****************************************/
 
+/* This function can be called to force utf8 for new threads.  */
+void
+_gpgrt_w32_utf8_for_new_threads (void)
+{
+  utf8_for_new_threads = 1;
+}
+
+
 static char *
 get_locale_dir (void)
 {
@@ -626,7 +655,7 @@ get_tls (void)
           /* No way to continue - commit suicide.  */
           _gpgrt_abort ();
         }
-      tls->gt_use_utf8 = 0;
+      tls->gt_use_utf8 = utf8_for_new_threads;
       TlsSetValue (tls_index, tls);
     }
 
@@ -658,7 +687,7 @@ DllMain (HINSTANCE hinst, DWORD reason, LPVOID reserved)
       tls = LocalAlloc (LPTR, sizeof *tls);
       if (!tls)
         return FALSE;
-      tls->gt_use_utf8 = 0;
+      tls->gt_use_utf8 = utf8_for_new_threads;
       TlsSetValue (tls_index, tls);
       if (reason == DLL_PROCESS_ATTACH)
         {

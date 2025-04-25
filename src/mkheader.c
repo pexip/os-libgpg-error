@@ -28,6 +28,7 @@ static char *srcdir;
 static const char *hdr_version;
 static const char *hdr_version_number;
 static int cross_building; /* Command line flag.  */
+static int verbose;
 
 /* Values take from the supplied config.h.  */
 static int have_stdint_h;
@@ -107,6 +108,8 @@ canon_host_triplet (const char *triplet, int no_vendor_hack, char **r_os)
 
     {"x86_64-pc-linux-gnuhardened1", "x86_64-unknown-linux-gnu" },
     {"x86_64-pc-linux-gnu" },
+
+    {"x86_64-pc-gnu"},
 
     {"powerpc-unknown-linux-gnuspe", "powerpc-unknown-linux-gnu" },
 
@@ -425,7 +428,7 @@ include_file (const char *fname, int lnr, const char *name, void (*outf)(char*))
       exit (1);
     }
 
-  if (repl_flag)
+  if (repl_flag && verbose)
     fprintf (stderr,"%s:%d: note: including '%s'\n",
              fname, lnr, incfname);
 
@@ -570,28 +573,20 @@ write_special (const char *fname, int lnr, const char *tag)
       else
         fputs ("int", stdout);
     }
-  else if (!strcmp (tag, "define:pid_t"))
+  else if (!strcmp (tag, "define:spawn_actions_functions"))
     {
-      if (have_sys_types_h)
+      if (have_w32_system || have_w64_system)
         {
-          if (!sys_types_h_included)
-            {
-              fputs ("#include <sys/types.h>\n", stdout);
-              sys_types_h_included = 1;
-            }
-        }
-      else if (have_w64_system)
-        {
-          if (!stdint_h_included && have_stdint_h)
-            {
-              fputs ("#include <stdint.h>\n", stdout);
-              stdint_h_included = 1;
-            }
-          fputs ("typedef int64_t pid_t\n", stdout);
+          fputs ("void gpgrt_spawn_actions_set_envvars (gpgrt_spawn_actions_t, char *);\n", stdout);
+          fputs ("void gpgrt_spawn_actions_set_redirect (gpgrt_spawn_actions_t, void *, void *, void *);\n", stdout);
+          fputs ("void gpgrt_spawn_actions_set_inherit_handles (gpgrt_spawn_actions_t, void **);\n", stdout);
         }
       else
         {
-          fputs ("typedef int     pid_t\n", stdout);
+          fputs ("void gpgrt_spawn_actions_set_environ (gpgrt_spawn_actions_t, char **);\n", stdout);
+          fputs ("void gpgrt_spawn_actions_set_redirect (gpgrt_spawn_actions_t, int, int, int);\n", stdout);
+          fputs ("void gpgrt_spawn_actions_set_inherit_fds (gpgrt_spawn_actions_t, const int *);\n", stdout);
+          fputs ("void gpgrt_spawn_actions_set_atfork (gpgrt_spawn_actions_t, void (*)(void *), void *);", stdout);
         }
     }
   else if (!strcmp (tag, "include:err-sources"))
@@ -651,6 +646,12 @@ main (int argc, char **argv)
       cross_building = 1;
       argc--; argv++;
     }
+  if (!strcmp (*argv, "--verbose"))
+    {
+      verbose = 1;
+      argc--; argv++;
+    }
+
 
   if (argc == 1)
     {
@@ -663,10 +664,14 @@ main (int argc, char **argv)
     ; /* Standard operation.  */
   else
     {
-      fputs ("usage: " PGM
+      fputs ("usage: " PGM " [options]"
              " host_triplet template.h config.h version version_number\n"
-             "       " PGM
-             " host_triplet\n",
+             "       " PGM " [options]"
+             " host_triplet\n"
+             "\n"
+             "Options:\n"
+             "  --cross        Specify cross building\n"
+             "  --verbose      Show what is going on\n",
              stderr);
       return 1;
     }

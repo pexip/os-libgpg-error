@@ -1,3 +1,838 @@
+2024-11-11  Werner Koch  <wk@gnupg.org>
+
+	Release 1.51.
+	+ commit b0bb9266010d84b30fa2dc6a2127b7e40dc03660
+
+
+2024-10-23  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Avoid use of 'nullptr' for an identifier.
+	+ commit d14c69a7f256a9444c5c64b808d8767e5a8ba68e
+	* tests/t-printf.c (check_fprintf_sf): Use 'null_ptr'
+	as an identifier.
+
+2024-10-16  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Shorter identifier gpgrt_spawn_actions_set_env_rev.
+	+ commit 1bca948594d9f8c26231bfb7ff7b2f3ebf9df295
+	* src/gpg-error.def.in: Rename to gpgrt_spawn_actions_set_env_rev.
+	* src/gpg-error.h.in: Likewise.
+	* src/gpg-error.vers: Likewise.
+	* src/gpgrt-int.h: Likewise.
+	* src/spawn-posix.c: Likewise.
+	* src/spawn-w32.c: Likewise.
+	* src/visibility.c: Likewise.
+	* src/visibility.h: Likewise.
+	* tests/t-spawn.c (run_test): Use gpgrt_spawn_actions_set_env_rev.
+
+2024-10-11  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Add new function to modify environment.
+	+ commit 1860f6407f834b681c21f67db7236eaad161524c
+	* src/gpg-error.def.in (gpgrt_spawn_actions_set_envchange): New.
+	* src/gpg-error.vers (gpgrt_spawn_actions_set_envchange): New.
+	* src/gpg-error.h.in (gpgrt_spawn_actions_set_envchange): New.
+	* src/gpgrt-int.h (_gpgrt_spawn_actions_set_envchange): New.
+	* src/spawn-posix.c (struct gpgrt_spawn_actions): New field ENVCHANGE.
+	(prepare_environ): New.
+	(my_exec): Take care of ENVCHANGE.
+	(_gpgrt_spawn_actions_set_envchange): New.
+	* src/spawn-w32.c (struct gpgrt_spawn_actions): New field ENVCHANGE.
+	(prepare_env_block): New.
+	(_gpgrt_spawn_actions_set_envchange): New.
+	(spawn_detached, _gpgrt_process_spawn): Take care of ENVCHANGE.
+	* src/visibility.c (gpgrt_spawn_actions_set_envchange): New.
+	* src/visibility.h (gpgrt_spawn_actions_set_envchange): New.
+	* tests/Makefile.am (TESTS): Add t-spawn.
+	* tests/t-spawn.c: New.
+
+2024-10-10  NIIBE Yutaka  <gniibe@fsij.org>
+
+	w32: Fix releasing memory for UTF-8 text.
+	+ commit 68600fe17c5f8c72e421b5ca9d9622568c6f57fd
+	* src/spawn-w32.c (spawn_detached): Use _gpgrt_free_wchar.
+	(_gpgrt_process_spawn): Likewise.
+
+2024-09-24  Werner Koch  <wk@gnupg.org>
+
+	estream: Let poll return an error for a closed fd.
+	+ commit 4a3dc85f695e6448e6279dc48894b500168f42f9
+	* src/estream.c (_gpgrt_poll): Set got_nval.
+
+2024-09-19  NIIBE Yutaka  <gniibe@fsij.org>
+
+	posix: Fix forgotten _gpgrt_post_syscall on error path.
+	+ commit bcab96484d4858fcde669b36d309ab7fbc79174e
+	* src/spawn-posix.c (do_create_pipe_and_estream): Call post_syscall.
+
+	posix: Fix memory leak for spawn.
+	+ commit 4a0c942151da91ad75dbb45d4dc10c4751ee28e4
+	* src/spawn-posix.c (spawn_detached): Free ARGV.
+
+2024-09-16  NIIBE Yutaka  <gniibe@fsij.org>
+
+	w32:spawn: Remove unused function get_max_fds.
+	+ commit c2a713fe11e35b4567e0c7d2a20d8ab416b366ad
+	* src/spawn-w32.c (get_max_fds): Remove.
+
+2024-09-06  NIIBE Yutaka  <gniibe@fsij.org>
+
+	w32: Clarify the environment block encoding.
+	+ commit 0f7b327ccf6d2018b193d5598c4a8a338f874a59
+	* src/spawn-w32.c (_gpgrt_spawn_actions_set_envvars): It's an ASCII
+	string.
+
+2024-08-27  NIIBE Yutaka  <gniibe@fsij.org>
+
+	w32: Add GPGRT_PROCESS_ALLOW_SET_FG for gpgrt_process_spawn.
+	+ commit b79d4206f482b323fb9f9d52a1c715e853752195
+	* src/gpg-error.h.in (GPGRT_PROCESS_ALLOW_SET_FG): New.
+	* src/spawn-w32.c (_gpgrt_process_spawn): Support the flag.
+
+2024-08-02  Werner Koch  <wk@gnupg.org>
+
+	w32: Allow initialization of new threads to utf8 mode.
+	+ commit 7f36440d90964ffe809064365cb16033ba1dda69
+	* src/init.c (utf8_for_new_threads): New var.
+	(_gpgrt_w32_utf8_for_new_threads): New func.
+	(get_tls): Init the TLS utf8 flag from the new var.
+	* src/w32-gettext.c (_gpg_w32_gettext_use_utf8): Implement new flag.
+
+2024-07-04  Werner Koch  <wk@gnupg.org>
+
+	Put the full commit id into VERSION.
+	+ commit 9c448f7c7a55c8293cd33ea0fcd33dd42032504d
+	* autogen.sh <find-version>: Also print the full commit id.
+	* configure.ac: Get the full commit id.  Add it to VERSION.
+	(BUILD_REVISION): Replace this ac_define by
+	(BUILD_COMMITID): this.
+	* src/version.c (cright_blurb): Use here.
+
+2024-06-20  Werner Koch  <wk@gnupg.org>
+
+	core: Declare environ for macOS and others.
+	+ commit a59e902b887fd92337c9728f668cf9c89da3957a
+	* src/spawn-posix.c (environ): Declare.
+
+2024-06-19  Werner Koch  <wk@gnupg.org>
+
+	Release 1.50.
+	+ commit bb732615daad9bba9026354ae90f0f5292ea4908
+
+
+	spawn: New flag GPGRT_PROCESS_NO_EUID_CHECK.
+	+ commit bdd1060445fa358d3ca3f1f98334de60cd5d6c10
+	* src/gpg-error.h.in (GPGRT_PROCESS_NO_EUID_CHECK): New.
+	* src/spawn-posix.c (spawn_detached): Move check to ...
+	(_gpgrt_process_spawn): here and skip if flag is set.
+
+	spawn: Keep struct definitions at the top of the file.
+	+ commit 0078afb8c60af2c61c01688ca52f51ca95b25721
+	* src/spawn-posix.c: Move include and struct defs around.
+	* src/spawn-w32.c: Move struct defs around.
+
+2024-06-13  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Apply spell fix.
+	+ commit 82a34b733d89b2c3ebc45d8124378ada19017a65
+	* src/gpg-error.m4: Apply spell fix from GnuPG master.
+
+	Fix gpg-error.m4.
+	+ commit c690e6e3655e7d9db79cd07cfacf3234ecd548cf
+	* src/gpg-error.m4 (_AM_PATH_GPGRT_CONFIG): Don't set
+	gpg_error_config_version.
+	(AM_PATH_GPG_ERROR): Set GPG_ERROR_CONFIG here and set
+	gpg_error_config_version with GPG_ERROR_CONFIG.
+
+2024-06-07  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Support the use case in libassuan where PGMNAME==NULL.
+	+ commit d53f35a5e6644b94fb25bf6afd365f4b0f5a18e0
+	* src/spawn-posix.c (my_exec): When PGMNAME==NULL, just fork.
+	(_gpgrt_process_spawn): Support PGMNAME==NULL use case.
+	* src/spawn-w32.c (_gpgrt_process_spawn): Return GPG_ERR_INV_ARG,
+	when PGMNAME==NULL.
+
+2024-06-06  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Expose gpgrt_spawn_actions functions.
+	+ commit e644311383350ce704611cce69f322a7d9dd548e
+	* src/gpg-error.def.in: Update.
+	* src/gpg-error.h.in: Add declarations.
+	* src/gpg-error.vers: Update.
+	* src/visibility.c: Update.
+	* src/visibility.h: Update.
+
+	spawn: Add new GPGRT_PROCESS_NO_CONSOLE for Windows.
+	+ commit 03fd278d7f7a1e3e0d082de5efb9d85740cf0ab8
+	* src/gpg-error.h.in (GPGRT_PROCESS_NO_CONSOLE): New.
+	* src/spawn-w32.c (_gpgrt_process_spawn): Handle
+	GPGRT_PROCESS_NO_CONSOLE.
+
+	Fix return type of gpgrt_b64dec_*.
+	+ commit 7d132a1a72ad618640640db278056ce04d32fdde
+	* src/gpg-error.h.in (gpgrt_b64dec_proc): Return gpg_err_code_t.
+	(gpgrt_b64dec_finish): Ditto.
+	* src/visibility.c: Fix return type.
+
+2024-06-05  Werner Koch  <wk@gnupg.org>
+
+	spawn:w32: Allow for up to 32 inherited handles.
+	+ commit 4ee656242aa93af42e74acb706a13f99212a93d6
+	* src/spawn-w32.c (spawn_detached): Increase array size.
+	(_gpgrt_process_spawn): Ditto.
+
+	spawn: Avoid bumping the error counter.
+	+ commit 60b9a68def583d7c3a1d47daec717a7f71233c55
+	* src/spawn-posix.c: Use log_info instead of log_error.
+	* src/spawn-w32.c: Ditto.
+	(spawn_detached): Fix copying of hd[2]
+	(_gpgrt_process_spawn): Ditto.
+
+2024-06-05  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Expose spawn functions API.
+	+ commit 2caaef8f6b89d7fcbbe3d480d192fe1952576942
+	* src/gpg-error.def.in: Update.
+	* src/gpg-error.vers: Update.
+	* src/gpg-error.h.in: Add declarations.
+	* src/visibility.c: Add implementations.
+	* src/visibility.h: Expose them.
+
+2024-06-04  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn:w32: Fix setting of dwFlags for CreateProcess.
+	+ commit 3be8b2c95faac8543e2ceddb308b8c138dde11d8
+	* src/spawn-w32.c (_gpgrt_process_spawn): Only set
+	STARTF_USESTDHANDLES with active handles.
+
+2024-05-30  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Allow NULL for ACT.
+	+ commit adcb4170a40d7cf66181a6b3efc7c187892a1318
+	* src/spawn-posix.c (_gpgrt_process_spawn): ACT may be null.
+	* src/spawn-w32.c (_gpgrt_process_spawn): Likewise.
+
+2024-05-29  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix process termination check at release.
+	+ commit 5fec7d7ada4c5b1978cfba3be8b67475ff1e0859
+	* src/spawn-posix.c (_gpgrt_process_release): When NOT terminated,
+	terminate and wait.
+	* src/spawn-w32.c (_gpgrt_process_release): Likewise.
+
+	Fix how environment variables are specified for spawn.
+	+ commit fbe1f5153c3cb8b7c5de40973cceee7f639804e7
+	* src/gpgrt-int.h (_gpgrt_spawn_actions_set_envvars)
+	[HAVE_W32_SYSTEM]: Assume use with GetEnvironmentStrings.
+	(_gpgrt_spawn_actions_set_environ) [!HAVE_W32_SYSTEM]:
+	New.
+	* src/spawn-posix.c: Follow the change.
+	* src/spawn-w32.c: Can specify envvars now.
+
+	Cleaner semantics for _gpgrt_process_spawn without a callback.
+	+ commit 6c05b35977c9d15da45b4fe6c0c870dbbf51657c
+	* src/gpg-error.h.in (@define:struct_spawn_cb_arg@): Remove.
+	(gpgrt_spawn_actions_t): New.
+	(@define:spawn_actions_functions@): New.
+	* src/gpgrt-int.h (_gpgrt_spawn_actions_new)
+	(_gpgrt_spawn_actions_release, _gpgrt_spawn_actions_set_envvars)
+	(_gpgrt_spawn_actions_set_redirect): New.
+	[HAVE_W32_SYSTEM] (_gpgrt_spawn_actions_set_inherit_handles): New.
+	[!HAVE_W32_SYSTEM] (_gpgrt_spawn_actions_set_inherit_fds)
+	(_gpgrt_spawn_actions_set_atfork): New.
+	(_gpgrt_process_spawn): Use gpgrt_spawn_actions_t.
+	(_gpgrt_spawn_helper): Remove.
+	* src/mkheader.c: Emit gpgrt_spawn_actions_* definition.
+	* src/spawn-posix.c(_gpgrt_spawn_actions_new)
+	(_gpgrt_spawn_actions_release, _gpgrt_spawn_actions_set_envvars)
+	(_gpgrt_spawn_actions_set_redirect)
+	(_gpgrt_spawn_actions_set_inherit_fds)
+	(_gpgrt_spawn_actions_set_atfork): New.
+	(spawn_detached, _gpgrt_process_spawn): Use gpgrt_spawn_actions_t.
+	(_gpgrt_spawn_helper): Remove.
+	* src/spawn-w32.c: Ditto, with
+	_gpgrt_spawn_actions_set_inherit_handles, but no
+	_gpgrt_spawn_actions_set_atfork.
+
+2024-05-28  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Import spawn functions from GnuPG master.
+	+ commit 8dc6e3281e17c5d2885dc71634ab1068b88fc738
+	* src/gpg-error.h.in (@define:gpgrt_process_t@): Remove.
+	(@define:struct_spawn_cb_arg@): New.
+	(enum gpgrt_process_requests): New.
+	(GPGRT_PROCESS_DETACHED, GPGRT_PROCESS_STDIN_PIPE)
+	(GPGRT_PROCESS_STDOUT_PIPE, GPGRT_PROCESS_STDERR_PIPE)
+	(GPGRT_PROCESS_STDINOUT_SOCKETPAIR, GPGRT_PROCESS_STDIN_KEEP)
+	(GPGRT_PROCESS_STDOUT_KEEP, GPGRT_PROCESS_STDERR_KEEP)
+	(GPGRT_PROCESS_STDFDS_SETTING, GPGRT_PROCESS_STREAM_NONBLOCK):
+	New.
+	* src/gpgrt-int.h (_gpgrt_process_spawn, _gpgrt_process_terminate)
+	(_gpgrt_process_get_fds, _gpgrt_process_get_streams)
+	(_gpgrt_process_ctl, _gpgrt_process_wait, _gpgrt_process_release)
+	(_gpgrt_process_wait_list, _gpgrt_spawn_helper): New.
+	* src/mkheader.c: Emit definition of struct_spawn_cb_arg.
+	* src/spawn-posix.c (_gpgrt_process_spawn, _gpgrt_process_terminate)
+	(_gpgrt_process_get_fds, _gpgrt_process_get_streams)
+	(_gpgrt_process_ctl, _gpgrt_process_wait, _gpgrt_process_release)
+	(_gpgrt_process_wait_list, _gpgrt_spawn_helper): New.
+	* src/spawn-w32.c: Ditto.
+
+2024-04-26  Werner Koch  <wk@gnupg.org>
+
+	argparse: Fix a theoretical memory leak.
+	+ commit a5f0e0b2f7897fc6ef1ab847146e16ef64d1d4a7
+	* src/argparse.c (store_alias): Free NAME because it has ownerhip
+	here.  Take care P is actually a pointer into NAME.
+
+2024-04-25  Werner Koch  <wk@gnupg.org>
+
+	Release 1.49.
+	+ commit faed9c271ad22bbd2ed265d8e11badb53b7a2f32
+
+
+	logging: New function gpgrt_logv_domain.
+	+ commit 2f9a0895a103f0baf1c2ea38662112c1359bdb90
+	* src/gpg-error.h.in (gpgrt_logv_domain): New.  Also add printf
+	attributes to the other logv functions.
+	* src/visibility.c (gpgrt_logv_domain): New.
+
+2024-04-22  Werner Koch  <wk@gnupg.org>
+
+	core: New function gpgrt_add_post_log_func.
+	+ commit 319a505623c197d06ca3e76f30691fe65a982d6f
+	* src/gpg-error.h.in (gpgrt_add_post_log_func): New.
+	* src/gpg-error.vers: Add new function
+	* src/gpg-error.def.in: Ditto.
+	* src/visibility.c (gpgrt_add_post_log_func): New.
+	* src/logging.c (struct post_log_func_item_s): New.
+	(post_log_func_list): New.
+	(_gpgrt_add_post_log_func): new.
+	(run_post_log_funcs): New.
+	(_gpgrt_logv_internal): Call for fatal and bug log levels.
+
+2024-04-19  Werner Koch  <wk@gnupg.org>
+
+	logging: Indent continuation lines of log_printhex.
+	+ commit 6ab3e9ac43ba104f557d538db100953ae6245076
+	* src/logging.c (_gpgrt_logv_internal): Change to return the length
+	w/o prefix.
+	(_gpgrt_logv_printhex): Indent wrapped lines properly.
+
+2024-04-12  Werner Koch  <wk@gnupg.org>
+
+	logging: Add a truncate keyword to log_printhex.
+	+ commit 0a39fbefcb55379de1cdf1049de303c5ca0691b3
+	* src/logging.c (_gpgrt_logv_printhex): Add keyword support.
+
+2024-04-08  Werner Koch  <wk@gnupg.org>
+
+	argparser: avoid endless loop due to a conf file read error.
+	+ commit 2dc93cfecc7a7b22fd08365a789b8c6c4b8cc36c
+	* src/argparse.c (struct _gpgrt_argparse_internal_s): Add forceeof
+	flag.
+	(initialize): Clear.
+	(_gpgrt_argparse): Clear.
+	(_gpgrt_argparse): Act upon.
+
+2024-02-23  Werner Koch  <wk@gnupg.org>
+
+	Release 1.48.
+	+ commit 77b7c5ff6b756870811acaff53df0ebf1e5c2368
+
+
+2024-02-21  Werner Koch  <wk@gnupg.org>
+
+	argparse: Adjust help output for command mode.
+	+ commit c3b6eaedd8707bca9892a0e188bf04532ca70818
+	* src/argparse.c (show_help): Adjust for command style options.
+
+2024-02-06  Werner Koch  <wk@gnupg.org>
+
+	core: Add "wipe" mode flag.
+	+ commit 49507cf6977f6c9fce1b651ae808e37b63fc3e4e
+	* src/gpgrt-int.h (struct _gpgrt_stream_internal): Add field "wipe".
+	* src/estream.c (mem_free2): New.
+	(struct estream_cookie_mem): Add flag "wipe".
+	(func_mem_create): Add arg wipe.
+	(func_mem_destroy): Wipe.
+	(X_WIPE): New.
+	(parse_mode): Parse "wipe" mode flag.
+	(init_stream_obj): Set it.
+	(do_close): Wipe internal struct with its static buffers.
+	(doreadline): Pass wipe mode along to help buffer.
+	(_gpgrt_mopen): Pass wipe mode.
+	(_gpgrt_fopenmem): Ditto.
+
+	core: New function gpgrt_wipememory.
+	+ commit 1fdd8749014cf390d6ea9dd4350146473362044e
+	* src/init.c (_gpgrt_wipememory): New.
+	* src/visibility.c (gpgrt_wipememory): New.
+	* src/visibility.h: Add it.
+	* src/gpg-error.def.in: Ditto.
+	* src/gpg-error.vers: Ditto.
+
+	argparser: Implement a command mode.
+	+ commit b113114c7498fc6c48065a8c4816c610c6f08198
+	* src/gpg-error.h.in (ARGPARSE_FLAG_COMMAND): New.
+	* src/argparse.c (struct _gpgrt_argparse_internal_s): Add flags
+	explicit_cmd_mode, cmd_mode, and command_seen.
+	(initialize): Init them.  Mark default commands as commands.
+	(handle_meta_command): New.
+	(handle_metacmd): Add "command-mode" and "-command-mode".
+	(find_long_option): Add arg only_commands.
+	(arg_parse): Factor some code out to ...
+	(handle_special_commands): new.
+	(arg_parse): Implement the command-mode.
+
+	* tests/t-argparse.c (main): Add some testing code.
+
+2024-02-01  Jakub Jelen  <jjelen@redhat.com>
+
+	gpgrt-config: Avoid warning about literals for curly braces.
+	+ commit ae6fec7399d77e4e3a63287d94b1366ad121b505
+	* src/gpgrt-config.in: Fix the pattern match for an expression with
+	variable in the ".pc" config file.
+
+2024-01-16  NIIBE Yutaka  <gniibe@fsij.org>
+
+	estream: Fix call to string filter for estream-printf.
+	+ commit 4a9def77488f2631f71737357d9e9dd874c9b302
+	* src/estream-printf.c (pr_string): Make sure to prepare
+	NUL-terminated string to call the string filter.
+
+2024-01-15  Ineiev  <ineiev@gnu.org>
+
+	po: Update Russian translation.
+	+ commit 521e8d4db70c5cf4d4977d93f9ff7adce5de023f
+
+
+2024-01-15  Jakub Bogusz  <qboosh@pld-linux.org>
+
+	po: update Polish translation.
+	+ commit 5142d0d7a2a3b52456010d47bac44322009bb31a
+
+
+2023-11-16  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: Fix HTML output for backslash.
+	+ commit f83eac17363a8c76c10b06712ba3dd39146f36b4
+	* doc/yat2m.c (proc_texi_buffer): Use &bsol.
+
+2023-11-15  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: Implement @item handling with @table item specification.
+	+ commit e31d65345bcb420a2e0ee609d91322abfde4aa44
+	* doc/yat2m.c (MAX_TABLE_NESTING): New.
+	(table_item_stack): New.
+	(proc_texi_cmd): Add @gcctabopt and @gnupgtabopt.
+	Add handling of @item argument with proc_texi_buffer.
+	Add handling of @table argument, push to table_item_stack.
+
+	yat2m: Also handle @file treating '-' as minus.
+	+ commit cfb1871240c4d12c2d2b7c92e2ef7afb30692f88
+	* doc/yat2m.c (proc_texi_cmd): It's minus for @file.
+
+2023-11-14  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: Output \- for @samp, @kbd, and @env, too.
+	+ commit 7375b4c0acedc6333c9074db14a15fc2949f7752
+	* doc/yat2m.c (proc_texi_cmd): Support more commands.
+
+2023-11-09  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: Generate \- for roff for some commands.
+	+ commit 3534e2cc73f9339acc8d154e9551339e544507c6
+	* doc/yat2m.c (proc_texi_cmd): New flag to enable generating \- for
+	roff for @command, @code, @url and @option for their argument, and
+	@example and @smallexample until their @end.
+	(proc_texi_buffer): Emit \- when enabled.
+
+2023-11-07  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: Add support of @minus{} command.
+	+ commit 8275d716bae68124c4c6bebde5305aed1dad5cd4
+	* doc/yat2m.c (proc_texi_cmd): Support @minus.
+
+	yat2m: Use \fP to return previous font.
+	+ commit ab6324e5787a00d2f42638277542bc96b91de52e
+	* doc/yat2m.c (proc_texi_cmd): Use \fP instead of \fR.
+
+	yat2m: Fix backslash output in man.
+	+ commit 6fe51354634361970761095f71e278b90b0dd4e7
+	* doc/yat2m.c (proc_texi_buffer): Use \[rs] for backslash.
+
+2023-11-07  Ben Kibbey  <bjk@luxsci.net>
+
+	yat2m: Parse @dots{} to show ellipsis in HTML mode.
+	+ commit db81ea1219e2baad0fadbc665465d3d03cbb4de2
+	* doc/yat2m.c (proc_texi_cmd): Add "dots" to comamnd table and output
+	  "..." in manpages and ellipsis in HTML mode.
+
+2023-11-06  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: No en-dash and em-dash for @item line.
+	+ commit 260f709413d8df6d0f2e65fb21685f8ce3038f5f
+	* doc/yat2m.c (proc_texi_cmd): Disable parsing for dashes
+	for @item.
+
+2023-11-02  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: Interpret -- and --- verbatimly in @example.
+	+ commit c57e1b1435e6a09e547b18df6c458f9f32a1a513
+	* doc/yat2m.c (example_cmd_active): New.
+	(proc_texi_cmd): Don't apply the processing for en-dash
+	and em-dash when it's in @example/@smallexample.
+
+	yat2m: Support Texinfo input -- and ---.
+	+ commit 82a8e2cece08fa0ca6aff9bdf62414731d384083
+	* doc/yat2m.c (proc_texi_buffer): Handle en-dash and em-dash.
+
+2023-10-05  NIIBE Yutaka  <gniibe@fsij.org>
+
+	doc: Minor style fix.
+	+ commit 53d9d77a496f5b6bc6616a95abfc053f396c1a12
+
+
+2023-09-27  NIIBE Yutaka  <gniibe@fsij.org>
+
+	estream: String filter should NOT be called with non-nul string.
+	+ commit 0fc740ffca848d17b8c71d1682de1e29b24db3cb
+	* src/estream-printf.c (pr_string): Call the string filter function SF
+	conditionally to avoid possible SEGV.
+
+2023-09-01  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Fix the previous commit.
+	+ commit 19d7ec4bfeda6222b11ac92cd4509850322727fc
+
+
+	build: Change the default for --with-libtool-modification.
+	+ commit 071effebcf7db745f5d3bc2b8bb43ffaac54366e
+	* configure.ac (--with-libtool-modification): default=never.
+
+2023-08-09  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Update libtool-patch.sed.
+	+ commit b369ef64e05a2336eb98a28a55dd02193aefaefa
+	* build-aux/libtool-patch.sed: Fail with exit code 1,
+	when it doesn't go well.
+
+2023-08-08  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Use sed for --with-libtool-modification.
+	+ commit 8dd210e9e15905f8c6d155c64b09378d65382335
+	*  configure.ac (--with-libtool-modification): Use sed.
+
+2023-08-04  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Add build-aux/libtool.patch in the tarball.
+	+ commit 03a3b3c02cf220c6e7ee1acecef7403a64ddf4a3
+	* Makefile.am (EXTRA_DIST): build-aux/libtool.patch.
+
+2023-08-02  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: New configure option --with-libtool-modification.
+	+ commit 64532db11fcda9b886df74c00c730108852f4f52
+	*  configure.ac (--with-libtool-modification): New.
+
+2023-07-28  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Fix libtool modification.
+	+ commit e0286bf0a22861f8eadb70a077644a2925baff00
+	* build-aux/ltmain.sh: Fix reverting mistake.
+	* build-aux/libtool.patch: Regenerate and fix whitespace mistake.
+	* configure.ac [x86_64-*mingw32*] (libtool-patch): Exit when failed.
+
+	build: Support --verbose option for mkheader.
+	+ commit ab8b4d58035f4d3093b1df7c25c227e15b673f42
+	* src/mkheader.c (include_file): Only emit the notification when
+	invoked with --verbose.
+	(main): Add --verbose handling.
+
+	build: Apply libtool.patch at the last stage of configure.
+	+ commit c1d3f5952f621a553c122cee7a20e990d982a715
+	* build-aux/libtool.patch: New.
+	* build-aux/ltmain.sh: Revert our local change to original.
+	* configure.ac [x86_64-*mingw32*] (libtool-patch): Introduce a
+	construct with AC_CONFIG_COMMANDS to apply build-aux/libtool.patch
+	after libtool generation.
+
+2023-07-27  NIIBE Yutaka  <gniibe@fsij.org>
+
+	yat2m: No additional newline after the end of subsection.
+	+ commit da48e3cb30be2897b733dbc9db271bfa166fd260
+	* doc/yat2m.c (proc_texi_buffer): Add 'break' in switch.
+
+	build: Recover the local change for libtool.
+	+ commit ff2763c46c7a8f8f9f77f665060f1dc70e515e20
+	* ltmain.sh: Prefix the SO number for W64 with a "6".
+
+	build: Update libtool from version 2.4.7.
+	+ commit 692c2990598689de1dae5867b0e966d7ffeae747
+	* build-aux/compile, build-aux/depcomp, build-aux/ltmain.sh: Update.
+	* m4/libtool.m4, m4/ltoptions.m4, m4/ltsugar.m4: Update.
+	* m4/ltversion.m4, m4/lt~obsolete.m4: Update.
+
+	build: Update autobuild.m4 from autobuild 5.3.
+	+ commit f599ff4988dbf6739e020ee21c7e957387cc3237
+	* m4/autobuild.m4: Update.
+
+2023-07-17  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgscm: Incorporate changes from GnuPG.
+	+ commit 0e8105a364c8cac68a254b5617a83987cc44fcff
+	* gpgscm/scheme.c [__GNUC__] (type_to_string): Use
+	__builtin_unreachable for GCC.
+
+	* gpgscm/ffi.c (do_get_temp_path): Remove the last backslash.
+
+	* gpgscm/ffi.c (do_chdir): Use gpg_error_from_syserror.
+
+2023-06-12  Werner Koch  <wk@gnupg.org>
+
+	yat2m: Fix Windows build.
+	+ commit 3faf11925549260c3822660a2b83785a68326664
+	* doc/yat2m.c (mystpcpy): New.  Use instead of stpcpy.
+
+2023-06-09  Werner Koch  <wk@gnupg.org>
+
+	w32: Map ERROR_FILE_INVALID to EIO.
+	+ commit 32213bb48ea3520588f59ac96456adc156e2c4e8
+	* src/estream.c (map_w32_to_errno): Add a mapping.
+
+	yat2m: Add option --gnupgorg.
+	+ commit 93d764498895e4cc9bdf14ac4c0cb41431946066
+
+
+2023-06-01  Werner Koch  <wk@gnupg.org>
+
+	yat2m: Some basic HTML formatting works now.
+	+ commit 43dcdbff50fa33728ab4717cacdf8ff600aea3b9
+	* doc/yat2m.c: Lots of changes for option --html.
+
+2023-05-26  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Add GNU system support for cross compilation.
+	+ commit 6877540eb1fcc159302b1722264e1059c9f32bc1
+	* configure.ac: Cross compile should work well for
+	GNU system.
+
+2023-05-24  Werner Koch  <wk@gnupg.org>
+
+	core: New mode flag "sequential" for gpgrt_fopen.
+	+ commit 7a42ff0ec971f4f2add28b0edad6cf381b5b8acc
+	* src/estream.c (X_SEQUENTIAL): New.
+	(func_file_create_w32): Add arg flags_and_attrs,
+	(parse_mode): Parse the new "sequenial" flag.
+	(_gpgrt_fopen): Use the sequenial flag in sysopen mode under Windows.
+
+2023-05-17  NIIBE Yutaka  <gniibe@fsij.org>
+
+	w32: Use _putenv_s when available.
+	+ commit 89e53ad90f3aa4ee4379b91a8c8965bc87a39c53
+	* src/sysutils.c (_gpgrt_setenv): Use _putenv_s when the macro
+	_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES is defined.
+
+2023-05-12  NIIBE Yutaka  <gniibe@fsij.org>
+
+	tests: Use -no-fast-install LDFLAGS for Windows.
+	+ commit dfdd07c3c488735d87c13f89270eeb4fa5714ef8
+	* tests/Makefile.am [HAVE_W32_SYSTEM] (AM_LDFLAGS): Conditionalize.
+
+2023-04-10  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt-config: Simplify to set gpgrt_libdir.
+	+ commit 9c17795ec25f3cb7cfd08cc1f9c5dcc1f33ec296
+	* src/gpgrt-config.in (determine_gpgrt_libdir): Merge the two cases.
+
+2023-04-06  Werner Koch  <wk@gnupg.org>
+
+	Release 1.47.
+	+ commit a25cea92798a5ece3f49924911507f5335915ecc
+
+
+	build: Make distcheck work again.
+	+ commit bcc16b4cd00f02fbb824a9b6fc69e00fc6458b19
+	* Makefile.am (DISTCHECK_CONFIGURE_FLAGS): Add
+	with --install-gpg-error-config.
+
+	core: New error codes for PUKs and reset codes.
+	+ commit 0262cd3371cf9794be94851955fec099b0e1fab5
+	* src/err-codes.h.in (GPG_ERR_BAD_PUK): New
+	(GPG_ERR_NO_RESET_CODE, GPG_ERR_BAD_RESET_CODE): New.
+
+2023-04-04  NIIBE Yutaka  <gniibe@fsij.org>
+
+	core: Add GPG_ERR_SOURCE_TKD.
+	+ commit 1a382660855fb46da86980797acc50af1718c359
+	* src/err-sources.h.in (GPG_ERR_SOURCE_TKD): New.
+
+2023-04-01  NIIBE Yutaka  <gniibe@fsij.org>
+
+	m4: Fix behavior with older gpg-error-config and gpgrt-config.
+	+ commit c61e831b6f0c3c4bc9047e583ad3261bd9babefc
+	* src/gpg-error.m4 (_AM_PATH_GPGRT_CONFIG): Set the variable
+	gpg_error_config_version on error with gpgrt-config.
+
+2023-03-23  NIIBE Yutaka  <gniibe@fsij.org>
+
+	m4: Fallback to $possible_libdir1, when not found with $CC.
+	+ commit ed36ba06f907c0d67f8a60930dc329d58a4cd77d
+	* src/gpg-error.m4: Try $possible_libdir1 for gpgrt_libdir.
+
+2023-03-21  Werner Koch  <wk@gnupg.org>
+
+	Avoid segv in logging with improper use of the "socket://" .
+	+ commit 68333be63042be281a497a5751474e9e3d119dc3
+	* src/logging.c (fun_writer): Protect calling socket_dir_cb if not
+	set.
+
+2023-03-15  Werner Koch  <wk@gnupg.org>
+
+	build: Improve the beta numbering by autogen.sh.
+	+ commit fbbc55b3febef6d22dae5e2675c75b1d1f561b09
+	* autogen.sh: Introduce a 3rd matchstr and simplify rules.
+
+2022-12-16  Werner Koch  <wk@gnupg.org>
+
+	core: Fix translations of --help.
+	+ commit 885a287a57cf060b4c5b441822c09d23b8dee2bd
+	* src/argparse.c (show_help): Do not translate the empty string.
+
+2022-12-13  pengyi  <pengyi37@huawei.com>
+	    NIIBE Yutaka  <gniibe@fsij.org>
+
+	Add more tests for t-printf and t-strerror.
+	+ commit 72e0fb3fc858301de7b200e1c08da6904ab44bc0
+	* tests/t-printf.c (check_fwrite): New.
+	(main): Add check_fwrite.
+	* tests/t-strerror.c (main): Add three more cases to LIST.
+
+2022-12-05  NIIBE Yutaka  <gniibe@fsij.org>
+
+	Handle strerror_r failure on non-GNU systems.
+	+ commit be94bcf6aace55e319a203c6b60e31b1c204b0dc
+	* src/strerror.c (system_strerror_r): Make sure to fill the buffer.
+
+2022-11-29  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt-config: Support a simple invocation.
+	+ commit 3f812a0f5df8aaa82372ea0c40573703119ed83d
+	* src/gpgrt-config.in (determine_gpgrt_libdir): New.
+
+2022-11-29  NIIBE Yutaka  <gniibe@fsij.org>
+	    Andreas Metzler  <ametzler@debian.org>
+
+	doc: Add man page of gpgrt-config.
+	+ commit 4c6890aca2d0234fdc3da4678a003160091dc0dd
+	* doc/Makefile.am (myman_pages): Add gpgrt-config.1.
+	* doc/gpgrt.texi: Add gpgrt-config.1.
+
+2022-11-15  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpg-error.m4: Factor out _AM_PATH_GPGRT_CONFIG.
+	+ commit 788f63347eda2d35ba5d9dad5e339743343d2f66
+	* src/gpg-error.m4 (_AM_PATH_POSSIBLE_GPG_ERROR_CONFIG): New.
+	(_AM_PATH_GPGRT_CONFIG): New.
+	(AM_PATH_GPG_ERROR): Use _AM_PATH_POSSIBLE_GPG_ERROR_CONFIG
+	and _AM_PATH_GPGRT_CONFIG.
+
+	Revert "spawn: Expose spawn functions."
+	+ commit c580094dbe97249caebdedbf0f584e604fd20240
+	This reverts commit 43c1e85fe29a52a9debc068d97c5860a4694b821.
+
+2022-11-04  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Introduce gpgrt_process_t and use it for spawn API.
+	+ commit 5d30adb5ad376a07576b258b9395adadf5576867
+	* configure.ac (AC_FUNC_FORK): No use.
+	* src/gpg-error.h.in (@define:gpgrt_process_t@): New.
+	(@define:pid_t@): Remove.
+	(gpgrt_spawn_process, gpgrt_spawn_process_fd): Use gpgrt_process_t.
+	(gpgrt_wait_process, gpgrt_wait_processes): Likewise.
+	(gpgrt_kill_process, gpgrt_release_process): Likewise.
+	* src/gpgrt-int.h (_gpgrt_spawn_process): Likewise.
+	(_gpgrt_spawn_process_fd): Likewise.
+	(_gpgrt_wait_process, _gpgrt_wait_processes): Likewise.
+	(_gpgrt_kill_process, _gpgrt_release_process): Likewise.
+	* src/mkheader.c (write_special): Handle @define:gpgrt_process_t@.
+	Remove handling of @define:pid_t@.
+	* src/spawn-posix.c (_gpgrt_spawn_process): Use gpgrt_process_t.
+	(_gpgrt_spawn_process_fd): Likewise.
+	(_gpgrt_wait_process, _gpgrt_wait_processes): Likewise.
+	(_gpgrt_kill_process, _gpgrt_release_process): Likewise.
+	* src/spawn-w32.c (_gpgrt_spawn_process): Use gpgrt_process_t.
+	(_gpgrt_spawn_process_fd): Likewise.
+	(_gpgrt_wait_process, _gpgrt_wait_processes): Likewise.
+	(_gpgrt_kill_process, _gpgrt_release_process): Likewise.
+
+2022-10-31  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Fix spawn_cb of gpgrt_spawn_process_fd.
+	+ commit 6c20e8393eba4a9f330143b2158e28ea594cbadd
+	* src/gpg-error.def.in (gpgrt_close_all_fds): New.
+	* src/gpg-error.vers (gpgrt_close_all_fds): New.
+	* src/gpg-error.h.in (GPGRT_SPAWN_INHERIT_FILE): New.
+	(gpgrt_spawn_process_fd): SPAWN_CB having return value.
+	* src/gpgrt-int.h (_gpgrt_spawn_process_fd): SPAWN_CB change.
+	* src/spawn-posix.c (_gpgrt_close_all_fds): Rename from close_all_fds,
+	and export it.
+	(do_exec): Support the case not closing fds.
+	(_gpgrt_spawn_process_fd): Handle return value of SPAWN_CB to
+	determine closing all fds or not.
+	* src/spawn-w32.c (_gpgrt_spawn_process_fd): Run SPAWN_CB.
+	(_gpgrt_close_all_fds): New.
+	* src/visibility.c (gpgrt_close_all_fds): New.
+	* src/visibility.h (gpgrt_close_all_fds): New.
+
+2022-10-27  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Expose spawn functions.
+	+ commit 43c1e85fe29a52a9debc068d97c5860a4694b821
+	* src/gpg-error.def.in: Update.
+	* src/gpg-error.vers: Update.
+	* src/gpg-error.h.in: Add declarations.
+	* src/visibility.c: Add implementations.
+	* src/visibility.h: Expose them.
+
+2022-10-20  NIIBE Yutaka  <gniibe@fsij.org>
+
+	gpgrt_spawn_process, gpgrt_spawn_process_fd: Change the API.
+	+ commit 5ad97e8fa62882b2014a67b4e57dab3b37ccaf4c
+	* src/gpg-error.h.in (gpgrt_spawn_process): Remove PREEXEC argument.
+	(gpgrt_spawn_process_fd): Add AFTER_FORK_CB and AFTER_FORK_CB_ARG.
+	* src/gpgrt-int.h (_gpgrt_spawn_process): Remove PREEXEC argument.
+	(_gpgrt_spawn_process_fd): Add AFTER_FORK_CB and AFTER_FORK_CB_ARG.
+	* src/spawn-posix.c (do_exec): Remove PREEXEC argument.
+	(_gpgrt_spawn_process): Remove PREEXEC argument.
+	(_gpgrt_spawn_process_fd): Add AFTER_FORK_CB and AFTER_FORK_CB_ARG.
+	(_gpgrt_spawn_process_detached): Follow the change of do_exec.
+	* src/spawn-w32.c (_gpgrt_spawn_process): Remove PREEXEC argument.
+	(_gpgrt_spawn_process_fd): Add AFTER_FORK_CB and AFTER_FORK_CB_ARG.
+	* src/visibility.c (gpgrt_spawn_process): Remove PREEXEC argument.
+	(gpgrt_spawn_process_fd): Add AFTER_FORK_CB and AFTER_FORK_CB_ARG.
+
+2022-10-19  NIIBE Yutaka  <gniibe@fsij.org>
+
+	spawn: Update changes from gnupg.
+	+ commit 494886acb0bf3d536f4e620340e42c8ec8947742
+	* src/gpg-error.h.in (GPGRT_SPAWN_KEEP_STDIN): New.
+	(GPGRT_SPAWN_KEEP_STDOUT, GPGRT_SPAWN_KEEP_STDERR): New.
+	* src/gpgrt-int.h: Add comment.
+	* src/spawn-posix.c (do_exec): Add the argument FLAGS.
+	(_gpgrt_spawn_process): Add FLAGS.
+	(_gpgrt_spawn_process_fd): Follow the change.
+	(_gpgrt_spawn_process_detached): Likewise.
+	* src/spawn-w32.c (_gpgrt_spawn_process): Handle FLAGS.
+
+2022-10-11  NIIBE Yutaka  <gniibe@fsij.org>
+
+	build: Remove potomo from repo.
+	+ commit be4f289a5c09f43cb6b893bdc709a743a100be15
+	* potomo: Remove.
+
 2022-10-07  Werner Koch  <wk@gnupg.org>
 
 	Release 1.46.
