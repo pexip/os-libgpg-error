@@ -1,3 +1,125 @@
+libgpg-error (1.51-4) unstable; urgency=low
+
+  * Cherry-pick fixes from upstream GIT:
+    Fix gpgrt-config breakage when PKG_CONFIG_PATH is set. Closes: #1095260
+    Fix "gpgconf --kill all" infinite loop when /proc/fd is not available.
+    (Closes: #1079696)
+
+ -- Andreas Metzler <ametzler@debian.org>  Sun, 23 Mar 2025 15:10:34 +0100
+
+libgpg-error (1.51-3) unstable; urgency=low
+
+  [ Victor Westerhuis ]
+  * Enable tests (MR !5)
+
+  [ Andreas Metzler ]
+  * Run wrap-and-sort -ast
+
+ -- Andreas Metzler <ametzler@debian.org>  Tue, 24 Dec 2024 07:04:51 +0100
+
+libgpg-error (1.51-2) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- Andreas Metzler <ametzler@debian.org>  Sun, 01 Dec 2024 07:29:14 +0100
+
+libgpg-error (1.51-1) experimental; urgency=low
+
+  * New upstream version.
+  * Drop cherry-picked patch, unfuzz patches.
+  * Update symbol-file for new upstream.
+  * Cherry-pick post-release fix from upstream GIT.
+
+ -- Andreas Metzler <ametzler@debian.org>  Fri, 22 Nov 2024 14:20:48 +0100
+
+libgpg-error (1.50-4) unstable; urgency=high
+
+  * Pull 0002-w32-spawn-Remove-unused-function-get_max_fds.patch from upstream
+    GIT to fix gnupg2 2.4 FTFBS (#1081807)
+
+ -- Andreas Metzler <ametzler@debian.org>  Mon, 16 Sep 2024 18:06:31 +0200
+
+libgpg-error (1.50-3) unstable; urgency=low
+
+  * autopkgtest: Set Restrictions: allow-stderr on debian/tests/windows.
+
+ -- Andreas Metzler <ametzler@debian.org>  Wed, 07 Aug 2024 18:57:58 +0200
+
+libgpg-error (1.50-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * Add debian/* stanza to debian/copyright.
+  * Add myself to Uploaders.
+
+ -- Andreas Metzler <ametzler@debian.org>  Sat, 03 Aug 2024 10:37:09 +0200
+
+libgpg-error (1.50-1) experimental; urgency=low
+
+  * Team upload.
+  * New upstream version.
+   + Update symbol file.
+   + Update copyright info.
+
+ -- Andreas Metzler <ametzler@debian.org>  Sat, 29 Jun 2024 14:06:19 +0200
+
+libgpg-error (1.49-2) unstable; urgency=medium
+
+  * Team upload.
+  * Mark libgpg-error-dev Multi-Arch: same. Closes: #933713
+  * Upload to unstable.
+
+ -- Andreas Metzler <ametzler@debian.org>  Sat, 11 May 2024 06:40:01 +0200
+
+libgpg-error (1.49-1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream version.
+    + Avoids endless-loop on conf file read error. Closes:#1068594
+    + Update symbol file.
+
+ -- Andreas Metzler <ametzler@debian.org>  Sat, 27 Apr 2024 08:10:16 +0200
+
+libgpg-error (1.48-1) experimental; urgency=low
+
+  * Team upload.
+  * New upstream version.
+    + Update copyright file.
+  * Enforce keeping the symbol file up to date with
+    DPKG_GENSYMBOLS_CHECK_LEVEL=4.
+  * Update symbol file, add pgrt_wipememory, version bumps for
+    ARGPARSE_FLAG_COMMAND addition.
+  * [lintian] Do not ship empty /lib directory in udeb.
+
+ -- Andreas Metzler <ametzler@debian.org>  Sun, 03 Mar 2024 12:01:42 +0100
+
+libgpg-error (1.47-3) unstable; urgency=low
+
+  [ Andreas Metzler ]
+  * Team upload
+
+  [ Helmut Grohne ]
+  * Move libgpg-error.so.* to /usr. Closes: #1055939
+
+ -- Andreas Metzler <ametzler@debian.org>  Sat, 18 Nov 2023 14:15:16 +0100
+
+libgpg-error (1.47-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable. Closes: #1034156
+  * Update Vcs-Git field. Closes: #1034556
+
+ -- Andreas Metzler <ametzler@debian.org>  Tue, 15 Aug 2023 11:02:07 +0200
+
+libgpg-error (1.47-1) experimental; urgency=medium
+
+  * Team upload
+  * New upstream version.
+    + Unfuzz 0001-Remove-upstream-git-fanciness.patch.
+    + Ship newly available gpgrt-config.1 manpage.
+    + Update copyright info.
+
+ -- Andreas Metzler <ametzler@debian.org>  Tue, 25 Jul 2023 07:32:15 +0000
+
 libgpg-error (1.46-1+pexip24u3) pexip-bookworm; urgency=medium
 
   * New versioning scheme

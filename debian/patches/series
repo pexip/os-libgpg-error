@@ -1,1 +1,5 @@
 0001-Remove-upstream-git-fanciness.patch
+from-upstream/0001-spawn-w32-Fix-a-memory-leak-on-an-error-path.patch
+from-upstream/0005-spawn-Use-closefrom-when-available.patch
+from-upstream/0006-spawn-Care-about-closefrom-close-call-is-interrupted.patch
+from-upstream/0009-gpgrt-config-Append-default-directory-to-PKG_CONFIG_.patch

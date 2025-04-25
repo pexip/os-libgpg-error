@@ -817,6 +817,13 @@ gpgrt_free (void *a)
     _gpgrt_free (a);
 }
 
+void
+gpgrt_wipememory (void *ptr, size_t len)
+{
+  if (ptr && len)
+    _gpgrt_wipememory (ptr, len);
+}
+
 char *
 gpgrt_getenv (const char *name)
 {
@@ -879,14 +886,14 @@ gpgrt_b64dec_start (const char *title)
   return _gpgrt_b64dec_start (title);
 }
 
-gpg_error_t
+gpg_err_code_t
 gpgrt_b64dec_proc (gpgrt_b64state_t state, void *buffer,
                    size_t length, size_t *r_nbytes)
 {
   return _gpgrt_b64dec_proc (state, buffer, length, r_nbytes);
 }
 
-gpg_error_t
+gpg_err_code_t
 gpgrt_b64dec_finish (gpgrt_b64state_t state)
 {
   return _gpgrt_b64dec_finish (state);
@@ -954,6 +961,14 @@ gpgrt_log_get_stream (void)
   return _gpgrt_log_get_stream ();
 }
 
+
+void
+gpgrt_add_post_log_func (void (*f)(int))
+{
+  _gpgrt_add_post_log_func (f);
+}
+
+
 void
 gpgrt_log (int level, const char *fmt, ...)
 {
@@ -974,6 +989,17 @@ void
 gpgrt_logv_prefix (int level, const char *prefix,
                     const char *fmt, va_list arg_ptr)
 {
+  _gpgrt_logv_prefix (level, prefix, fmt, arg_ptr);
+}
+
+void
+gpgrt_logv_domain (const char *domain, int level, const char *prefix,
+                   const void *buffer, size_t length,
+                   const char *fmt, va_list arg_ptr)
+{
+  (void)domain;  /* Not yet used.  */
+  (void)buffer;
+  (void)length;
   _gpgrt_logv_prefix (level, prefix, fmt, arg_ptr);
 }
 
@@ -1100,55 +1126,137 @@ gpgrt_make_pipe (int filedes[2], estream_t *r_fp, int direction, int nonblock)
   return _gpgrt_make_pipe (filedes, r_fp, direction, nonblock);
 }
 
-gpg_err_code_t
-gpgrt_spawn_process (const char *pgmname, const char *argv[],
-                     int *except, void (*preexec)(void), unsigned int flags,
-                     estream_t *r_infp, estream_t *r_outfp, estream_t *r_errfp,
-                     pid_t *pid)
-{
-  return _gpgrt_spawn_process (pgmname, argv, except, preexec, flags,
-                               r_infp, r_outfp, r_errfp, pid);
-}
-
-gpg_err_code_t
-gpgrt_spawn_process_fd (const char *pgmname, const char *argv[],
-                        int infd, int outfd, int errfd, pid_t *pid)
-{
-  return _gpgrt_spawn_process_fd (pgmname, argv, infd, outfd, errfd, pid);
-}
-
-gpg_err_code_t
-gpgrt_spawn_process_detached (const char *pgmname, const char *argv[],
-                              const char *envp[])
-{
-  return _gpgrt_spawn_process_detached (pgmname, argv, envp);
-}
-
-gpg_err_code_t
-gpgrt_wait_process (const char *pgmname, pid_t pid, int hang, int *r_exitcode)
-{
-  return _gpgrt_wait_process (pgmname, pid, hang, r_exitcode);
-}
-
-gpg_err_code_t
-gpgrt_wait_processes (const char **pgmnames, pid_t *pids,
-                      size_t count, int hang, int *r_exitcodes)
-{
-  return _gpgrt_wait_processes (pgmnames, pids, count, hang, r_exitcodes);
-}
-
 void
-gpgrt_kill_process (pid_t pid)
+gpgrt_close_all_fds (int from, int *keep_fds)
 {
-  _gpgrt_kill_process (pid);
-}
-
-void
-gpgrt_release_process (pid_t pid)
-{
-  _gpgrt_release_process (pid);
+  _gpgrt_close_all_fds (from, keep_fds);
 }
 #endif /*0*/
+
+gpg_err_code_t
+gpgrt_spawn_actions_new (gpgrt_spawn_actions_t *r_act)
+{
+  return _gpgrt_spawn_actions_new (r_act);
+}
+
+void
+gpgrt_spawn_actions_release (gpgrt_spawn_actions_t act)
+{
+  _gpgrt_spawn_actions_release (act);
+}
+
+void
+gpgrt_spawn_actions_set_env_rev (gpgrt_spawn_actions_t act,
+                                 const char *const *env)
+{
+  _gpgrt_spawn_actions_set_env_rev (act, env);
+}
+
+#ifdef HAVE_W32_SYSTEM
+void
+gpgrt_spawn_actions_set_envvars (gpgrt_spawn_actions_t act,
+                                 char *envvars)
+{
+  _gpgrt_spawn_actions_set_envvars (act, envvars);
+}
+
+void
+gpgrt_spawn_actions_set_redirect (gpgrt_spawn_actions_t act, void *in,
+                                  void *out, void *err)
+{
+  _gpgrt_spawn_actions_set_redirect (act, in, out, err);
+}
+
+void
+gpgrt_spawn_actions_set_inherit_handles (gpgrt_spawn_actions_t act, void **hds)
+{
+  _gpgrt_spawn_actions_set_inherit_handles (act, hds);
+}
+#else
+void
+gpgrt_spawn_actions_set_environ (gpgrt_spawn_actions_t act, char **env)
+{
+  _gpgrt_spawn_actions_set_environ (act, env);
+}
+
+void
+gpgrt_spawn_actions_set_redirect (gpgrt_spawn_actions_t act, int in, int out, int err)
+{
+  _gpgrt_spawn_actions_set_redirect (act, in, out, err);
+}
+
+void
+gpgrt_spawn_actions_set_inherit_fds (gpgrt_spawn_actions_t act, const int *fds)
+{
+  _gpgrt_spawn_actions_set_inherit_fds (act, fds);
+}
+
+void
+gpgrt_spawn_actions_set_atfork (gpgrt_spawn_actions_t act, void (*atfork)(void *), void *arg)
+{
+  _gpgrt_spawn_actions_set_atfork (act, atfork, arg);
+}
+#endif
+
+gpg_err_code_t
+gpgrt_process_spawn (const char *pgmname, const char *argv1[],
+                     unsigned int flags,
+                     gpgrt_spawn_actions_t act,
+                     gpgrt_process_t *r_process)
+{
+  return _gpgrt_process_spawn (pgmname, argv1, flags, act, r_process);
+}
+
+gpg_err_code_t
+gpgrt_process_terminate (gpgrt_process_t process)
+{
+  return _gpgrt_process_terminate (process);
+}
+
+gpg_err_code_t
+gpgrt_process_get_fds (gpgrt_process_t process,
+                       unsigned int flags,
+                       int *r_fd_in, int *r_fd_out,
+                       int *r_fd_err)
+{
+  return _gpgrt_process_get_fds (process, flags, r_fd_in, r_fd_out, r_fd_err);
+}
+
+gpg_err_code_t
+gpgrt_process_get_streams (gpgrt_process_t process,
+                           unsigned int flags,
+                           gpgrt_stream_t *r_fp_in,
+                           gpgrt_stream_t *r_fp_out,
+                           gpgrt_stream_t *r_fp_err)
+{
+  return _gpgrt_process_get_streams (process, flags, r_fp_in, r_fp_out,
+                                     r_fp_err);
+}
+
+gpg_err_code_t
+gpgrt_process_ctl (gpgrt_process_t process,
+                   unsigned int request, ...)
+{
+  va_list arg_ptr;
+  gpg_err_code_t ec;
+
+  va_start (arg_ptr, request);
+  ec = _gpgrt_process_vctl (process, request, arg_ptr);
+  va_end (arg_ptr);
+  return ec;
+}
+
+gpg_err_code_t
+gpgrt_process_wait (gpgrt_process_t process, int hang)
+{
+  return _gpgrt_process_wait (process, hang);
+}
+
+void
+gpgrt_process_release (gpgrt_process_t process)
+{
+  _gpgrt_process_release (process);
+}
 
 
 int

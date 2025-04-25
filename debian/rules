@@ -2,6 +2,7 @@
 include /usr/share/dpkg/architecture.mk
 export AUTOPOINT = true
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DPKG_GENSYMBOLS_CHECK_LEVEL = 4
 export CFLAGS_FOR_BUILD = $(shell dpkg-architecture -f -a$(DEB_BUILD_ARCH) -c dpkg-buildflags --get CFLAGS)
 export LDFLAGS_FOR_BUILD = $(shell dpkg-architecture -f -a$(DEB_BUILD_ARCH) -c dpkg-buildflags --get LDFLAGS)
 
@@ -22,6 +23,9 @@ ifeq ($(DEB_HOST_MULTIARCH),$(DEB_BUILD_MULTIARCH))
 	tail -vn+0 build/src/lock-obj-pub.native.h
 endif
 
+override_dh_auto_test-arch:
+	dh_auto_test --builddirectory=build
+
 override_dh_auto_install-arch:
 	dh_auto_install --builddirectory=build
 
@@ -30,9 +34,6 @@ override_dh_installchangelogs:
 
 override_dh_installdocs:
 	dh_installdocs -A README
-
-override_dh_link:
-	dh_link -plibgpg-error-dev lib/$(DEB_HOST_MULTIARCH)/libgpg-error.so.0 usr/lib/$(DEB_HOST_MULTIARCH)/libgpg-error.so
 
 ### "arch-independent" Windows builds: ###
 

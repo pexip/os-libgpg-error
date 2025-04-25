@@ -1,0 +1,59 @@
+From eb005c30157f4ce0cd335955f13567dda03685e3 Mon Sep 17 00:00:00 2001
+From: NIIBE Yutaka <gniibe@fsij.org>
+Date: Thu, 14 Nov 2024 14:41:00 +0900
+Subject: [PATCH] spawn:w32: Fix a memory leak on an error path.
+
+* src/spawn-w32.c (spawn_detached): Make sure to release
+lpAttributeList.
+(_gpgrt_process_spawn): Likewise.
+
+--
+
+Signed-off-by: NIIBE Yutaka <gniibe@fsij.org>
+---
+ src/spawn-w32.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/spawn-w32.c b/src/spawn-w32.c
+index 435e9f6..fe4c8be 100644
+--- a/src/spawn-w32.c
++++ b/src/spawn-w32.c
+@@ -611,6 +611,8 @@ spawn_detached (const char *pgmname, char *cmdline, gpgrt_spawn_actions_t act)
+   if (act->envchange)
+     xfree (env);
+   env = NULL;
++  if (si.lpAttributeList)
++    DeleteProcThreadAttributeList (si.lpAttributeList);
+   if (!ret)
+     {
+       if (!wpgmname || !wcmdline)
+@@ -626,8 +628,6 @@ spawn_detached (const char *pgmname, char *cmdline, gpgrt_spawn_actions_t act)
+       xfree (cmdline);
+       return GPG_ERR_GENERAL;
+     }
+-  if (si.lpAttributeList)
+-    DeleteProcThreadAttributeList (si.lpAttributeList);
+   _gpgrt_free_wchar (wpgmname);
+   _gpgrt_free_wchar (wcmdline);
+   xfree (cmdline);
+@@ -1005,6 +1005,8 @@ _gpgrt_process_spawn (const char *pgmname, const char *argv[],
+   if (act->envchange)
+     xfree (env);
+   env = NULL;
++  if (si.lpAttributeList)
++    DeleteProcThreadAttributeList (si.lpAttributeList);
+   if (!ret)
+     {
+       if (!wpgmname || !wcmdline)
+@@ -1035,8 +1037,6 @@ _gpgrt_process_spawn (const char *pgmname, const char *argv[],
+       return GPG_ERR_GENERAL;
+     }
+ 
+-  if (si.lpAttributeList)
+-    DeleteProcThreadAttributeList (si.lpAttributeList);
+   _gpgrt_free_wchar (wpgmname);
+   _gpgrt_free_wchar (wcmdline);
+   xfree (cmdline);
+-- 
+2.45.2
+

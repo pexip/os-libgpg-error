@@ -1,0 +1,130 @@
+From e3e793302b67e37727caf11a868b5b91d7c13f8c Mon Sep 17 00:00:00 2001
+From: NIIBE Yutaka <gniibe@fsij.org>
+Date: Wed, 8 Jan 2025 15:42:12 +0900
+Subject: [PATCH 1/2] spawn: Use closefrom when available.
+
+* configure.ac (AC_CHECK_FUNCS): Check closefrom.
+* src/spawn-posix.c [HAVE_CLOSEFROM]: Use closefrom if possible.
+
+--
+
+Signed-off-by: NIIBE Yutaka <gniibe@fsij.org>
+---
+ configure.ac      |  3 ++-
+ src/spawn-posix.c | 48 +++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 48 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 23d39bb..15f8f23 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -258,11 +258,12 @@ AC_SUBST(INSTALLSHELLPATH)
+ # We don't check 'fork' by configure script.  Use of fork is inferred from by
+ # the target system (POSIX or Windows).
+ # AC_FUNC_FORK
+ 
+ AC_CHECK_FUNCS([flockfile vasprintf mmap rand strlwr stpcpy setenv stat \
+-                getrlimit getpwnam getpwuid getpwnam_r getpwuid_r inet_pton])
++                getrlimit getpwnam getpwuid getpwnam_r getpwuid_r inet_pton \
++                closefrom])
+ 
+ 
+ #
+ # Checks for typedefs, structures, and compiler characteristics.
+ #
+diff --git a/src/spawn-posix.c b/src/spawn-posix.c
+index 0cdf0a6..3419cfc 100644
+--- a/src/spawn-posix.c
++++ b/src/spawn-posix.c
+@@ -82,11 +82,11 @@ struct gpgrt_process {
+   int fd_err;
+   int wstatus;
+ };
+ 
+ 
+-
++#ifndef HAVE_CLOSEFROM
+ /* Return the maximum number of currently allowed open file
+  * descriptors.  Only useful on POSIX systems but returns a value on
+  * other systems too.  */
+ static int
+ get_max_fds (void)
+@@ -173,19 +173,62 @@ get_max_fds (void)
+     max_fds = 256;
+ #endif
+ 
+   return max_fds;
+ }
+-
++#endif
+ 
+ /* Close all file descriptors starting with descriptor FIRST.  If
+  * EXCEPT is not NULL, it is expected to be a list of file descriptors
+  * which shall not be closed.  This list shall be sorted in ascending
+  * order with the end marked by -1.  */
+ void
+ _gpgrt_close_all_fds (int first, const int *except)
+ {
++#ifdef HAVE_CLOSEFROM
++  int fd, i, except_start;
++  int fd_except_first, fd_except_last;
++
++  if (except)
++    {
++      fd_except_first = except[0];
++      fd_except_last = -1;
++
++      /* Find the last entry in EXCEPT.  */
++      for (i = 0; except[i] != -1; i++)
++        ;
++      if (i != 0)
++        fd_except_last = except[--i];
++
++      if (fd_except_last != -1)
++        {
++          if (first < fd_except_last)
++            {
++              for (fd = first; fd < fd_except_first; fd++)
++                close (fd);
++
++              except_start = 0;
++              for (; fd <= fd_except_last; fd++)
++                {
++                  for (i = except_start; except[i] != -1; i++)
++                    if (except[i] == fd)
++                      {
++                        except_start = i + 1;
++                        break;
++                      }
++
++                  if (except[i] == -1)
++                    close (fd);
++                }
++
++              first = fd;
++            }
++        }
++    }
++
++  closefrom (first);
++#else
+   int max_fd = get_max_fds ();
+   int fd, i, except_start;
+ 
+   if (except)
+     {
+@@ -210,10 +253,11 @@ _gpgrt_close_all_fds (int first, const int *except)
+   else
+     {
+       for (fd=first; fd < max_fd; fd++)
+         close (fd);
+     }
++#endif
+ 
+   _gpg_err_set_errno (0);
+ }
+ 
+ /* Helper for _gpgrt_make_pipe.  */
+-- 
+2.47.2
+

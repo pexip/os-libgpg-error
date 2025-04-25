@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgpg-error\n"
 "Report-Msgid-Bugs-To: translations@gnupg.org\n"
-"POT-Creation-Date: 2022-10-07 11:24+0200\n"
+"POT-Creation-Date: 2024-11-11 11:35+0100\n"
 "PO-Revision-Date: 2022-01-13 20:00+0100\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish\n"
@@ -89,26 +89,30 @@ msgid "TLS"
 msgstr "TLS"
 
 #: src/err-sources.h:46
+msgid "TKD"
+msgstr ""
+
+#: src/err-sources.h:47
 msgid "Any source"
 msgstr "Herhangi bir kaynak"
 
-#: src/err-sources.h:47
+#: src/err-sources.h:48
 msgid "User defined source 1"
 msgstr "Kullanıcı tanımlı kaynak 1"
 
-#: src/err-sources.h:48
+#: src/err-sources.h:49
 msgid "User defined source 2"
 msgstr "Kullanıcı tanımlı kaynak 2"
 
-#: src/err-sources.h:49
+#: src/err-sources.h:50
 msgid "User defined source 3"
 msgstr "Kullanıcı tanımlı kaynak 3"
 
-#: src/err-sources.h:50
+#: src/err-sources.h:51
 msgid "User defined source 4"
 msgstr "Kullanıcı tanımlı kaynak 4"
 
-#: src/err-sources.h:51
+#: src/err-sources.h:52
 msgid "Unknown source"
 msgstr "Bilinmeyen kaynak"
 
@@ -1305,672 +1309,688 @@ msgid "Service error"
 msgstr "Servis hatası"
 
 #: src/err-codes.h:326
+#, fuzzy
+#| msgid "Bad PIN"
+msgid "Bad PUK"
+msgstr "Kötü PIN"
+
+#: src/err-codes.h:327
+msgid "No reset code"
+msgstr ""
+
+#: src/err-codes.h:328
+#, fuzzy
+#| msgid "Bad secret key"
+msgid "Bad reset code"
+msgstr "Kötü özel anahtar"
+
+#: src/err-codes.h:329
 msgid "System bug detected"
 msgstr "Sistem hatası algılandı"
 
-#: src/err-codes.h:327
+#: src/err-codes.h:330
 msgid "Unknown DNS error"
 msgstr "Bilinmeyen DNS hatası"
 
-#: src/err-codes.h:328
+#: src/err-codes.h:331
 msgid "Invalid DNS section"
 msgstr "Geçersiz DNS bölümü"
 
-#: src/err-codes.h:329
+#: src/err-codes.h:332
 msgid "Invalid textual address form"
 msgstr "Geçersiz metin adres biçimi"
 
-#: src/err-codes.h:330
+#: src/err-codes.h:333
 msgid "Missing DNS query packet"
 msgstr "DNS sorgu paketi eksik"
 
-#: src/err-codes.h:331
+#: src/err-codes.h:334
 msgid "Missing DNS answer packet"
 msgstr "DNS yanıt paketi eksik"
 
-#: src/err-codes.h:332
+#: src/err-codes.h:335
 msgid "Connection closed in DNS"
 msgstr "DNS içindeki bağlantı kapatıldı"
 
-#: src/err-codes.h:333
+#: src/err-codes.h:336
 msgid "Verification failed in DNS"
 msgstr "DNS içindeki doğrulama başarısız"
 
-#: src/err-codes.h:334
+#: src/err-codes.h:337
 msgid "DNS Timeout"
 msgstr "DNS zaman aşımı"
 
-#: src/err-codes.h:335
+#: src/err-codes.h:338
 msgid "General LDAP error"
 msgstr "Genel LDAP hatası"
 
-#: src/err-codes.h:336
+#: src/err-codes.h:339
 msgid "General LDAP attribute error"
 msgstr "Genel LDAP öznitelik hatası"
 
-#: src/err-codes.h:337
+#: src/err-codes.h:340
 msgid "General LDAP name error"
 msgstr "Genel LDAP ad hatası"
 
-#: src/err-codes.h:338
+#: src/err-codes.h:341
 msgid "General LDAP security error"
 msgstr "Genel LDAP güvenlik hatası"
 
-#: src/err-codes.h:339
+#: src/err-codes.h:342
 msgid "General LDAP service error"
 msgstr "Genel LDAP servis hatası"
 
-#: src/err-codes.h:340
+#: src/err-codes.h:343
 msgid "General LDAP update error"
 msgstr "Genel LDAP güncelleme hatası"
 
-#: src/err-codes.h:341
+#: src/err-codes.h:344
 msgid "Experimental LDAP error code"
 msgstr "Deneysel LDAP hata kodu"
 
-#: src/err-codes.h:342
+#: src/err-codes.h:345
 msgid "Private LDAP error code"
 msgstr "Özel LDAP hata kodu"
 
-#: src/err-codes.h:343
+#: src/err-codes.h:346
 msgid "Other general LDAP error"
 msgstr "Diğer genel LDAP hatası"
 
-#: src/err-codes.h:344
+#: src/err-codes.h:347
 msgid "LDAP connecting failed (X)"
 msgstr "LDAP bağlantısı başarısız (X)"
 
-#: src/err-codes.h:345
+#: src/err-codes.h:348
 msgid "LDAP referral limit exceeded"
 msgstr "LDAP başvuru limiti aşıldı"
 
-#: src/err-codes.h:346
+#: src/err-codes.h:349
 msgid "LDAP client loop"
 msgstr "LDAP istemci döngüsü"
 
-#: src/err-codes.h:347
+#: src/err-codes.h:350
 msgid "No LDAP results returned"
 msgstr "Bir LDAP sonucu döndürülmedi"
 
-#: src/err-codes.h:348
+#: src/err-codes.h:351
 msgid "LDAP control not found"
 msgstr "LDAP denetimi bulunamadı"
 
-#: src/err-codes.h:349
+#: src/err-codes.h:352
 msgid "Not supported by LDAP"
 msgstr "LDAP tarafından desteklenmiyor"
 
-#: src/err-codes.h:350
+#: src/err-codes.h:353
 msgid "LDAP connect error"
 msgstr "LDAP bağlantı hatası"
 
-#: src/err-codes.h:351
+#: src/err-codes.h:354
 msgid "Out of memory in LDAP"
 msgstr "LDAP'ta bellek yetersiz"
 
-#: src/err-codes.h:352
+#: src/err-codes.h:355
 msgid "Bad parameter to an LDAP routine"
 msgstr "LDAP rutininde kötü parametre"
 
-#: src/err-codes.h:353
+#: src/err-codes.h:356
 msgid "User cancelled LDAP operation"
 msgstr "Kullanıcı, LDAP işlemini iptal etti"
 
-#: src/err-codes.h:354
+#: src/err-codes.h:357
 msgid "Bad LDAP search filter"
 msgstr "Kötü LDAP arama süzgeci"
 
-#: src/err-codes.h:355
+#: src/err-codes.h:358
 msgid "Unknown LDAP authentication method"
 msgstr "Bilinmeyen LDAP kimlik doğrulama yöntemi"
 
-#: src/err-codes.h:356
+#: src/err-codes.h:359
 msgid "Timeout in LDAP"
 msgstr "LDAP'ta zaman aşımı"
 
-#: src/err-codes.h:357
+#: src/err-codes.h:360
 msgid "LDAP decoding error"
 msgstr "LDAP kod çözüm hatası"
 
-#: src/err-codes.h:358
+#: src/err-codes.h:361
 msgid "LDAP encoding error"
 msgstr "LDAP kodlama hatası"
 
-#: src/err-codes.h:359
+#: src/err-codes.h:362
 msgid "LDAP local error"
 msgstr "LDAP yerel hatası"
 
-#: src/err-codes.h:360
+#: src/err-codes.h:363
 msgid "Cannot contact LDAP server"
 msgstr "LDAP sunucusu ile iletişim kurulamıyor"
 
-#: src/err-codes.h:361
+#: src/err-codes.h:364
 msgid "LDAP success"
 msgstr "LDAP başarılı"
 
-#: src/err-codes.h:362
+#: src/err-codes.h:365
 msgid "LDAP operations error"
 msgstr "LDAP işlem hatası"
 
-#: src/err-codes.h:363
+#: src/err-codes.h:366
 msgid "LDAP protocol error"
 msgstr "LDAP protokol hatası"
 
-#: src/err-codes.h:364
+#: src/err-codes.h:367
 msgid "Time limit exceeded in LDAP"
 msgstr "LDAP'ta zaman limiti aşıldı"
 
-#: src/err-codes.h:365
+#: src/err-codes.h:368
 msgid "Size limit exceeded in LDAP"
 msgstr "LDAP'ta boyut limiti aşıldı"
 
-#: src/err-codes.h:366
+#: src/err-codes.h:369
 msgid "LDAP compare false"
 msgstr "LDAP karşılaştırması yanlış"
 
-#: src/err-codes.h:367
+#: src/err-codes.h:370
 msgid "LDAP compare true"
 msgstr "LDAP karşılaştırması doğru"
 
-#: src/err-codes.h:368
+#: src/err-codes.h:371
 msgid "LDAP authentication method not supported"
 msgstr "LDAP kimlik doğrulama yöntemi desteklenmiyor"
 
-#: src/err-codes.h:369
+#: src/err-codes.h:372
 msgid "Strong(er) LDAP authentication required"
 msgstr "(Daha) güçlü LDAP kimlik doğrulaması gerekiyor"
 
-#: src/err-codes.h:370
+#: src/err-codes.h:373
 msgid "Partial LDAP results+referral received"
 msgstr "Kısımsal LDAP sonuçları/başvurusu alındı"
 
-#: src/err-codes.h:371
+#: src/err-codes.h:374
 msgid "LDAP referral"
 msgstr "LDAP başvurusu"
 
-#: src/err-codes.h:372
+#: src/err-codes.h:375
 msgid "Administrative LDAP limit exceeded"
 msgstr "Yönetimsel LDAP limiti aşıldı"
 
-#: src/err-codes.h:373
+#: src/err-codes.h:376
 msgid "Critical LDAP extension is unavailable"
 msgstr "Kritik LDAP uzantısı kullanılamıyor"
 
-#: src/err-codes.h:374
+#: src/err-codes.h:377
 msgid "Confidentiality required by LDAP"
 msgstr "LDAP tarafından gereken gizlilik"
 
-#: src/err-codes.h:375
+#: src/err-codes.h:378
 msgid "LDAP SASL bind in progress"
 msgstr "LDAP SASL garantisi ilerliyor"
 
-#: src/err-codes.h:376
+#: src/err-codes.h:379
 msgid "No such LDAP attribute"
 msgstr "Böyle bir LDAP özniteliği yok"
 
-#: src/err-codes.h:377
+#: src/err-codes.h:380
 msgid "Undefined LDAP attribute type"
 msgstr "Bilinmeyen LDAP öznitelik türü"
 
-#: src/err-codes.h:378
+#: src/err-codes.h:381
 msgid "Inappropriate matching in LDAP"
 msgstr "LDAP'ta uygun olmayan eşleşme"
 
-#: src/err-codes.h:379
+#: src/err-codes.h:382
 msgid "Constraint violation in LDAP"
 msgstr "LDAP'ta kısıtlama ihlali"
 
-#: src/err-codes.h:380
+#: src/err-codes.h:383
 msgid "LDAP type or value exists"
 msgstr "LDAP türü veya değeri mevcut"
 
-#: src/err-codes.h:381
+#: src/err-codes.h:384
 msgid "Invalid syntax in LDAP"
 msgstr "LDAP'ta geçersiz sözdizim"
 
-#: src/err-codes.h:382
+#: src/err-codes.h:385
 msgid "No such LDAP object"
 msgstr "Böyle bir LDAP nesnesi yok"
 
-#: src/err-codes.h:383
+#: src/err-codes.h:386
 msgid "LDAP alias problem"
 msgstr "LDAP arma sorunu"
 
-#: src/err-codes.h:384
+#: src/err-codes.h:387
 msgid "Invalid DN syntax in LDAP"
 msgstr "LDAP'ta geçersiz DN sözdizimi"
 
-#: src/err-codes.h:385
+#: src/err-codes.h:388
 msgid "LDAP entry is a leaf"
 msgstr "LDAP girdisi bir yaprak"
 
-#: src/err-codes.h:386
+#: src/err-codes.h:389
 msgid "LDAP alias dereferencing problem"
 msgstr "LDAP arma başvuru kaldırma sorunu"
 
-#: src/err-codes.h:387
+#: src/err-codes.h:390
 msgid "LDAP proxy authorization failure (X)"
 msgstr "LDAP vekil kimlik doğrulama sorunu (X)"
 
-#: src/err-codes.h:388
+#: src/err-codes.h:391
 msgid "Inappropriate LDAP authentication"
 msgstr "Uygun olmayan LDAP kimlik doğrulaması"
 
-#: src/err-codes.h:389
+#: src/err-codes.h:392
 msgid "Invalid LDAP credentials"
 msgstr "Geçersiz LDAP kimlik doğrulama bilgileri"
 
-#: src/err-codes.h:390
+#: src/err-codes.h:393
 msgid "Insufficient access for LDAP"
 msgstr "LDAP için yetersiz erişim"
 
-#: src/err-codes.h:391
+#: src/err-codes.h:394
 msgid "LDAP server is busy"
 msgstr "LDAP sunucusu meşgul"
 
-#: src/err-codes.h:392
+#: src/err-codes.h:395
 msgid "LDAP server is unavailable"
 msgstr "LDAP sunucusu kullanılamıyor"
 
-#: src/err-codes.h:393
+#: src/err-codes.h:396
 msgid "LDAP server is unwilling to perform"
 msgstr "LDAP sunucusu gerçekleştirmek istemiyor"
 
-#: src/err-codes.h:394
+#: src/err-codes.h:397
 msgid "Loop detected by LDAP"
 msgstr "LDAP tarafından döngü algılandı"
 
-#: src/err-codes.h:395
+#: src/err-codes.h:398
 msgid "LDAP naming violation"
 msgstr "LDAP adlandırma ihlali"
 
-#: src/err-codes.h:396
+#: src/err-codes.h:399
 msgid "LDAP object class violation"
 msgstr "LDAP nesne veya sınıf ihlali"
 
-#: src/err-codes.h:397
+#: src/err-codes.h:400
 msgid "LDAP operation not allowed on non-leaf"
 msgstr "LDAP işlemine yaprak olmayan ögeler üzerinde izin verilmiyor"
 
-#: src/err-codes.h:398
+#: src/err-codes.h:401
 msgid "LDAP operation not allowed on RDN"
 msgstr "LDAP işlemine RDN üzerinde izin verilmiyor"
 
-#: src/err-codes.h:399
+#: src/err-codes.h:402
 msgid "Already exists (LDAP)"
 msgstr "Halihazırda mevcut (LDAP)"
 
-#: src/err-codes.h:400
+#: src/err-codes.h:403
 msgid "Cannot modify LDAP object class"
 msgstr "LDAP nesne sınıfı değiştirilmiyor"
 
-#: src/err-codes.h:401
+#: src/err-codes.h:404
 msgid "LDAP results too large"
 msgstr "LDAP sonuçları pek büyük"
 
-#: src/err-codes.h:402
+#: src/err-codes.h:405
 msgid "LDAP operation affects multiple DSAs"
 msgstr "LDAP işlemi birden çok DSA'yı etkiliyor"
 
-#: src/err-codes.h:403
+#: src/err-codes.h:406
 msgid "Virtual LDAP list view error"
 msgstr "Sanal LDAP liste görünümü hatası"
 
-#: src/err-codes.h:404
+#: src/err-codes.h:407
 msgid "Other LDAP error"
 msgstr "Diğer LDAP hatası"
 
-#: src/err-codes.h:405
+#: src/err-codes.h:408
 msgid "Resources exhausted in LCUP"
 msgstr "LCUP'taki özkaynaklar tüketildi"
 
-#: src/err-codes.h:406
+#: src/err-codes.h:409
 msgid "Security violation in LCUP"
 msgstr "LCUP'ta güvenlik ihlali"
 
-#: src/err-codes.h:407
+#: src/err-codes.h:410
 msgid "Invalid data in LCUP"
 msgstr "LCUP'ta geçersiz veri"
 
-#: src/err-codes.h:408
+#: src/err-codes.h:411
 msgid "Unsupported scheme in LCUP"
 msgstr "LCUP'ta desteklenmeyen şema"
 
-#: src/err-codes.h:409
+#: src/err-codes.h:412
 msgid "Reload required in LCUP"
 msgstr "LCUP'ta yeniden yükleme gerekiyor"
 
-#: src/err-codes.h:410
+#: src/err-codes.h:413
 msgid "LDAP cancelled"
 msgstr "LDAP iptal edildi"
 
-#: src/err-codes.h:411
+#: src/err-codes.h:414
 msgid "No LDAP operation to cancel"
 msgstr "İptal edilecek bir LDAP işlemi yok"
 
-#: src/err-codes.h:412
+#: src/err-codes.h:415
 msgid "Too late to cancel LDAP"
 msgstr "LDAP'i iptal etmek için pek geç"
 
-#: src/err-codes.h:413
+#: src/err-codes.h:416
 msgid "Cannot cancel LDAP"
 msgstr "LDAP iptal edilemiyor"
 
-#: src/err-codes.h:414
+#: src/err-codes.h:417
 msgid "LDAP assertion failed"
 msgstr "LDAP teyidi başarısız"
 
-#: src/err-codes.h:415
+#: src/err-codes.h:418
 msgid "Proxied authorization denied by LDAP"
 msgstr "Vekil üzerinden kimlik doğrulama LDAP tarafından reddedildi"
 
-#: src/err-codes.h:416
+#: src/err-codes.h:419
 msgid "User defined error code 1"
 msgstr "Kullanıcı tanımlı hata kodu 1"
 
-#: src/err-codes.h:417
+#: src/err-codes.h:420
 msgid "User defined error code 2"
 msgstr "Kullanıcı tanımlı hata kodu 2"
 
-#: src/err-codes.h:418
+#: src/err-codes.h:421
 msgid "User defined error code 3"
 msgstr "Kullanıcı tanımlı hata kodu 3"
 
-#: src/err-codes.h:419
+#: src/err-codes.h:422
 msgid "User defined error code 4"
 msgstr "Kullanıcı tanımlı hata kodu 4"
 
-#: src/err-codes.h:420
+#: src/err-codes.h:423
 msgid "User defined error code 5"
 msgstr "Kullanıcı tanımlı hata kodu 5"
 
-#: src/err-codes.h:421
+#: src/err-codes.h:424
 msgid "User defined error code 6"
 msgstr "Kullanıcı tanımlı hata kodu 6"
 
-#: src/err-codes.h:422
+#: src/err-codes.h:425
 msgid "User defined error code 7"
 msgstr "Kullanıcı tanımlı hata kodu 7"
 
-#: src/err-codes.h:423
+#: src/err-codes.h:426
 msgid "User defined error code 8"
 msgstr "Kullanıcı tanımlı hata kodu 8"
 
-#: src/err-codes.h:424
+#: src/err-codes.h:427
 msgid "User defined error code 9"
 msgstr "Kullanıcı tanımlı hata kodu 9"
 
-#: src/err-codes.h:425
+#: src/err-codes.h:428
 msgid "User defined error code 10"
 msgstr "Kullanıcı tanımlı hata kodu 10"
 
-#: src/err-codes.h:426
+#: src/err-codes.h:429
 msgid "User defined error code 11"
 msgstr "Kullanıcı tanımlı hata kodu 11"
 
-#: src/err-codes.h:427
+#: src/err-codes.h:430
 msgid "User defined error code 12"
 msgstr "Kullanıcı tanımlı hata kodu 12"
 
-#: src/err-codes.h:428
+#: src/err-codes.h:431
 msgid "User defined error code 13"
 msgstr "Kullanıcı tanımlı hata kodu 13"
 
-#: src/err-codes.h:429
+#: src/err-codes.h:432
 msgid "User defined error code 14"
 msgstr "Kullanıcı tanımlı hata kodu 14"
 
-#: src/err-codes.h:430
+#: src/err-codes.h:433
 msgid "User defined error code 15"
 msgstr "Kullanıcı tanımlı hata kodu 15"
 
-#: src/err-codes.h:431
+#: src/err-codes.h:434
 msgid "User defined error code 16"
 msgstr "Kullanıcı tanımlı hata kodu 16"
 
-#: src/err-codes.h:432
+#: src/err-codes.h:435
 msgid "SQL success"
 msgstr "SQL başarılı"
 
-#: src/err-codes.h:433
+#: src/err-codes.h:436
 msgid "SQL error"
 msgstr "SQL hatası"
 
-#: src/err-codes.h:434
+#: src/err-codes.h:437
 msgid "Internal logic error in SQL library"
 msgstr "SQL kitaplığında iç mantık hatası"
 
-#: src/err-codes.h:435
+#: src/err-codes.h:438
 msgid "Access permission denied (SQL)"
 msgstr "Erişim izni reddedildi (SQL)"
 
-#: src/err-codes.h:436
+#: src/err-codes.h:439
 msgid "SQL abort was requested"
 msgstr "SQL iptali istendi"
 
-#: src/err-codes.h:437
+#: src/err-codes.h:440
 msgid "SQL database file is locked"
 msgstr "SQL veritabanı dosyası kilitli"
 
-#: src/err-codes.h:438
+#: src/err-codes.h:441
 msgid "An SQL table in the database is locked"
 msgstr "Veritabanındaki bir SQL tablosu kilitli"
 
-#: src/err-codes.h:439
+#: src/err-codes.h:442
 msgid "SQL library ran out of core"
 msgstr "SQL kitaplığında çekirdek kalmadı"
 
-#: src/err-codes.h:440
+#: src/err-codes.h:443
 msgid "Attempt to write a readonly SQL database"
 msgstr "Saltokunur bir SQL veritabanına yazmaya çalışılıyor"
 
-#: src/err-codes.h:441
+#: src/err-codes.h:444
 msgid "SQL operation terminated by interrupt"
 msgstr "SQL işlemi yarıda kesme tarafından sonlandırıldı"
 
-#: src/err-codes.h:442
+#: src/err-codes.h:445
 msgid "I/O error during SQL operation"
 msgstr "SQL işlemi sırasında girdi-çıktı hatası"
 
-#: src/err-codes.h:443
+#: src/err-codes.h:446
 msgid "SQL database disk image is malformed"
 msgstr "SQL veritabanı disk kalıbı hatalı oluşturulmuş"
 
-#: src/err-codes.h:444
+#: src/err-codes.h:447
 msgid "Unknown opcode in SQL file control"
 msgstr "SQL dosya denetiminde bilinmeyen işlem kodu"
 
-#: src/err-codes.h:445
+#: src/err-codes.h:448
 msgid "Insertion failed because SQL database is full"
 msgstr "Ekleme başarısız; çünkü SQL veritabanı dolu"
 
-#: src/err-codes.h:446
+#: src/err-codes.h:449
 msgid "Unable to open the SQL database file"
 msgstr "SQL veritabanı dosyası açılamıyor"
 
-#: src/err-codes.h:447
+#: src/err-codes.h:450
 msgid "SQL database lock protocol error"
 msgstr "SQL veritabanı kilit protokol hatası"
 
-#: src/err-codes.h:448
+#: src/err-codes.h:451
 msgid "(internal SQL code: empty)"
 msgstr "(iç SQL kodu: boş)"
 
-#: src/err-codes.h:449
+#: src/err-codes.h:452
 msgid "SQL database schema changed"
 msgstr "SQL veritabanı şeması değiştirildi"
 
-#: src/err-codes.h:450
+#: src/err-codes.h:453
 msgid "String or blob exceeds size limit (SQL)"
 msgstr "Dizi veya geniş ikili nesne boyut limitini aşıyor (SQL)"
 
-#: src/err-codes.h:451
+#: src/err-codes.h:454
 msgid "SQL abort due to constraint violation"
 msgstr "Kısıtlama ihlali dolayısıyla SQL iptali"
 
-#: src/err-codes.h:452
+#: src/err-codes.h:455
 msgid "Data type mismatch (SQL)"
 msgstr "Veri türü uyuşmazlığı (SQL)"
 
-#: src/err-codes.h:453
+#: src/err-codes.h:456
 msgid "SQL library used incorrectly"
 msgstr "SQL kitaplığı yanlış bir biçimde kullanıldı"
 
-#: src/err-codes.h:454
+#: src/err-codes.h:457
 msgid "SQL library uses unsupported OS features"
 msgstr "SQL kitaplığı desteklenmeyen işletim sistemi özelliklerini kullanıyor"
 
-#: src/err-codes.h:455
+#: src/err-codes.h:458
 msgid "Authorization denied (SQL)"
 msgstr "Kimlik doğrulama reddedildi (SQL)"
 
-#: src/err-codes.h:456
+#: src/err-codes.h:459
 msgid "(unused SQL code: format)"
 msgstr "(kullanılmayan SQL kodu: format)"
 
-#: src/err-codes.h:457
+#: src/err-codes.h:460
 msgid "SQL bind parameter out of range"
 msgstr "SQL garanti parametresi erim dışında"
 
-#: src/err-codes.h:458
+#: src/err-codes.h:461
 msgid "File opened that is not an SQL database file"
 msgstr "Bir SQL veritabanı dosyası olmayan bir dosya açıldı"
 
-#: src/err-codes.h:459
+#: src/err-codes.h:462
 msgid "Notifications from SQL logger"
 msgstr "SQL günlükleyicisinden bildirimler"
 
-#: src/err-codes.h:460
+#: src/err-codes.h:463
 msgid "Warnings from SQL logger"
 msgstr "SQL günlükleyicisinden uyarılar"
 
-#: src/err-codes.h:461
+#: src/err-codes.h:464
 msgid "SQL has another row ready"
 msgstr "SQL'de başka bir satır var"
 
-#: src/err-codes.h:462
+#: src/err-codes.h:465
 msgid "SQL has finished executing"
 msgstr "SQL çalıştırmayı bitirdi"
 
-#: src/err-codes.h:463
+#: src/err-codes.h:466
 msgid "System error w/o errno"
 msgstr "Hata numarası olmayan sistem hatası"
 
-#: src/err-codes.h:464
+#: src/err-codes.h:467
 msgid "Unknown system error"
 msgstr "Bilinmeyen sistem hatası"
 
-#: src/err-codes.h:465
+#: src/err-codes.h:468
 msgid "End of file"
 msgstr "Dosya sonu"
 
-#: src/err-codes.h:466
+#: src/err-codes.h:469
 msgid "Unknown error code"
 msgstr "Bilinmeyen hata kodu"
 
-#: src/argparse.c:494
+#: src/argparse.c:502
 msgid "argument not expected"
 msgstr "Argüman beklenmiyordu"
 
-#: src/argparse.c:496
+#: src/argparse.c:504
 msgid "read error"
 msgstr "Okuma hatası"
 
-#: src/argparse.c:498
+#: src/argparse.c:506
 msgid "keyword too long"
 msgstr "Anahtar sözcük pek uzun"
 
-#: src/argparse.c:500
+#: src/argparse.c:508
 msgid "missing argument"
 msgstr "Argüman eksik"
 
-#: src/argparse.c:502
+#: src/argparse.c:510
 msgid "invalid argument"
 msgstr "Geçersiz argüman"
 
-#: src/argparse.c:504
+#: src/argparse.c:512
 msgid "invalid command"
 msgstr "Geçersiz komut"
 
-#: src/argparse.c:506
+#: src/argparse.c:514
 msgid "invalid alias definition"
 msgstr "Geçersiz arma tanımı"
 
-#: src/argparse.c:508 src/argparse.c:545
+#: src/argparse.c:516 src/argparse.c:553
 msgid "permission error"
 msgstr "İzin hatası"
 
-#: src/argparse.c:510 src/argparse.c:543
+#: src/argparse.c:518 src/argparse.c:551
 msgid "out of core"
 msgstr "Çekirdek kalmadı"
 
-#: src/argparse.c:514 src/argparse.c:549
+#: src/argparse.c:522 src/argparse.c:557
 msgid "invalid meta command"
 msgstr "Geçersiz meta komutu"
 
-#: src/argparse.c:516 src/argparse.c:551
+#: src/argparse.c:524 src/argparse.c:559
 msgid "unknown meta command"
 msgstr "Bilinmeyen meta komutu"
 
-#: src/argparse.c:518 src/argparse.c:553
+#: src/argparse.c:526 src/argparse.c:561
 msgid "unexpected meta command"
 msgstr "Beklenmedik meta komutu"
 
-#: src/argparse.c:520
+#: src/argparse.c:528
 msgid "invalid option"
 msgstr "Geçersiz seçenek"
 
-#: src/argparse.c:530
+#: src/argparse.c:538
 #, c-format
 msgid "missing argument for option \"%.50s\"\n"
 msgstr "\"%.50s\" seçeneği için argüman eksik\n"
 
-#: src/argparse.c:532
+#: src/argparse.c:540
 #, c-format
 msgid "invalid argument for option \"%.50s\"\n"
 msgstr "\"%.50s\" seçeneği için geçersiz argüman\n"
 
-#: src/argparse.c:534
+#: src/argparse.c:542
 #, c-format
 msgid "option \"%.50s\" does not expect an argument\n"
 msgstr "\"%.50s\" seçeneği bir argüman beklemiyor\n"
 
-#: src/argparse.c:537
+#: src/argparse.c:545
 #, c-format
 msgid "invalid command \"%.50s\"\n"
 msgstr "Geçersiz komut \"%.50s\"\n"
 
-#: src/argparse.c:539
+#: src/argparse.c:547
 #, c-format
 msgid "option \"%.50s\" is ambiguous\n"
 msgstr "\"%.50s\" seçeneği belirsiz\n"
 
-#: src/argparse.c:541
+#: src/argparse.c:549
 #, c-format
 msgid "command \"%.50s\" is ambiguous\n"
 msgstr "\"%.50s\" komutu belirsiz\n"
 
-#: src/argparse.c:555
+#: src/argparse.c:563
 #, c-format
 msgid "invalid option \"%.50s\"\n"
 msgstr "Geçersiz seçenek \"%.50s\"\n"
 
-#: src/argparse.c:2297 src/argparse.c:2393
+#: src/argparse.c:2335 src/argparse.c:2432
 #, c-format
 msgid "Note: no default option file '%s'\n"
 msgstr "Not: Öntanımlı seçenek dosyası '%s' yok\n"
 
-#: src/argparse.c:2307 src/argparse.c:2400
+#: src/argparse.c:2345 src/argparse.c:2439
 #, c-format
 msgid "reading options from '%s'\n"
 msgstr "'%s' konumundan seçenekler okunuyor\n"
 
-#: src/argparse.c:2385
+#: src/argparse.c:2424
 #, c-format
 msgid "option file '%s': %s\n"
 msgstr "Seçenek dosyası '%s': %s\n"
 
-#: src/argparse.c:2823
+#: src/argparse.c:2910
 #, c-format
 msgid "Note: ignoring option \"--%s\" due to global config\n"
 msgstr "Not: Global yapılandırma dolayısıyla \"--%s\" seçeneği yok sayılıyor\n"

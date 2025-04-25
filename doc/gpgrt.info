@@ -1,7 +1,7 @@
-This is gpgrt.info, produced by makeinfo version 6.5 from gpgrt.texi.
+This is gpgrt.info, produced by makeinfo version 6.8 from gpgrt.texi.
 
-This manual is for Libgpg-error (version 1.46, 2 August 2022), which is
-a library for code used by all GnuPG related packages.
+This manual is for Libgpg-error (version 1.51, 7 November 2023), which
+is a library for code used by all GnuPG related packages.
 
 Copyright (C) 2014, 2022 g10 Code GmbH
 
@@ -22,8 +22,8 @@ File: gpgrt.info,  Node: Top,  Next: Introduction,  Up: (dir)
 The Libgpg-error Library
 ************************
 
-This manual is for Libgpg-error (version 1.46, 2 August 2022), which is
-a library for code used by all GnuPG related packages.
+This manual is for Libgpg-error (version 1.51, 7 November 2023), which
+is a library for code used by all GnuPG related packages.
 
 Copyright (C) 2014, 2022 g10 Code GmbH
 
@@ -280,9 +280,10 @@ File: gpgrt.info,  Node: Tools,  Next: Library Copying,  Prev: Generalities,  Up
 * Menu:
 
 * gpg-error-config::    Print required compiler flags
+* gpgrt-config::    Helper tool for querying installed libraries
 
 
-File: gpgrt.info,  Node: gpg-error-config,  Up: Tools
+File: gpgrt.info,  Node: gpg-error-config,  Next: gpgrt-config,  Up: Tools
 
 4.1 Print required compiler flags
 =================================
@@ -326,6 +327,56 @@ gpgrt-config and gpg-error.pc internally.
      that Libgpg-error was built with when computing the output for the
      '--cflags' and '--libs' options.  This option must be specified
      before any '--libs' or '--cflags' options.
+
+
+File: gpgrt.info,  Node: gpgrt-config,  Prev: gpg-error-config,  Up: Tools
+
+4.2 gpgrt-config - Helper tool for querying installed libraries.
+================================================================
+
+'gpgrt-config' is a script tool that is used by the autoconf macros
+shipped with gnupg software (e.g., AM_PATH_GPG_ERROR and AM_PATH_GPGME)
+to determine the compiler and linker flags that should be used to
+compile and link programs that use the specific library (e.g.,
+libgpg-error or libgpgme).  'gpgrt-config' uses pkg-config .pc files as
+data source.
+
+   Apart from options 'gpgrt-config' accepts a single argument 'module'
+specifying the basename (without the ".pc"-suffix) of the pkg-config
+file to be used as input.  'module' will default to 'gpg-error' if it is
+not specified.
+
+'gpgrt-config' accepts the following options:
+
+'--libdir=LIBDIR'
+     Parent directory path of pkgconfig file search path.  e.g.,
+     'gpgrt-config --libdir=/usr/lib --exists gpgme' will parse
+     '/usr/lib/pkgconfig/gpgme.pc'.
+
+'--exists'
+     Test whether the pkg-config file 'module.pc' exist and exits with
+     success or error accordingly.
+
+'--modversion'
+     Print the currently installed version of 'module' on the standard
+     output.
+
+'--libs'
+     Print the linker flags that are necessary to link a program using
+     the 'module'.
+
+'--cflags'
+     Print the compiler flags that are necessary to compile a program
+     using the 'module'.
+
+'--static'
+     Modifies output if linking statically instead of dynamically.
+
+'--variable=VARNAME'
+     Output variable VARNAME from the module's pkg-config file.
+
+'gpgrt-config' is tried to be compatible to pkg-config, and to support
+cross build well, but it is not intended to be a replacement.
 
 
 File: gpgrt.info,  Node: Library Copying,  Next: Copying,  Prev: Tools,  Up: Top
@@ -1243,23 +1294,29 @@ Function and Data Index
 
 
 Tag Table:
-Node: Top733
-Node: Introduction2111
-Node: Getting Started2633
-Node: Features2990
-Node: Overview3119
-Node: Preparation3315
-Node: Header4116
-Node: Building sources5195
-Node: Building sources using Automake7393
-Node: Initializing the library8695
-Node: Multi-Threading9883
-Node: Generalities10025
-Node: Tools10212
-Node: gpg-error-config10382
-Node: Library Copying12035
-Node: Copying40136
-Node: Concept Index59306
-Node: Function and Data Index59603
+Node: Top735
+Node: Introduction2115
+Node: Getting Started2637
+Node: Features2994
+Node: Overview3123
+Node: Preparation3319
+Node: Header4120
+Node: Building sources5199
+Node: Building sources using Automake7397
+Node: Initializing the library8699
+Node: Multi-Threading9887
+Node: Generalities10029
+Node: Tools10216
+Node: gpg-error-config10451
+Node: gpgrt-config12125
+Node: Library Copying13874
+Node: Copying41975
+Node: Concept Index61145
+Node: Function and Data Index61442
 
 End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:
